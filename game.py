@@ -115,7 +115,7 @@ class player_obj(pygame.sprite.Sprite):
 
         #init sound effect
         if _audio_enabled:
-            self.fire_sound = pygame.mixer.Sound(load_wav('converted.wav'))
+            self.fire_sound = pygame.mixer.Sound(load_wav('superhot.wav'))
 
 
 
@@ -197,13 +197,19 @@ def main():
     if _audio_enabled:
         pygame.mixer.pre_init(frequency=22050, buffer=(2**20))
 
-    # Initialise screen
     pygame.init()
     pygame.mixer.init()
+
+    #Background music
+    pygame.mixer.music.load(os.path.join('data', 'rickrosslow.ogg'))
+    pygame.mixer.music.play(-1)
+
+
+    # Initialise screen
     # screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN, 0)
+    pygame.display.set_caption('StraightFire')
     screen = pygame.display.set_mode((0,0))
     (_width, _height) = screen.get_size()
-    pygame.display.set_caption('StraightFire')
 
     # Fill background
     background = pygame.Surface(screen.get_size())
@@ -229,10 +235,12 @@ def main():
     # movement vars
     enemy_timer = 1500
     pygame.time.set_timer(USEREVENT+1, enemy_timer)
-    moveup = False
-    movedown = False
-    moveright = False
-    moveleft = False
+    moveup, upkey       = False, False
+    movedown, downkey   = False, False
+    moveright, rightkey = False, False
+    moveleft, leftkey   = False, False
+    haters = []
+    _level = 1
 
     # controller vars
     enable_360 = True
@@ -245,15 +253,11 @@ def main():
     xbox = joysticks[0]
     xbox.init()
 
-    print xbox.get_numaxes();
-
-    haters = []
 
     # Event loop
     while 1:
         clock.tick(60) #cap at 60fps
 
-        
         # read controller input
         if enable_360:
             # A: fire mixtape
@@ -272,12 +276,12 @@ def main():
                 taunt_enabled = True
 
             # joystick movement
-            side_move = xbox.get_axis(0)
-            moveright = side_move > 0.1
-            moveleft = side_move < -0.1
+            side_move   = xbox.get_axis(0)
+            moveright   = rightkey or side_move > 0.1
+            moveleft    = leftkey or side_move < -0.1
             vertical_move = xbox.get_axis(1)
-            movedown = vertical_move > 0.1
-            moveup = vertical_move < -0.1
+            moveup      = upkey or vertical_move < -0.1
+            movedown    = downkey or vertical_move > 0.1
 
         # handle triggered events
         for event in pygame.event.get():
@@ -287,24 +291,24 @@ def main():
                 if event.key == K_ESCAPE:
                     return
                 if event.key == K_UP:
-                    moveup= True
+                    moveup, upkey = True, True
                 if event.key == K_DOWN:
-                    movedown= True
+                    movedown, downkey = True, True
                 if event.key == K_RIGHT:
-                    moveright = True
+                    moveright, rightkey = True, True
                 if event.key == K_LEFT:
-                    moveleft = True
+                    moveleft, leftkey = True, True
                 if event.key == K_SPACE:
                     player.fire()
             elif event.type == KEYUP:
                 if event.key == K_UP:
-                    moveup = False
+                    moveup, upkey = False, False
                 if event.key == K_DOWN:
-                    movedown= False
+                    movedown, downkey = False, False
                 if event.key == K_RIGHT:
-                    moveright = False
+                    moveright, rightkey = False, False
                 if event.key == K_LEFT:
-                    moveleft = False
+                    moveleft, leftkey = False, False
             elif event.type == USEREVENT+1:
                 enemy = enemy_obj(_width, random.randrange(0,_height-_player_height,15))
                 haters.append(enemy)
@@ -315,6 +319,7 @@ def main():
         player.move_right() if moveright else None
         player.move_left() if moveleft else None
         player.move_mixtapes()
+
         haters = [h for h in haters if h.x > -_player_height]
         for h in haters:
             h.move()
