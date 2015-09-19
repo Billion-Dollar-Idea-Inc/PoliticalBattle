@@ -64,6 +64,7 @@ class enemy_obj(pygame.sprite.Sprite):
         if self.on_fire != -1:
             surface.blit(self.fire, self.rect)
 
+
 class mixtape_obj(pygame.sprite.Sprite):
 
     move_dist = 15
@@ -86,6 +87,7 @@ class mixtape_obj(pygame.sprite.Sprite):
     def draw(self, surface):
         surface.blit(self.image, self.rect)
 
+
 class player_obj(pygame.sprite.Sprite):
 
     move_dist = 8
@@ -102,7 +104,6 @@ class player_obj(pygame.sprite.Sprite):
         self.rect.left = x
         self.rect.top = y
 
-
         # info about environment
         screen = pygame.display.get_surface()
         self.max_height = screen.get_height()
@@ -116,8 +117,6 @@ class player_obj(pygame.sprite.Sprite):
         #init sound effect
         if _audio_enabled:
             self.fire_sound = pygame.mixer.Sound(load_wav('superhot.wav'))
-
-
 
     def move_up(self):
         if self.y >= self.move_dist:
@@ -169,15 +168,20 @@ class player_obj(pygame.sprite.Sprite):
         # play taunt noise
         print "Taunt"
 
-    def check_collisions(self, enemies):
+    def check_hits(self, enemies):
+        hit_count = 0
         alive_enemies = [e for e in enemies if e.on_fire is -1]
         for tape in self.mixtapes:
             for e in alive_enemies:
                 if tape.rect.colliderect(e.rect):
                     e.on_fire = 5
                     tape.consumed = True
+                    hit_count += 1
         self.mixtapes = [m for m in self.mixtapes if not m.consumed]
-        alive_enemies = [e for e in alive_enemies if e.on_fire is -1]
+        return hit_count
+
+    def check_collisions(self, enemies):
+        alive_enemies = [e for e in enemies if e.on_fire is -1]
         return self.rect.collidelist(alive_enemies) != -1
 
 
@@ -191,7 +195,6 @@ def main():
     # misc data
     _player_height = 92
     _audio_enabled = False if '--disable-audio' in sys.argv else True
-    _level = 1
 
     # pre_init Pygame audio mixer
     if _audio_enabled:
@@ -199,15 +202,17 @@ def main():
 
     pygame.init()
     pygame.mixer.init()
+    pygame.event.set_blocked(pygame.MOUSEMOTION)
+    pygame.event.set_blocked(pygame.MOUSEBUTTONUP)
+    pygame.event.set_blocked(pygame.MOUSEBUTTONDOWN)
 
     #Background music
     pygame.mixer.music.load(os.path.join('data', 'rickrosslow.ogg'))
     pygame.mixer.music.play(-1)
 
-
     # Initialise screen
-    # screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN, 0)
     pygame.display.set_caption('StraightFire')
+    # screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN, 0)
     screen = pygame.display.set_mode((0,0))
     (_width, _height) = screen.get_size()
 
@@ -217,7 +222,7 @@ def main():
     background.fill((250, 250, 250))
 
     # Initialize player
-    player = player_obj(0, _height - _player_height, _level)
+    player = player_obj(0, _height - _player_height, 1)
 
     # Initialize sprites
     playersprite = pygame.sprite.RenderPlain((player))
@@ -240,7 +245,11 @@ def main():
     moveright, rightkey = False, False
     moveleft, leftkey   = False, False
     haters = []
-    _level = 1
+
+    # game stats
+    level = 1
+    hit_count = 0
+    enemy_count = 0
 
     # controller vars
     enable_360 = True
@@ -268,6 +277,7 @@ def main():
             elif not fire_state:
                 fire_enabled = True
 
+            # B: taunt enemies
             taunt_state = xbox.get_button(1)
             if taunt_enabled and taunt_state:
                 player.taunt()
@@ -312,6 +322,7 @@ def main():
             elif event.type == USEREVENT+1:
                 enemy = enemy_obj(_width, random.randrange(0,_height-_player_height,15))
                 haters.append(enemy)
+                enemy_count += 1
 
 
         player.move_up() if moveup else None
@@ -320,9 +331,11 @@ def main():
         player.move_left() if moveleft else None
         player.move_mixtapes()
 
-        haters = [h for h in haters if h.x > -_player_height]
+        haters = [h for h in haters if h.x > - _player_height]
         for h in haters:
             h.move()
+
+        hit_count += player.check_hits(haters)
         if player.check_collisions(haters):
             print "Collision"
             break
@@ -334,7 +347,8 @@ def main():
         # mixtapes remaining
         mixtapes_left = (10,10,10)
         no_mixtapes = (250,0,0)
-        text = font.render("Level: {}   Mixtapes: {}".format(_level, player.mixtapes_remaining), 1,
+        text = font.render("Level: {}  Enemies: {}  Hits: {}  Mixtapes: {}"
+                .format(level, enemy_count, hit_count, player.mixtapes_remaining), 1,
                 mixtapes_left if player.mixtapes_remaining > 0 else no_mixtapes)
         textpos = text.get_rect()
         textpos.centerx = background.get_rect().centerx
