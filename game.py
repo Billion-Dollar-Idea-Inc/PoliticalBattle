@@ -142,12 +142,8 @@ def main():
     # Initialize sprites
     playersprite = pygame.sprite.RenderPlain((player))
 
-    # Display some text
-    # font = pygame.font.Font(None, 36)
-    # text = font.render("Hello There", 1, (10, 10, 10))
-    # textpos = text.get_rect()
-    # textpos.centerx = background.get_rect().centerx
-    # background.blit(text, textpos)
+    # Initialize text
+    font = pygame.font.Font(None, 28)
 
     # Blit everything to the screen
     screen.blit(background, (0, 0))
@@ -162,7 +158,7 @@ def main():
 
     # Event loop
     while 1:
-        clock.tick(60) #cap at 60fps
+        clock.tick(40) #cap at 60fps
 
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -195,10 +191,21 @@ def main():
         player.moveleft() if moveleft else None
         player.movemixtapes()
 
+        # prepare screen to be re-drawn
         screen.blit(background, (0, 0))
-        playersprite.update()
+
+        # HUD
+        # mixtapes remaining
+        mixtapes_left = (10,10,10)
+        no_mixtapes = (250,0,0)
+        text = font.render("Mixtapes: {}".format(player.mixtapes_remaining), 1,
+                mixtapes_left if player.mixtapes_remaining > 0 else no_mixtapes)
+        textpos = text.get_rect()
+        textpos.centerx = background.get_rect().centerx
+        screen.blit(text, textpos)
+
+        # playersprite.update()
         player.draw(screen)
-        # playersprite.draw(screen)
         pygame.display.flip()
 
 if __name__ == '__main__': main()
