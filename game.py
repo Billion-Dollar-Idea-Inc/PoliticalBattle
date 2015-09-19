@@ -115,7 +115,7 @@ class player_obj(pygame.sprite.Sprite):
 
         #init sound effect
         if _audio_enabled:
-            self.fire_sound = pygame.mixer.Sound(load_wav('converted.wav'))
+            self.fire_sound = pygame.mixer.Sound(load_wav('SuperHot.wav'))
 
 
 

@@ -1,17 +1,22 @@
 import os
 from Tkinter import Tk
 from tkFileDialog import askopenfilename
+import tkMessageBox
 
 from PIL import Image, ImageDraw
 
-#import Image
-#import ImageDraw
-
 def get_user_art():
     Tk().withdraw() #stop Tk's root window
-    # show an "Open" dialog box and return the path to the selected file
-    filename = askopenfilename()
-    print("user requested art %s" % (filename))
+    custom_art = tkMessageBox.askyesno(title="StraightFire", \
+            message="Choose your own mixtape art?", \
+            default=tkMessageBox.YES, icon=tkMessageBox.QUESTION)
+
+    if custom_art:
+        filename = askopenfilename()
+        print("user requested art %s" % (filename))
+    else:
+        filename = os.path.join('data', "mixtape.png")
+        print("using default art at %s" % (filename))
 
     im = Image.open(filename)
     size = 24,24
@@ -23,6 +28,7 @@ def get_user_art():
     
     add_alpha(filepath)
     return filename
+
 
 def add_alpha(filepath):
 
