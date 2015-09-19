@@ -3,7 +3,9 @@
 import pygame
 import math
 import os
+import sys
 from pygame.locals import *
+import artmanager
 
 ## Util functions
 
@@ -39,17 +41,14 @@ class mixtape_obj(pygame.sprite.Sprite):
         self.y = y
 
         # info about image
-        self.image, self.rect = load_png('mixtape.png')
+
+        #self.image, self.rect = load_png('mixtape.png')
+        self.image, self.rect = load_png('tmp_user_art.png')
         self.height = self.rect.height
         self.width = self.rect.width
 
-        #sound effect
-        self.superhot = pygame.mixer.Sound(load_wav('superhot.wav'))
-
     def move(self):
         self.x += self.move_dist
-        self.superhot.play(loops=0, maxtime=0) #play sound effect
-        self.superhot.stop()
 
     def draw(self, surface):
         surface.blit(self.image, (self.x, self.y))
@@ -78,6 +77,11 @@ class player_obj(pygame.sprite.Sprite):
         # mixtape info
         self.mixtapes = []
         self.mixtapes_remaining = level * 12
+
+        #init sound effect
+        if _audio_enabled:
+            self.fire_sound = pygame.mixer.Sound(load_wav('converted.wav'))
+
 
 
     def moveup(self):
@@ -114,20 +118,35 @@ class player_obj(pygame.sprite.Sprite):
             b = mixtape_obj(self.x + self.width, self.y + self.height/3)
             self.mixtapes.append(b)
             self.mixtapes_remaining -= 1
+            if _audio_enabled:
+                #self.fire_sound.stop() #Stop previous sound if there was one
+                self.fire_sound.play(loops=0, maxtime=0) # "supa hot"
 
 
 
 ## Running the game
 
 def main():
+    global _audio_enabled
+
+    #Prompt user for art
+    artmanager.get_user_art()
 
     # misc data
     _height = 600
     _width = 900
     _player_height = 92
+    _audio_enabled = False if '--disable-audio' in sys.argv else True
+
+    # pre_init Pygame audio mixer
+    if _audio_enabled:
+        #pygame.mixer.pre_init(frequency=48000, size=-24, channels=2, \
+        #        buffer=(2**20) )
+        pygame.mixer.pre_init(frequency=22050, buffer=(2**20))
 
     # Initialise screen
     pygame.init()
+    pygame.mixer.init()
     screen = pygame.display.set_mode((_width, _height))
     pygame.display.set_caption('StraightFire')
 

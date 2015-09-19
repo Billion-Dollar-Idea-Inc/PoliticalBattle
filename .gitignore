@@ -59,3 +59,8 @@ target/
 
 #super hot fire
 video.mp4
+#local vimrc for python indent
+.lvimrc
+#converted album artworks
+tmp_user_art.png
+
