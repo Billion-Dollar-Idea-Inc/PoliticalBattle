@@ -21,6 +21,12 @@ def load_png(name):
         raise SystemExit, message
     return image, image.get_rect()
 
+def load_wav(name):
+    """ Load sound file and return object """    
+    fullname = os.path.join('data', name)
+    return fullname
+
+
 
 ## Objects
 class mixtape_obj(pygame.sprite.Sprite):
@@ -37,8 +43,13 @@ class mixtape_obj(pygame.sprite.Sprite):
         self.height = self.rect.height
         self.width = self.rect.width
 
+        #sound effect
+        self.superhot = pygame.mixer.Sound(load_wav('superhot.wav'))
+
     def move(self):
         self.x += self.move_dist
+        self.superhot.play(loops=0, maxtime=0) #play sound effect
+        self.superhot.stop()
 
     def draw(self, surface):
         surface.blit(self.image, (self.x, self.y))
@@ -118,7 +129,7 @@ def main():
     # Initialise screen
     pygame.init()
     screen = pygame.display.set_mode((_width, _height))
-    pygame.display.set_caption('MixtapeFire')
+    pygame.display.set_caption('StraightFire')
 
     # Fill background
     background = pygame.Surface(screen.get_size())
