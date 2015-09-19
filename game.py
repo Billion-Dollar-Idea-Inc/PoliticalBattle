@@ -115,7 +115,7 @@ class player_obj(pygame.sprite.Sprite):
 
         #init sound effect
         if _audio_enabled:
-            self.fire_sound = pygame.mixer.Sound(load_wav('SuperHot.wav'))
+            self.fire_sound = pygame.mixer.Sound(load_wav('superhot.wav'))
 
 
 
@@ -199,6 +199,11 @@ def main():
     # Initialise screen
     pygame.init()
     pygame.mixer.init()
+    #Background music
+    pygame.mixer.music.load(os.path.join('data', 'rickrosslow.ogg'))
+    pygame.mixer.music.play(loops=-1)
+    #pygame.mixer.music.set_volume(0.1)
+
     _level = 1
 
     # Initialise screen
