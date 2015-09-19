@@ -34,7 +34,7 @@ def load_wav(name):
 ## Objects
 class enemy_obj(pygame.sprite.Sprite):
 
-    move_dist = 12
+    move_dist = 10
 
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
@@ -88,7 +88,7 @@ class mixtape_obj(pygame.sprite.Sprite):
 
 class player_obj(pygame.sprite.Sprite):
 
-    move_dist = 10
+    move_dist = 8
 
     def __init__(self, x, y, level=1):
         pygame.sprite.Sprite.__init__(self)
@@ -165,13 +165,16 @@ class player_obj(pygame.sprite.Sprite):
                 #self.fire_sound.stop() #Stop previous sound if there was one
                 self.fire_sound.play(loops=0, maxtime=0) # "supa hot"
 
+    def taunt(self):
+        # play taunt noise
+        print "Taunt"
+
     def check_collisions(self, enemies):
         alive_enemies = [e for e in enemies if e.on_fire is -1]
         for tape in self.mixtapes:
             for e in alive_enemies:
                 if tape.rect.colliderect(e.rect):
                     e.on_fire = 5
-                    print "Hit!"
                     tape.consumed = True
         self.mixtapes = [m for m in self.mixtapes if not m.consumed]
         alive_enemies = [e for e in alive_enemies if e.on_fire is -1]
@@ -179,18 +182,16 @@ class player_obj(pygame.sprite.Sprite):
 
 
 ## Running the game
-
 def main():
     global _audio_enabled
 
-    #Prompt user for art
-    artmanager.get_user_art()
+    # Prompt user for art
+    # artmanager.get_user_art()
 
     # misc data
-    _height = 720
-    _width = 1360
     _player_height = 92
     _audio_enabled = False if '--disable-audio' in sys.argv else True
+    _level = 1
 
     # pre_init Pygame audio mixer
     if _audio_enabled:
@@ -199,11 +200,9 @@ def main():
     # Initialise screen
     pygame.init()
     pygame.mixer.init()
-    _level = 1
-
-    # Initialise screen
-    screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN, 0)
-    print screen.get_size()
+    # screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN, 0)
+    screen = pygame.display.set_mode((0,0))
+    (_width, _height) = screen.get_size()
     pygame.display.set_caption('StraightFire')
 
     # Fill background
@@ -226,11 +225,27 @@ def main():
 
     # Initialize clock
     clock = pygame.time.Clock()
+
+    # movement vars
+    enemy_timer = 1500
+    pygame.time.set_timer(USEREVENT+1, enemy_timer)
     moveup = False
     movedown = False
     moveright = False
     moveleft = False
-    pygame.time.set_timer(USEREVENT+1, 1500)
+
+    # controller vars
+    enable_360 = True
+    # enable_360 = False
+    fire_enabled = True
+    taunt_enabled = True
+
+    pygame.joystick.init()
+    joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
+    xbox = joysticks[0]
+    xbox.init()
+
+    print xbox.get_numaxes();
 
     haters = []
 
@@ -238,10 +253,39 @@ def main():
     while 1:
         clock.tick(60) #cap at 60fps
 
+        
+        # read controller input
+        if enable_360:
+            # A: fire mixtape
+            fire_state = xbox.get_button(0)
+            if fire_enabled and fire_state:
+                player.fire()
+                fire_enabled = False
+            elif not fire_state:
+                fire_enabled = True
+
+            taunt_state = xbox.get_button(1)
+            if taunt_enabled and taunt_state:
+                player.taunt()
+                taunt_enabled = False
+            elif not taunt_state:
+                taunt_enabled = True
+
+            # joystick movement
+            side_move = xbox.get_axis(0)
+            moveright = side_move > 0.1
+            moveleft = side_move < -0.1
+            vertical_move = xbox.get_axis(1)
+            movedown = vertical_move > 0.1
+            moveup = vertical_move < -0.1
+
+        # handle triggered events
         for event in pygame.event.get():
             if event.type == QUIT:
                 return
             elif event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    return
                 if event.key == K_UP:
                     moveup= True
                 if event.key == K_DOWN:
