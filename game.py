@@ -34,15 +34,16 @@ def load_wav(name):
 ## Objects
 class enemy_obj(pygame.sprite.Sprite):
 
-    # move_dist = 10
-
     def __init__(self, x, y, height):
         pygame.sprite.Sprite.__init__(self)
-        # self.x = x
-        # self.y = y
+
+        enemy_options = [
+            'hater.png'
+        ]
+        pick = random.randrange(0, len(enemy_options))
 
         # info about image
-        self.image, self.rect = load_png('hater.png')
+        self.image, self.rect = load_png(enemy_options[pick])
         self.fire, self.fire_rect = load_png('fire.png')
         self.height = self.rect.height
         self.width = self.rect.width
@@ -52,7 +53,6 @@ class enemy_obj(pygame.sprite.Sprite):
         self.rect.top = y
         self.on_fire = -1
         self.move_dist = int(height * 0.014)
-        print self.move_dist
 
     def move(self):
         if self.on_fire is -1:
@@ -71,8 +71,6 @@ class enemy_obj(pygame.sprite.Sprite):
 
 class mixtape_obj(pygame.sprite.Sprite):
 
-    # move_dist = 15
-
     def __init__(self, x, y, height):
         pygame.sprite.Sprite.__init__(self)
 
@@ -85,7 +83,6 @@ class mixtape_obj(pygame.sprite.Sprite):
         self.width = self.rect.width
         self.consumed = False
         self.move_dist = int(height * 0.022)
-        print self.move_dist
 
     def move(self):
         self.rect.left += self.move_dist
@@ -95,8 +92,6 @@ class mixtape_obj(pygame.sprite.Sprite):
 
 
 class player_obj(pygame.sprite.Sprite):
-
-    # move_dist = 8
 
     def __init__(self, x, y, level=1):
         pygame.sprite.Sprite.__init__(self)
@@ -111,7 +106,6 @@ class player_obj(pygame.sprite.Sprite):
         self.rect.left = x
         self.rect.top = (y - self.height) / 2
         self.move_dist = int(y * 0.012)
-        print self.move_dist
 
         # info about environment
         screen = pygame.display.get_surface()
@@ -293,31 +287,31 @@ def main():
         clock.tick(60) #cap at 60fps
 
         # read controller input
-        # if enable_360:
+        if enable_360:
             # A: fire mixtape
-            # fire_state = xbox.get_button(0)
-            # if fire_enabled and fire_state:
-            #     player.fire()
-            #     fire_enabled = False
-            # elif not fire_state:
-            #     fire_enabled = True
+            fire_state = xbox.get_button(0)
+            if fire_enabled and fire_state:
+                player.fire()
+                fire_enabled = False
+            elif not fire_state:
+                fire_enabled = True
 
-            # # B: taunt enemies
-            # taunt_state = xbox.get_button(1)
-            # if taunt_enabled and taunt_state:
-            #     player.taunt()
-            #     taunt_enabled = False
-            # elif not taunt_state:
-            #     taunt_enabled = True
+            # B: taunt enemies
+            taunt_state = xbox.get_button(1)
+            if taunt_enabled and taunt_state:
+                player.taunt()
+                taunt_enabled = False
+            elif not taunt_state:
+                taunt_enabled = True
 
-            # # joystick movement
-            # joystick_threshhold = 0.15
-            # side_move   = xbox.get_axis(0)
-            # moveright   = rightkey or side_move > joystick_threshhold
-            # moveleft    = leftkey or side_move < -joystick_threshhold
-            # vertical_move = xbox.get_axis(1)
-            # moveup      = upkey or vertical_move < -joystick_threshhold
-            # movedown    = downkey or vertical_move > joystick_threshhold
+            # joystick movement
+            joystick_threshhold = 0.15
+            side_move   = xbox.get_axis(0)
+            moveright   = rightkey or side_move > joystick_threshhold
+            moveleft    = leftkey or side_move < -joystick_threshhold
+            vertical_move = xbox.get_axis(1)
+            moveup      = upkey or vertical_move < -joystick_threshhold
+            movedown    = downkey or vertical_move > joystick_threshhold
 
         # handle triggered events
         for event in pygame.event.get():
@@ -375,7 +369,7 @@ def main():
             break
 
         # scale difficulty
-        if current_enemy_count == enemy_cap:
+        if current_enemy_count >= enemy_cap:
             current_enemy_count = 0
             # enemy_cap += 3
             level += 1
@@ -392,7 +386,7 @@ def main():
         # mixtapes remaining
         mixtapes_left = (10,10,10)
         no_mixtapes = (250,0,0)
-        text = font.render("Level: {}  Enemies: {}  Hits: {}  Mixtapes: {}"
+        text = font.render("Level: {}   Enemies: {}   Hits: {}   Mixtapes: {}"
                 .format(level, enemy_count, hit_count, player.mixtapes_remaining), 1,
                 mixtapes_left if player.mixtapes_remaining > 0 else no_mixtapes)
         textpos = text.get_rect()
