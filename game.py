@@ -40,7 +40,9 @@ class enemy_obj(pygame.sprite.Sprite):
         enemy_options = [
             'hater.png',
             'hater_1.png',
-            'hater_2.png'
+            'hater_2.png',
+            'hater_3.png',
+            'hater_4.png'
         ]
         pick = random.randrange(0, len(enemy_options))
 
