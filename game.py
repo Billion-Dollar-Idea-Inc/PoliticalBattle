@@ -38,7 +38,9 @@ class enemy_obj(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         enemy_options = [
-            'hater.png'
+            'hater.png',
+            'hater_1.png',
+            'hater_2.png'
         ]
         pick = random.randrange(0, len(enemy_options))
 
@@ -99,7 +101,7 @@ class player_obj(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         # info about image
-        self.image, self.rect = load_png('player2.png')
+        self.image, self.rect = load_png('player.png')
         self.height = self.rect.height
         self.width = self.rect.width
         self.x = x
@@ -236,15 +238,15 @@ def main():
 
     # Initialise screen
     pygame.display.set_caption('StraightFire')
-    # screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN, 0)
-    screen = pygame.display.set_mode((0,0))
+    screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN, 0)
+    # screen = pygame.display.set_mode((0,0))
     (_width, _height) = screen.get_size()
 
     # Fill background
     background = pygame.Surface(screen.get_size())
     background = background.convert()
     # background.fill((250, 250, 250))
-    background = pygame.image.load("data/darktown.jpg")
+    background = pygame.image.load("data/darktown.png").convert()
 
     # Initialize player
     player = player_obj(0, _height, 1)
@@ -388,7 +390,6 @@ def main():
         hit_count += player.check_hits(haters)
 
         if player.check_collisions(haters):
-            print "Collision"
             break
 
         # scale difficulty
@@ -458,7 +459,5 @@ def main():
         lose_sound.play(loops=0, maxtime=0)
     pygame.time.wait(2000)
     
-    print "You lose"
-
 if __name__ == '__main__': main()
 
