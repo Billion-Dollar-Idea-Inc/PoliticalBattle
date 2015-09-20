@@ -102,9 +102,9 @@ class player_obj(pygame.sprite.Sprite):
         self.height = self.rect.height
         self.width = self.rect.width
         self.x = x
-        self.y = y
+        self.y = (y - self.height) / 2
         self.rect.left = x
-        self.rect.top = y
+        self.rect.top = (y - self.height) / 2
 
         # info about environment
         screen = pygame.display.get_surface()
@@ -124,6 +124,9 @@ class player_obj(pygame.sprite.Sprite):
     def levelup(self):
         self.level += 1
         self.mixtapes_remaining += 4 + (self.level * 2)
+
+    def get_rect(self):
+        return self.rect
 
     def move_up(self):
         if self.y >= self.move_dist:
@@ -200,7 +203,6 @@ def main():
     # artmanager.get_user_art()
 
     # misc data
-    _player_height = 92
     _audio_enabled = False if '--disable-audio' in sys.argv else True
 
     # pre_init Pygame audio mixer
@@ -229,7 +231,9 @@ def main():
     background.fill((250, 250, 250))
 
     # Initialize player
-    player = player_obj(0, (_height - _player_height) / 2, 1)
+    player = player_obj(0, _height, 1)
+    player_info = player.get_rect()
+    _player_width, _player_height = player_info[2], player_info[3]
 
     # Initialize sprites
     playersprite = pygame.sprite.RenderPlain((player))
@@ -331,8 +335,6 @@ def main():
                 if event.key == K_LEFT:
                     moveleft, leftkey = False, False
             elif event.type == USEREVENT+1:
-                # enemy = enemy_obj(_width, random.randrange(0,_height-_player_height,15))
-                # haters.append(enemy)
                 difficulty_mult = (level / 3) + 1
                 for i in range(0, difficulty_mult):
                     enemy = enemy_obj(_width, random.randrange(0,_height-_player_height,15))
@@ -346,7 +348,7 @@ def main():
         player.move_mixtapes()
 
         pre_count = len(haters)
-        haters = [h for h in haters if h.x > - _player_height and h.on_fire != 0]
+        haters = [h for h in haters if h.x > -_player_width and h.on_fire != 0]
         enemy_count += pre_count - len(haters)
         current_enemy_count += pre_count - len(haters)
 
