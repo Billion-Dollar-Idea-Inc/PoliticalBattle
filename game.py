@@ -233,6 +233,7 @@ def main():
     background = pygame.Surface(screen.get_size())
     background = background.convert()
     background.fill((250, 250, 250))
+    background = pygame.image.load("data/darktown.jpg")
 
     # Initialize player
     player = player_obj(0, _height, 1)
@@ -247,7 +248,8 @@ def main():
     font = pygame.font.Font(None, 28)
 
     # Blit everything to the screen
-    screen.blit(background, (0, 0))
+    screen.blit(background, (-500, -500))
+    #screen.blit(bg, (0, 0))
     pygame.display.flip()
 
     # Initialize clock
@@ -380,7 +382,7 @@ def main():
 
 
         # prepare screen to be re-drawn
-        screen.blit(background, (0, 0))
+        screen.blit(background, (-500, -500))
 
         # HUD
         # mixtapes remaining
