@@ -34,7 +34,7 @@ def load_wav(name):
 ## Objects
 class enemy_obj(pygame.sprite.Sprite):
 
-    def __init__(self, x, y, height):
+    def __init__(self, x, y, height, speed_diff):
         pygame.sprite.Sprite.__init__(self)
 
         enemy_options = [
@@ -52,7 +52,9 @@ class enemy_obj(pygame.sprite.Sprite):
         self.rect.left = x
         self.rect.top = y
         self.on_fire = -1
-        self.move_dist = int(height * 0.014)
+        self.move_dist = int(height * 0.014) + speed_diff
+        if self.move_dist is 0:
+            self.move_dist = int(height * 0.014)
 
     def move(self):
         if self.on_fire is -1:
@@ -97,7 +99,7 @@ class player_obj(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         # info about image
-        self.image, self.rect = load_png('player_new.png')
+        self.image, self.rect = load_png('player2.png')
         self.height = self.rect.height
         self.width = self.rect.width
         self.x = x
@@ -120,7 +122,10 @@ class player_obj(pygame.sprite.Sprite):
 
         #init sound effect
         if _audio_enabled:
-            self.fire_sound = pygame.mixer.Sound(load_wav('superhot.wav'))
+            fire_sounds = ['boom.wav', 'bop.wav', 'bada.wav', 'pow.wav']
+            self.fire_sound = [pygame.mixer.Sound(load_wav(s)) for s in fire_sounds]
+            # self.fire_sound = pygame.mixer.Sound(load_wav('superhot.wav'))
+            self.empty_sound = pygame.mixer.Sound(load_wav('EmptyClip.wav'))
             self.not_rapper_sound = pygame.mixer.Sound(load_wav('ImNotARapper.wav'))
 
     def levelup(self):
@@ -162,7 +167,6 @@ class player_obj(pygame.sprite.Sprite):
         mixtapes = [m for m in self.mixtapes if m.rect.x < self.max_width]
 
     def draw(self, surface):
-        # surface.blit(self.image, (self.x, self.y))
         surface.blit(self.image, self.rect)
         for tape in self.mixtapes:
             tape.draw(surface)
@@ -174,7 +178,12 @@ class player_obj(pygame.sprite.Sprite):
             self.mixtapes_remaining -= 1
             if _audio_enabled:
                 #self.fire_sound.stop() #Stop previous sound if there was one
-                self.fire_sound.play(loops=0, maxtime=0) # "supa hot"
+                self.fire_sound[random.randrange(0,len(self.fire_sound))].play(loops=0, maxtime=0)
+                # self.fire_sound.play(loops=0, maxtime=0) # "supa hot"
+        else:
+            if _audio_enabled:
+                self.empty_sound.play(loops=0, maxtime=0) # "supa hot"
+
 
     def taunt(self):
         if _audio_enabled:
@@ -222,6 +231,8 @@ def main():
     if _audio_enabled:
         pygame.mixer.music.load(os.path.join('data', 'rickrosslow.ogg'))
         pygame.mixer.music.play(-1)
+        lose_sound = pygame.mixer.Sound(load_wav('stop.wav'))
+        level_sound = pygame.mixer.Sound(load_wav('superhot.wav'))
 
     # Initialise screen
     pygame.display.set_caption('StraightFire')
@@ -232,7 +243,7 @@ def main():
     # Fill background
     background = pygame.Surface(screen.get_size())
     background = background.convert()
-    background.fill((250, 250, 250))
+    # background.fill((250, 250, 250))
     background = pygame.image.load("data/darktown.jpg")
 
     # Initialize player
@@ -245,7 +256,9 @@ def main():
     playersprite = pygame.sprite.RenderPlain((player))
 
     # Initialize text
-    font = pygame.font.Font(None, 28)
+    font = pygame.font.Font(None, 32)
+    mixtape_font = pygame.font.Font(None, 48)
+    title_font = pygame.font.Font(None, 162)
 
     # Blit everything to the screen
     screen.blit(background, (-500, -500))
@@ -270,6 +283,7 @@ def main():
     enemy_count = 0
     current_enemy_count = 0
     enemy_cap = 10
+    wave_mult = 1
 
     # controller vars
     enable_360 = False
@@ -302,6 +316,9 @@ def main():
             taunt_state = xbox.get_button(1)
             if taunt_enabled and taunt_state:
                 player.taunt()
+                enemy = enemy_obj(_width, random.randrange(0,_height-_player_height,30),
+                        _height, random.randrange(-level, level))
+                haters.append(enemy)
                 taunt_enabled = False
             elif not taunt_state:
                 taunt_enabled = True
@@ -324,6 +341,9 @@ def main():
                     return
                 if event.key == K_t:
                     player.taunt()
+                    enemy = enemy_obj(_width, random.randrange(0,_height-_player_height,30),
+                        _height, random.randrange(-level, level))
+                    haters.append(enemy)
                 if event.key == K_UP:
                     moveup, upkey = True, True
                 if event.key == K_DOWN:
@@ -344,9 +364,10 @@ def main():
                 if event.key == K_LEFT:
                     moveleft, leftkey = False, False
             elif event.type == USEREVENT+1:
-                difficulty_mult = (level / 3) + 1
-                for i in range(0, difficulty_mult):
-                    enemy = enemy_obj(_width, random.randrange(0,_height-_player_height,30),_height)
+                wave_mult = (level / 3) + 1
+                for i in range(0, wave_mult):
+                    enemy = enemy_obj(_width, random.randrange(0,_height-_player_height,30),
+                        _height, random.randrange(-level, level))
                     haters.append(enemy)
 
         # do movement
@@ -371,28 +392,54 @@ def main():
             break
 
         # scale difficulty
-        if current_enemy_count >= enemy_cap:
+        if current_enemy_count >= wave_mult * enemy_cap:
             current_enemy_count = 0
-            # enemy_cap += 3
+            enemy_cap += 1
             level += 1
             player.levelup()
             if enemy_timer > 750:
                 enemy_timer -= int(enemy_timer * 0.15)
                 pygame.time.set_timer(USEREVENT+1, enemy_timer)
+            # show levelup screen
+            text = title_font.render("Level {}".format(level),1,(250,250,250))
+            textpos = text.get_rect()
+            textpos.centerx = _width / 2
+            textpos.centery = _height/ 2 - 75
+            screen.blit(text, textpos)
+            if _audio_enabled:
+                level_sound.play(loops=0, maxtime=0)
+            pygame.display.flip()
+            pygame.time.wait(1500)
+            text2 = title_font.render("Go!".format(level),1,(250,250,250))
+            textpos2 = text2.get_rect()
+            textpos2.centerx = _width / 2
+            textpos2.centery = _height/ 2 + 75
+            screen.blit(text, textpos)
+            screen.blit(text2, textpos2)
+            pygame.display.flip()
+            pygame.time.wait(1000)
 
 
         # prepare screen to be re-drawn
         screen.blit(background, (-500, -500))
+        # screen.blit(background, (0,0))
 
         # HUD
         # mixtapes remaining
-        mixtapes_left = (10,10,10)
+        mixtapes_left = (250,250,250)
         no_mixtapes = (250,0,0)
-        text = font.render("Level: {}   Enemies: {}   Hits: {}   Mixtapes: {}"
-                .format(level, enemy_count, hit_count, player.mixtapes_remaining), 1,
-                mixtapes_left if player.mixtapes_remaining > 0 else no_mixtapes)
+        mixtape_text = mixtape_font.render("Mixtapes: {}".format(player.mixtapes_remaining),
+            1, mixtapes_left if player.mixtapes_remaining > 0 else no_mixtapes)
+        mixtape_pos = mixtape_text.get_rect()
+        mixtape_pos.x = 15
+        mixtape_pos.y = 15
+        screen.blit(mixtape_text, mixtape_pos)
+            
+        text = font.render("Level: {}   Haters: {}   Hits: {}"
+                .format(level, enemy_count, hit_count), 1, mixtapes_left)
         textpos = text.get_rect()
-        textpos.centerx = background.get_rect().centerx
+        textpos.centerx = background.get_rect().centerx - 500
+        textpos.centery = 15
         screen.blit(text, textpos)
 
         # playersprite.update()
@@ -401,6 +448,16 @@ def main():
             h.draw(screen)
         pygame.display.flip()
 
+    text = title_font.render("Your mixtape flopped!", 1, (255,20,0))
+    textpos = text.get_rect()
+    textpos.centerx = _width / 2
+    textpos.centery = _height/ 2
+    screen.blit(text, textpos)
+    pygame.display.flip()
+    if _audio_enabled:
+        lose_sound.play(loops=0, maxtime=0)
+    pygame.time.wait(2000)
+    
     print "You lose"
 
 if __name__ == '__main__': main()
