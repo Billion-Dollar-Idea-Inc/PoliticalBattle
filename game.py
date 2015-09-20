@@ -56,6 +56,8 @@ class enemy_obj(pygame.sprite.Sprite):
         if self.on_fire is -1:
             self.x -= self.move_dist
             self.rect.x -= self.move_dist
+        else:
+            self.on_fire -= 1
 
 
     def draw(self, surface):
@@ -96,7 +98,7 @@ class player_obj(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         # info about image
-        self.image, self.rect = load_png('player.png')
+        self.image, self.rect = load_png('player_new.png')
         self.height = self.rect.height
         self.width = self.rect.width
         self.x = x
@@ -111,12 +113,17 @@ class player_obj(pygame.sprite.Sprite):
         self.area = screen.get_rect()
 
         # mixtape info
+        self.level = 1
         self.mixtapes = []
-        self.mixtapes_remaining = level * 12
+        self.mixtapes_remaining = 4 + (self.level * 3)
 
         #init sound effect
         if _audio_enabled:
             self.fire_sound = pygame.mixer.Sound(load_wav('superhot.wav'))
+
+    def levelup(self):
+        self.level += 1
+        self.mixtapes_remaining += 4 + (self.level * 2)
 
     def move_up(self):
         if self.y >= self.move_dist:
@@ -174,7 +181,7 @@ class player_obj(pygame.sprite.Sprite):
         for tape in self.mixtapes:
             for e in alive_enemies:
                 if tape.rect.colliderect(e.rect):
-                    e.on_fire = 5
+                    e.on_fire = 25
                     tape.consumed = True
                     hit_count += 1
         self.mixtapes = [m for m in self.mixtapes if not m.consumed]
@@ -222,7 +229,7 @@ def main():
     background.fill((250, 250, 250))
 
     # Initialize player
-    player = player_obj(0, _height - _player_height, 1)
+    player = player_obj(0, (_height - _player_height) / 2, 1)
 
     # Initialize sprites
     playersprite = pygame.sprite.RenderPlain((player))
@@ -238,7 +245,7 @@ def main():
     clock = pygame.time.Clock()
 
     # movement vars
-    enemy_timer = 1500
+    enemy_timer = 1200
     pygame.time.set_timer(USEREVENT+1, enemy_timer)
     moveup, upkey       = False, False
     movedown, downkey   = False, False
@@ -250,6 +257,9 @@ def main():
     level = 1
     hit_count = 0
     enemy_count = 0
+    current_enemy_count = 0
+    enemy_cap = 10
+    
 
     # controller vars
     enable_360 = True
@@ -286,12 +296,13 @@ def main():
                 taunt_enabled = True
 
             # joystick movement
+            joystick_threshhold = 0.15
             side_move   = xbox.get_axis(0)
-            moveright   = rightkey or side_move > 0.1
-            moveleft    = leftkey or side_move < -0.1
+            moveright   = rightkey or side_move > joystick_threshhold
+            moveleft    = leftkey or side_move < -joystick_threshhold
             vertical_move = xbox.get_axis(1)
-            moveup      = upkey or vertical_move < -0.1
-            movedown    = downkey or vertical_move > 0.1
+            moveup      = upkey or vertical_move < -joystick_threshhold
+            movedown    = downkey or vertical_move > joystick_threshhold
 
         # handle triggered events
         for event in pygame.event.get():
@@ -320,9 +331,12 @@ def main():
                 if event.key == K_LEFT:
                     moveleft, leftkey = False, False
             elif event.type == USEREVENT+1:
-                enemy = enemy_obj(_width, random.randrange(0,_height-_player_height,15))
-                haters.append(enemy)
-                enemy_count += 1
+                # enemy = enemy_obj(_width, random.randrange(0,_height-_player_height,15))
+                # haters.append(enemy)
+                difficulty_mult = (level / 3) + 1
+                for i in range(0, difficulty_mult):
+                    enemy = enemy_obj(_width, random.randrange(0,_height-_player_height,15))
+                    haters.append(enemy)
 
 
         player.move_up() if moveup else None
@@ -331,14 +345,29 @@ def main():
         player.move_left() if moveleft else None
         player.move_mixtapes()
 
-        haters = [h for h in haters if h.x > - _player_height]
+        pre_count = len(haters)
+        haters = [h for h in haters if h.x > - _player_height and h.on_fire != 0]
+        enemy_count += pre_count - len(haters)
+        current_enemy_count += pre_count - len(haters)
+
         for h in haters:
             h.move()
 
         hit_count += player.check_hits(haters)
+
         if player.check_collisions(haters):
             print "Collision"
             break
+
+        if current_enemy_count == enemy_cap:
+            current_enemy_count = 0
+            # enemy_cap += 3
+            level += 1
+            player.levelup()
+            if enemy_timer > 750:
+                enemy_timer -= int(enemy_timer * 0.15)
+                pygame.time.set_timer(USEREVENT+1, enemy_timer)
+
 
         # prepare screen to be re-drawn
         screen.blit(background, (0, 0))
