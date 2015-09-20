@@ -267,15 +267,12 @@ def main():
     enemy_count = 0
     current_enemy_count = 0
     enemy_cap = 10
-    
 
     # controller vars
     enable_360 = False
-    # enable_360 = False
     fire_enabled = True
     taunt_enabled = True
 
-    
     pygame.joystick.init()
     joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
     if len(joysticks) > 0:
@@ -349,7 +346,7 @@ def main():
                     enemy = enemy_obj(_width, random.randrange(0,_height-_player_height,15))
                     haters.append(enemy)
 
-
+        # do movement
         player.move_up() if moveup else None
         player.move_down() if movedown else None
         player.move_right() if moveright else None
@@ -370,6 +367,7 @@ def main():
             print "Collision"
             break
 
+        # scale difficulty
         if current_enemy_count == enemy_cap:
             current_enemy_count = 0
             # enemy_cap += 3
