@@ -117,6 +117,7 @@ class player_obj(pygame.sprite.Sprite):
         #init sound effect
         if _audio_enabled:
             self.fire_sound = pygame.mixer.Sound(load_wav('superhot.wav'))
+            self.not_rapper_sound = pygame.mixer.Sound(load_wav('ImNotARapper.wav'))
 
     def move_up(self):
         if self.y >= self.move_dist:
@@ -165,7 +166,8 @@ class player_obj(pygame.sprite.Sprite):
                 self.fire_sound.play(loops=0, maxtime=0) # "supa hot"
 
     def taunt(self):
-        # play taunt noise
+        if _audio_enabled:
+            self.not_rapper_sound.play(loops=0, maxtime=0) # "supa hot"
         print "Taunt"
 
     def check_hits(self, enemies):
@@ -201,14 +203,16 @@ def main():
         pygame.mixer.pre_init(frequency=22050, buffer=(2**20))
 
     pygame.init()
-    pygame.mixer.init()
+    if _audio_enabled:
+        pygame.mixer.init()
     pygame.event.set_blocked(pygame.MOUSEMOTION)
     pygame.event.set_blocked(pygame.MOUSEBUTTONUP)
     pygame.event.set_blocked(pygame.MOUSEBUTTONDOWN)
 
     #Background music
-    pygame.mixer.music.load(os.path.join('data', 'rickrosslow.ogg'))
-    pygame.mixer.music.play(-1)
+    if _audio_enabled:
+        pygame.mixer.music.load(os.path.join('data', 'rickrosslow.ogg'))
+        pygame.mixer.music.play(-1)
 
     # Initialise screen
     pygame.display.set_caption('StraightFire')
@@ -252,15 +256,18 @@ def main():
     enemy_count = 0
 
     # controller vars
-    enable_360 = True
+    enable_360 = False
     # enable_360 = False
     fire_enabled = True
     taunt_enabled = True
 
+    
     pygame.joystick.init()
     joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
-    xbox = joysticks[0]
-    xbox.init()
+    if len(joysticks) > 0:
+        xbox = joysticks[0]
+        xbox.init()
+        enable_360=True
 
 
     # Event loop
@@ -300,6 +307,8 @@ def main():
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     return
+                if event.key == K_t:
+                    player.taunt()
                 if event.key == K_UP:
                     moveup, upkey = True, True
                 if event.key == K_DOWN:
