@@ -1,7 +1,7 @@
 Political Battle
 
 made by:
+Ethan Schoen
 Derrreks
 harrisongerst
-EthanSchoen
 cullo7
