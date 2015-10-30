@@ -2,23 +2,12 @@ import pygame
 import sys
 
 
-def init_data():
-	'''
-	initializes all of the data
-	for the game like characters, etc.
-	'''
-	pass
-
 def main():
 	'''
 	runs the main game loop and
 	manages everything
 	'''
-	
-	#initialize the game data
-	init_data()
 
-	#initialize pygame
 	pygame.init()
 	screen = pygame.display.set_mode((500, 500))
 
@@ -30,5 +19,7 @@ def main():
 
 		pygame.display.update()
 		pygame.display.flip()
+
+
 if __name__ == "__main__":
 	main()
