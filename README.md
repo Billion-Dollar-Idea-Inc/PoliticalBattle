@@ -1,7 +1,7 @@
 Political Battle
 
 made by:
-Ethan Schoen
-Derrreks
-harrisongerst
-cullo7
+* Derek Schuster (Derrreks)
+* Ethan Schoen (EthanSchoen)
+* Harrison Gerstenlauer (harrisongerst)
+* Aiden Cullo (cullo7)
