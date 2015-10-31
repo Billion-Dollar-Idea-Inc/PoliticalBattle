@@ -1,7 +1,15 @@
+import crudder
+
 class Character(object):
-	def __init__(self, name):#variabel to intialize: health, party, attack, attack_description,
+	def __init__(self, name):
 		self.name = name
-		self.attacks = []
+		self.c = crudder.Crudder()
+		self.orig_health = c.get_health(name)
+		self.health = c.get_health(name)
+		self.party = c.get_party(name)
+		self.attacks = c.get_attacks(name)
+		self.attack_powers = c.get_attack_powers(name)
+		self.attack_descs = c.get_attack_descs(name)	
 
 	def add_attack(self, attack):
 		'''
@@ -19,6 +27,20 @@ class Character(object):
 			if attack not in attacks:
 				self.attacks.append(attack)
 
+	def add_health(self, amount):
+		'''increase health'''
+		self.health = self.health + amount
+
+	def dec_health(self, amount):
+		self.health = self.health - amount
+
+	def get_health(self):
+		'''return health'''
+		return self.health
+
+	def reset_health(self):
+		self.health = self.orig_health
+
 	def get_attacks(self):
 		'''returns list of attacks'''
 		return self.attacks
@@ -26,36 +48,28 @@ class Character(object):
 	def get_name(self):
 		'''returns name'''
 		return self.name
-	
-	def get_health(self):
-                 '''returns health'''
-                 return self.health
-
-	def add_health(self, boost):
-                 '''increases health'''
-                 self.health += boost
-
-	def lose_health(self, lose):
-                '''decreases health'''
-                self.health -= lose
 
 	def get_attack_description(self, attack):
-               '''retrieve description of attack'''
-                pass
+               '''returns description of attack'''
+                return self.attack_desc[attack]
+
+	def get_attack_power(self, attack):
+		'''returns power of attack'''
+		return self.attack_power[attack]
 
 	def get_party(self):
-               '''returns party affiliation'''
+               '''returns party affiliation, either REP or DEM'''
                return self.party
 
 	def get_random_attack(self):
-               '''return random attack'''
-                rand  = random.randint(0,len(attacks))
-		name = attack[rand]
-		power = dict[name]
-		toreturn = []
-		toreturn.append(name)
-		toreturn.append(power)
-		return toreturn 
+               	'''
+		returns random attack in an array
+		of side two with name and power
+		'''
+                rand = random.randint(0, len(attacks))
+		name = attacks[rand]
+		power = attack_powers[name]
+		return [name, power]
 
 	def get_picture(self):
                '''returns player picture'''

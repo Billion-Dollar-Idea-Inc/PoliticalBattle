@@ -7,4 +7,24 @@ in project github.com/Derrreks/CRUD
 '''
 class Crudder():
 	def __init__(self):
+		self.conn = sqlite3.connect("data.db")
+		self.conn.text_factory = str
+		self.c = self.conn.cursor()
+
+	def get_health(self, name):
+		pass
+
+	def get_attacks(self, name):
+		pass
+
+	def get_name(self, name):
+		pass
+
+	def get_attack_descs(self, name):
+		pass
+
+	def get_attack_powers(self, name):
+		pass
+
+	def get_party(self, name):
 		pass
