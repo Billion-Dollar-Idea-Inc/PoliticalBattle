@@ -17,9 +17,6 @@ class Crudder():
 	def get_attacks(self, name):
 		pass
 
-	def get_name(self, name):
-		pass
-
 	def get_attack_descs(self, name):
 		pass
 
@@ -27,4 +24,6 @@ class Crudder():
 		pass
 
 	def get_party(self, name):
-		pass
+		self.c.execute("SELECT party FROM people WHERE name = {_name}"\
+			.format(_name = name))
+		return self.c.fetchall()

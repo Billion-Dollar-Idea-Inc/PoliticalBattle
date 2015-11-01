@@ -50,8 +50,8 @@ class Character(object):
 		return self.name
 
 	def get_attack_description(self, attack):
-               '''returns description of attack'''
-                return self.attack_desc[attack]
+		desc = self.attack_descs[attack]
+                return desc
 
 	def get_attack_power(self, attack):
 		'''returns power of attack'''
