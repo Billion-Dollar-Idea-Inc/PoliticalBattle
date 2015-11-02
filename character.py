@@ -71,6 +71,14 @@ class Character(object):
 		power = attack_powers[name]
 		return [name, power]
 
+	def get_four_attacks(self):
+		'''
+		will return four random attacks from all
+		of this players attacks to be used in GameScreen in
+		main.py
+		'''
+		pass
+
 	def get_picture(self):
                '''returns player picture'''
                return self.image
