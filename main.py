@@ -31,11 +31,6 @@ class HomeScreen:
 				return True
 		return False
 
-<<<<<<< HEAD
-
-class CharacterScreen():
-	def __init__():
-=======
 class CharacterScreen():
 	def __init__(self):
 		self.font = pygame.font.SysFont("monospace", 15)
@@ -52,8 +47,6 @@ class CharacterScreen():
 		self.recth = 400
 		self.rectw = 200
 
-		
-	
 	def get_character_screen(self, screen):
 		screen.fill(self.background_color)
 		screen.blit(self.labelPlay, (self.labelPlayx, self.labelPlayy))
@@ -62,7 +55,6 @@ class CharacterScreen():
 		return screen
 
 	def get_play_choice(self):
->>>>>>> 954d81e36156d07137959e9176703a3a9708fc75
 		pass
 
 
@@ -129,13 +121,7 @@ def main():
 		if game_state == 1:
 		 	screen = hs.get_home_screen(screen)
 		elif game_state == 2:
-<<<<<<< HEAD
-		 	screen = cs.get_char_select_screen(screen)
-		elif game_state == 2:
-		    	pass
-=======
 		 	screen = cs.get_character_screen(screen)
->>>>>>> 954d81e36156d07137959e9176703a3a9708fc75
 		pygame.display.update()
 		pygame.display.flip()
 
