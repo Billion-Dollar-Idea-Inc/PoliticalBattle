@@ -44,6 +44,8 @@ class CharacterScreen():
 		self.rect_color = (0, 0, 100)
 		self.rectPlayx = 10
 		self.rectPlayy = 50
+		self.rectOppx = 280
+		self.rectOppy = 50
 		self.recth = 400
 		self.rectw = 200
 
@@ -52,12 +54,14 @@ class CharacterScreen():
 		screen.blit(self.labelPlay, (self.labelPlayx, self.labelPlayy))
 		screen.blit(self.labelOpp, (self.labelOppx, self.labelOppy))
 		pygame.draw.rect(screen, self.rect_color, pygame.Rect(self.rectPlayx, self.rectPlayy, self.rectw, self.recth))
+		pygame.draw.rect(screen, self.rect_color, pygame.Rect(self.rectOppx, self.rectOppy, self.rectw, self.recth))		
 		return screen
 
 	def get_play_choice(self):
 		pass
 
-
+	def back_to_home(self, screen):
+		pass
 class GameScreen():
 	def __init__(self):
 		self.font = pygame.font.SysFont("monospace", 30)
