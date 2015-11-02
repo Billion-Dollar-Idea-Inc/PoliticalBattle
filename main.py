@@ -69,11 +69,6 @@ class CharacterScreen():
 	def get_play_choice(self):
 		pass
 
-
-	'''these next two functions should check to see if the click is within
-	their respective buttons. use x = pos[0] to get x value and y = pos[1]
-	for the y value. return True or False. should be similar to function in
-	the class above'''
 	def is_in_start_button(self, pos):
 		xpos = pos[0]
 		ypos = pos[1]
@@ -81,7 +76,6 @@ class CharacterScreen():
 			if ypos > self.rectStarty and ypos < self.rectStarty+self.rectStarth:
 				return True
 		return False
-		pass
 
 	def is_in_back_button(self, pos):
 		xpos = pos[0]
@@ -90,8 +84,6 @@ class CharacterScreen():
 			if ypos > self.rectStarty and ypos < self.rectStarty+self.rectStarth:
 				return True
 		return False
-		pass
-		pass
 
 
 class GameScreen():
@@ -129,9 +121,9 @@ class GameScreen():
 			.format(opp = opponent))
 
 	def get_game_screen(self, screen):
-		screen.fill(self.background_color)
-		screen.blit(self.playimg, (playimgx, playimgy))
-		screen.blit(self.oppimg, (oppimgx, oppimgy))
+		screen.fill((255, 255, 255))
+		#screen.blit(self.playimg, (playimgx, playimgy))
+		#screen.blit(self.oppimg, (oppimgx, oppimgy))
 		pygame.draw.rect(screen, self.attboxc, pygame.Rect(self.attboxx, self.attboxy, self.attboxw, self.attboxh))
 		pygame.draw.rect(screen, self.opboxc, pygame.Rect(self.opboxx, self.opboxy, self.attboxw, self.attboxh))
 		for x in range(0, 4):
