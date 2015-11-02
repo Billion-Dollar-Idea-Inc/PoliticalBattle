@@ -14,7 +14,7 @@ class HomeScreen:
 		self.rectw = 300
 		self.recth = 100
 		self.rect_color = (100, 100, 100)
-		pass
+		
 
 	def get_home_screen(self, screen):
 		'''paints the home page to the screen'''
@@ -31,9 +31,38 @@ class HomeScreen:
 				return True
 		return False
 
+<<<<<<< HEAD
 
 class CharacterScreen():
 	def __init__():
+=======
+class CharacterScreen():
+	def __init__(self):
+		self.font = pygame.font.SysFont("monospace", 15)
+		self.labelPlay = self.font.render("Player", 1, (0, 0, 0))
+		self.labelPlayx = 75
+		self.labelPlayy = 20
+		self.labelOpp = self.font.render("Opponent", 1, (0, 0, 0))
+		self.labelOppx = 350
+		self.labelOppy = 20
+		self.background_color = (255, 255, 255)
+		self.rect_color = (0, 0, 100)
+		self.rectPlayx = 10
+		self.rectPlayy = 50
+		self.recth = 400
+		self.rectw = 200
+
+		
+	
+	def get_character_screen(self, screen):
+		screen.fill(self.background_color)
+		screen.blit(self.labelPlay, (self.labelPlayx, self.labelPlayy))
+		screen.blit(self.labelOpp, (self.labelOppx, self.labelOppy))
+		pygame.draw.rect(screen, self.rect_color, pygame.Rect(self.rectPlayx, self.rectPlayy, self.rectw, self.recth))
+		return screen
+
+	def get_play_choice(self):
+>>>>>>> 954d81e36156d07137959e9176703a3a9708fc75
 		pass
 
 
@@ -100,9 +129,13 @@ def main():
 		if game_state == 1:
 		 	screen = hs.get_home_screen(screen)
 		elif game_state == 2:
+<<<<<<< HEAD
 		 	screen = cs.get_char_select_screen(screen)
 		elif game_state == 2:
 		    	pass
+=======
+		 	screen = cs.get_character_screen(screen)
+>>>>>>> 954d81e36156d07137959e9176703a3a9708fc75
 		pygame.display.update()
 		pygame.display.flip()
 
