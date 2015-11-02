@@ -60,17 +60,34 @@ class CharacterScreen():
 	def get_play_choice(self):
 		pass
 
-	def back_to_home(self, screen):
+
+	'''these next two functions should check to see if the click is within
+	their respective buttons. use x = pos[0] to get x value and y = pos[1]
+	for the y value. return True or False. should be similar to function in
+	the class above'''
+	def is_in_start_button(self, pos):
 		pass
+
+	def is_in_back_button(self, pos):
+		pass
+
+
 class GameScreen():
 	def __init__(self):
 		self.font = pygame.font.SysFont("monospace", 30)
 		self.background_color = (255, 255, 255)
+		#box with the attacks
 		self.attboxx = 0
 		self.attboxy = 400
 		self.attboxh = 400
 		self.attboxw = 100
 		self.attboxc = (100, 100, 100)
+		#four boxes for the attacks
+		self.attboxesx = [0, 200, 0, 200]
+		self.attboxesy = [300, 300, 400, 400]
+		self.attboxesw = 200
+		self.attboxesh = 100
+		#box for the options box
 		self.opboxx = 400
 		self.opboxy = 400
 		self.opboxw = 100
@@ -82,9 +99,11 @@ class GameScreen():
 		self.oppimgy = 0
 	
 	def set_chars(self, player, opponent):
-		self.playimg = pygame.image.load("images/{play}"\
+		'''this function currently assumes that the images will be jpegs
+		   so we will probably need to change that'''
+		self.playimg = pygame.image.load("images/{play}.jpg"\
 			.format(play = player))
-		self.oppimg = pygame.images.load("images/{opp}"\
+		self.oppimg = pygame.images.load("images/{opp}.jpg"\
 			.format(opp = opponent))
 
 	def get_game_screen(self, screen):
@@ -93,6 +112,8 @@ class GameScreen():
 		screen.blit(self.oppimg, (oppimgx, oppimgy))
 		pygame.draw.rect(screen, self.attboxc, pygame.Rect(self.attboxx, self.attboxy, self.attboxw, self.attboxh))
 		pygame.draw.rect(screen, self.opboxc, pygame.Rect(self.opboxx, self.opboxy, self.attboxw, self.attboxh))
+		for x in range(0, 4):
+			pygame.draw.rect(screen, self.attboxc, pygame.Rect(self.attboxesx[x], self.attboxesy[x], self.attboxesw, self.attboxesh))
 
 
 def main():
@@ -106,6 +127,7 @@ def main():
 
 	hs = HomeScreen()
 	cs = CharacterScreen()
+	gs = GameScreen()
 
 	# -- this would need to be worked out --
 	#if 1, then were at the home screen
@@ -122,10 +144,17 @@ def main():
 				if game_state == 1:
 					if hs.is_in_start_button(pygame.mouse.get_pos()):
 						game_state = 2
+				if game_state == 2:
+				  	if cs.is_in_start_button(pygame.mouse.get_pos()):
+						game_state = 3
+					elif cs.is_in_back_button(pygame.moust.get_pos()):
+						game_state = 1
 		if game_state == 1:
 		 	screen = hs.get_home_screen(screen)
 		elif game_state == 2:
 		 	screen = cs.get_character_screen(screen)
+		elif game_state == 3:
+		    	screen = gs.get_game_screen(screen)
 		pygame.display.update()
 		pygame.display.flip()
 
