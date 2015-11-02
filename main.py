@@ -42,19 +42,28 @@ class CharacterScreen():
 		self.labelOppy = 20
 		self.background_color = (255, 255, 255)
 		self.rect_color = (0, 0, 100)
+		self.rect_color2 = (0, 100, 0)
+		self.rect_color3 = (100, 0, 0)
 		self.rectPlayx = 10
 		self.rectPlayy = 50
 		self.rectOppx = 280
 		self.rectOppy = 50
-		self.recth = 400
-		self.rectw = 200
+		self.rectStarth = 25
+		self.rectStartw = 100
+		self.rectStartx = 330
+		self.rectStarty = 460
+		self.rectBackx = 60
+		self.rectCharh = 400
+		self.rectCharw = 200
 
 	def get_character_screen(self, screen):
 		screen.fill(self.background_color)
 		screen.blit(self.labelPlay, (self.labelPlayx, self.labelPlayy))
 		screen.blit(self.labelOpp, (self.labelOppx, self.labelOppy))
-		pygame.draw.rect(screen, self.rect_color, pygame.Rect(self.rectPlayx, self.rectPlayy, self.rectw, self.recth))
-		pygame.draw.rect(screen, self.rect_color, pygame.Rect(self.rectOppx, self.rectOppy, self.rectw, self.recth))		
+		pygame.draw.rect(screen, self.rect_color, pygame.Rect(self.rectPlayx, self.rectPlayy, self.rectCharw, self.rectCharh))
+		pygame.draw.rect(screen, self.rect_color, pygame.Rect(self.rectOppx, self.rectOppy, self.rectCharw, self.rectCharh))		
+		pygame.draw.rect(screen, self.rect_color2, pygame.Rect(self.rectStartx, self.rectStarty, self.rectStartw, self.rectStarth))		
+		pygame.draw.rect(screen, self.rect_color3, pygame.Rect(self.rectBackx, self.rectStarty, self.rectStartw, self.rectStarth))		
 		return screen
 
 	def get_play_choice(self):
@@ -66,9 +75,22 @@ class CharacterScreen():
 	for the y value. return True or False. should be similar to function in
 	the class above'''
 	def is_in_start_button(self, pos):
+		xpos = pos[0]
+		ypos = pos[1]
+		if xpos > self.rectStartx and xpos < self.rectStartx+self.rectStartw:
+			if ypos > self.rectStarty and ypos < self.rectStarty+self.rectStarth:
+				return True
+		return False
 		pass
 
 	def is_in_back_button(self, pos):
+		xpos = pos[0]
+		ypos = pos[1]
+		if xpos > self.rectBackx and xpos < self.rectBackx+self.rectStartw:
+			if ypos > self.rectStarty and ypos < self.rectStarty+self.rectStarth:
+				return True
+		return False
+		pass
 		pass
 
 
