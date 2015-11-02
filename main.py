@@ -31,11 +31,44 @@ class HomeScreen:
 				return True
 		return False
 
-class CharacterSelect():
+
+class CharacterScreen():
 	def __init__():
 		pass
 
+
+class GameScreen():
+	def __init__(self):
+		self.font = pygame.font.SysFont("monospace", 30)
+		self.background_color = (255, 255, 255)
+		self.attboxx = 0
+		self.attboxy = 400
+		self.attboxh = 400
+		self.attboxw = 100
+		self.attboxc = (100, 100, 100)
+		self.opboxx = 400
+		self.opboxy = 400
+		self.opboxw = 100
+		self.opboxh = 100
+		self.opboxc = (200, 200, 200)
+		self.playimgx = 0
+		self.playimgy = 300
+		self.oppimgx = 400
+		self.oppimgy = 0
 	
+	def set_chars(self, player, opponent):
+		self.playimg = pygame.image.load("images/{play}"\
+			.format(play = player))
+		self.oppimg = pygame.images.load("images/{opp}"\
+			.format(opp = opponent))
+
+	def get_game_screen(self, screen):
+		screen.fill(self.background_color)
+		screen.blit(self.playimg, (playimgx, playimgy))
+		screen.blit(self.oppimg, (oppimgx, oppimgy))
+		pygame.draw.rect(screen, self.attboxc, pygame.Rect(self.attboxx, self.attboxy, self.attboxw, self.attboxh))
+		pygame.draw.rect(screen, self.opboxc, pygame.Rect(self.opboxx, self.opboxy, self.attboxw, self.attboxh))
+
 
 def main():
 	'''
@@ -47,11 +80,12 @@ def main():
 	screen = pygame.display.set_mode((500, 500))
 
 	hs = HomeScreen()
+	cs = CharacterScreen()
 
 	# -- this would need to be worked out --
 	#if 1, then were at the home screen
 	#if 2, were at character selection
-	#if 3, in the game?
+	#if 3, in the game
 	game_state = 1
 
 	while True:
@@ -67,6 +101,8 @@ def main():
 		 	screen = hs.get_home_screen(screen)
 		elif game_state == 2:
 		 	screen = cs.get_char_select_screen(screen)
+		elif game_state == 2:
+		    	pass
 		pygame.display.update()
 		pygame.display.flip()
 
