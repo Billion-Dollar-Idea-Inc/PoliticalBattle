@@ -147,7 +147,7 @@ def main():
 				if game_state == 2:
 				  	if cs.is_in_start_button(pygame.mouse.get_pos()):
 						game_state = 3
-					elif cs.is_in_back_button(pygame.moust.get_pos()):
+					elif cs.is_in_back_button(pygame.mouse.get_pos()):
 						game_state = 1
 		if game_state == 1:
 		 	screen = hs.get_home_screen(screen)
