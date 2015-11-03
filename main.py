@@ -55,8 +55,16 @@ class CharacterScreen():
 		self.rectBackx = 60
 		self.rectCharh = 400
 		self.rectCharw = 200
-
+		self.rectChoiceh = 80
+		self.rectChoicew = 160
+		self.rectPlayChoicex = 30
+		self.rectPlayChoicey = 60
+		self.rect_color4 = (0, 0, 0)
+		self.rectOppChoicex = 300
+	
 	def get_character_screen(self, screen):
+		self.loopInc = 0
+		self.rectPlayChoicey = 60
 		screen.fill(self.background_color)
 		screen.blit(self.labelPlay, (self.labelPlayx, self.labelPlayy))
 		screen.blit(self.labelOpp, (self.labelOppx, self.labelOppy))
@@ -64,6 +72,13 @@ class CharacterScreen():
 		pygame.draw.rect(screen, self.rect_color, pygame.Rect(self.rectOppx, self.rectOppy, self.rectCharw, self.rectCharh))		
 		pygame.draw.rect(screen, self.rect_color2, pygame.Rect(self.rectStartx, self.rectStarty, self.rectStartw, self.rectStarth))		
 		pygame.draw.rect(screen, self.rect_color3, pygame.Rect(self.rectBackx, self.rectStarty, self.rectStartw, self.rectStarth))		
+		#loop to create boxes for the character choices
+		while self.loopInc < 4:
+			pygame.draw.rect(screen, self.rect_color4, pygame.Rect(self.rectPlayChoicex, self.rectPlayChoicey, self.rectChoicew, self.rectChoiceh))
+			pygame.draw.rect(screen, self.rect_color4, pygame.Rect(self.rectOppChoicex, self.rectPlayChoicey, self.rectChoicew, self.rectChoiceh))
+			self.rectPlayChoicey = self.rectPlayChoicey + 90
+			self.loopInc = self.loopInc + 1	
+
 		return screen
 
 	def get_play_choice(self):
