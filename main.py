@@ -90,16 +90,12 @@ class CharacterScreen():
 		pygame.draw.rect(screen, self.rect_color, pygame.Rect(self.rectPlayx, self.rectPlayy, self.rectCharw, self.rectCharh))
 		pygame.draw.rect(screen, self.rect_color, pygame.Rect(self.rectOppx, self.rectOppy, self.rectCharw, self.rectCharh))		
 		pygame.draw.rect(screen, self.rect_color2, pygame.Rect(self.rectStartx, self.rectStarty, self.rectStartw, self.rectStarth))		
-<<<<<<< HEAD
 		pygame.draw.rect(screen, self.rect_color3, pygame.Rect(self.rectBackx, self.rectStarty, self.rectStartw, self.rectStarth))		
-	
-=======
 		pygame.draw.rect(screen, self.rect_color3, pygame.Rect(self.rectBackx, self.rectStarty, self.rectStartw, self.rectStarth))
 		screen.blit(self.labelPlay, (self.labelPlayx, self.labelPlayy))
 		screen.blit(self.labelStart, (self.labelStartx, self.labelBacky))
 		screen.blit(self.labelOpp, (self.labelOppx, self.labelOppy))
-		screen.blit(self.labelBack, (self.labelBackx, self.labelBacky))		
->>>>>>> 67f657ebe1288c4d90ce46a980e6abc46cc9c67c
+		screen.blit(self.labelBack, (self.labelBackx, self.labelBacky))
 		#loop to create boxes for the character choices
 		while self.loopInc < 4:
 			pygame.draw.rect(screen, self.rect_color4, pygame.Rect(self.rectPlayChoicex, self.rectPlayChoicey, self.rectChoicew, self.rectChoiceh))
