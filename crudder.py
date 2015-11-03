@@ -29,4 +29,9 @@ class Crudder():
 		return self.c.fetchall()
 
 	def get_num_chars_in_party(self, party):
-		pass
+		if party == "DEM" or party == "REP":
+			self.c.execute("SELECT COUNT(*) FROM people WHERE party = \"{_party}\""\
+				.format(_party = party))
+			fetch = self.c.fetchall()
+			fetch = fetch[0][0]
+			return int(fetch)

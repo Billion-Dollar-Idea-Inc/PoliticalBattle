@@ -50,37 +50,46 @@ class HomeScreen:
 class CharacterScreen():
 	def __init__(self):
 		self.font = pygame.font.SysFont("monospace", 15)
+		
 		self.labelPlay = self.font.render("Player", 1, (0, 0, 0))
 		self.labelPlayx = 75
 		self.labelPlayy = 20
+		
 		self.labelOpp = self.font.render("Opponent", 1, (0, 0, 0))
 		self.labelOppx = 350
 		self.labelOppy = 20
+		
 		self.labelBack = self.font.render("Back", 1, (255, 255, 255))
 		self.labelStart = self.font.render("Start", 1, (255, 255, 255))
-		self.labelBacky = 465
 		self.labelBackx = 90
 		self.labelStartx = 360
+		self.labelStartBacky = 465
+		
 		self.background_color = (255, 255, 255)
 		self.rect_color = (0, 0, 100)
 		self.rect_color2 = (0, 100, 0)
 		self.rect_color3 = (100, 0, 0)
+		self.rect_color4 = (0, 0, 0)
+		
 		self.rectPlayx = 10
 		self.rectPlayy = 50
 		self.rectOppx = 280
 		self.rectOppy = 50
+		
 		self.rectStarth = 25
 		self.rectStartw = 100
 		self.rectStartx = 330
 		self.rectStarty = 460
+		
 		self.rectBackx = 60
+		
 		self.rectCharh = 400
 		self.rectCharw = 200
+		
 		self.rectChoiceh = 80
 		self.rectChoicew = 160
 		self.rectPlayChoicex = 30
 		self.rectPlayChoicey = 60
-		self.rect_color4 = (0, 0, 0)
 		self.rectOppChoicex = 300
 	
 	def get_character_screen(self, screen):
@@ -93,19 +102,20 @@ class CharacterScreen():
 		pygame.draw.rect(screen, self.rect_color3, pygame.Rect(self.rectBackx, self.rectStarty, self.rectStartw, self.rectStarth))		
 		pygame.draw.rect(screen, self.rect_color3, pygame.Rect(self.rectBackx, self.rectStarty, self.rectStartw, self.rectStarth))
 		screen.blit(self.labelPlay, (self.labelPlayx, self.labelPlayy))
-		screen.blit(self.labelStart, (self.labelStartx, self.labelBacky))
+		screen.blit(self.labelStart, (self.labelStartx, self.labelStartBacky))
 		screen.blit(self.labelOpp, (self.labelOppx, self.labelOppy))
-		screen.blit(self.labelBack, (self.labelBackx, self.labelBacky))
-		#loop to create boxes for the character choices
-		while self.loopInc < 4:
-			pygame.draw.rect(screen, self.rect_color4, pygame.Rect(self.rectPlayChoicex, self.rectPlayChoicey, self.rectChoicew, self.rectChoiceh))
-			pygame.draw.rect(screen, self.rect_color4, pygame.Rect(self.rectOppChoicex, self.rectPlayChoicey, self.rectChoicew, self.rectChoiceh))
-			self.rectPlayChoicey = self.rectPlayChoicey + 90
-			self.loopInc = self.loopInc + 1	
+		screen.blit(self.labelBack, (self.labelBackx, self.labelStartBacky))
+		#TODO create boxes
 		return screen
 
-	def set_play_choice(self, party):
+	def set_party(self, party):
 		self.party = party
+		c = Crudder()
+		self.play_ops = c.get_num_choices_in_party(party)
+		if party = "DEM":
+			self.opp_ops = c.get_num_chars_in_party("REP")
+		else:
+			self.opp_ops = c.get_num_chars_in_party("DEM")
 
 	def is_in_start_button(self, pos):
 		xpos = pos[0]
