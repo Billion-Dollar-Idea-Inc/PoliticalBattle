@@ -1,33 +1,49 @@
 import pygame
 import sys
 
+import crudder
 
 class HomeScreen:
 	def __init__(self):
 		self.font = pygame.font.SysFont("monospace", 30)
-		self.label = self.font.render("Start", 1, (0, 0, 0))
+		self.labeldem = self.font.render("Democrat", 1, (0, 0, 0))
+		self.labelrep = self.font.render("Republican", 1, (0, 0, 0))
 		self.labelx = 150
 		self.labely = 250
 		self.background_color = (255, 255, 255)
-		self.rectx = 100
-		self.recty = 200
-		self.rectw = 300
-		self.recth = 100
+		self.demrectx = 100
+		self.demrecty = 200
+		self.demrectw = 300
+		self.demrecth = 100
 		self.rect_color = (100, 100, 100)
-		
+		self.reprectx = 100
+		self.reprecty = 350
+		self.reprectw = 300
+		self.reprecth = 100
+		self.is_dem = True
 
 	def get_home_screen(self, screen):
 		'''paints the home page to the screen'''
 		screen.fill(self.background_color)
-		pygame.draw.rect(screen, self.rect_color, pygame.Rect(self.rectx, self.recty, self.rectw, self.recth))
-		screen.blit(self.label, (self.labelx, self.labely))
+		pygame.draw.rect(screen, self.rect_color, pygame.Rect(self.demrectx, self.demrecty, self.demrectw, self.demrecth))
+		screen.blit(self.labeldem, (self.labelx, self.labely))
+		pygame.draw.rect(screen, self.rect_color, pygame.Rect(self.reprectx, self.reprecty, self.reprectw, self.reprecth))
+		screen.blit(self.labelrep, (self.labelx, self.labely+100))
 		return screen
 
-	def is_in_start_button(self, pos):
+	def is_in_dem_button(self, pos):
 		xpos = pos[0]
 		ypos = pos[1]
-		if xpos > self.rectx and xpos < self.rectx+self.rectw:
-			if ypos > self.recty and ypos < self.recty+self.recth:
+		if xpos > self.demrectx and xpos < self.demrectx+self.demrectw:
+			if ypos > self.demrecty and ypos < self.demrecty+self.demrecth:
+				return True
+		return False
+
+	def is_in_rep_button(self, pos):
+		xpos = pos[0]
+		ypos = pos[1]
+		if xpos > self.reprectx and xpos < self.reprectx+self.reprectw:
+			if ypos > self.reprecty and ypos < self.reprecty+self.reprecth:
 				return True
 		return False
 
@@ -72,17 +88,17 @@ class CharacterScreen():
 		pygame.draw.rect(screen, self.rect_color, pygame.Rect(self.rectOppx, self.rectOppy, self.rectCharw, self.rectCharh))		
 		pygame.draw.rect(screen, self.rect_color2, pygame.Rect(self.rectStartx, self.rectStarty, self.rectStartw, self.rectStarth))		
 		pygame.draw.rect(screen, self.rect_color3, pygame.Rect(self.rectBackx, self.rectStarty, self.rectStartw, self.rectStarth))		
+	
 		#loop to create boxes for the character choices
 		while self.loopInc < 4:
 			pygame.draw.rect(screen, self.rect_color4, pygame.Rect(self.rectPlayChoicex, self.rectPlayChoicey, self.rectChoicew, self.rectChoiceh))
 			pygame.draw.rect(screen, self.rect_color4, pygame.Rect(self.rectOppChoicex, self.rectPlayChoicey, self.rectChoicew, self.rectChoiceh))
 			self.rectPlayChoicey = self.rectPlayChoicey + 90
 			self.loopInc = self.loopInc + 1	
-
 		return screen
 
-	def get_play_choice(self):
-		pass
+	def set_play_choice(self, party):
+		self.party = party
 
 	def is_in_start_button(self, pos):
 		xpos = pos[0]
@@ -171,8 +187,12 @@ def main():
 				sys.exit()
 			if event.type == pygame.MOUSEBUTTONDOWN:
 				if game_state == 1:
-					if hs.is_in_start_button(pygame.mouse.get_pos()):
+					if hs.is_in_dem_button(pygame.mouse.get_pos()):
 						game_state = 2
+						cs.set_party("DEM")
+					if hs.is_in_rep_button(pygame.mouse.get_pos()):
+						game_state = 2
+						cs.set_party("REP")
 				if game_state == 2:
 				  	if cs.is_in_start_button(pygame.mouse.get_pos()):
 						game_state = 3

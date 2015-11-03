@@ -27,3 +27,6 @@ class Crudder():
 		self.c.execute("SELECT party FROM people WHERE name = {_name}"\
 			.format(_name = name))
 		return self.c.fetchall()
+
+	def get_num_chars_in_party(self, party):
+		pass
