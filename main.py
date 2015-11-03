@@ -51,41 +51,41 @@ class CharacterScreen():
 	def __init__(self):
 		self.font = pygame.font.SysFont("monospace", 15)
 		
+		#for layer above players char choice
 		self.labelPlay = self.font.render("Player", 1, (0, 0, 0))
 		self.labelPlayx = 75
 		self.labelPlayy = 20
-		
+		#for label above opps char choice
 		self.labelOpp = self.font.render("Opponent", 1, (0, 0, 0))
 		self.labelOppx = 350
 		self.labelOppy = 20
-		
+		#label and positions for start and back buttons
 		self.labelBack = self.font.render("Back", 1, (255, 255, 255))
 		self.labelStart = self.font.render("Start", 1, (255, 255, 255))
 		self.labelBackx = 90
 		self.labelStartx = 360
 		self.labelStartBacky = 465
-		
+		#background and rectangle coloring
 		self.background_color = (255, 255, 255)
 		self.rect_color = (0, 0, 100)
 		self.rect_color2 = (0, 100, 0)
 		self.rect_color3 = (100, 0, 0)
 		self.rect_color4 = (0, 0, 0)
-		
+		#rectangles where the choices will be listed
 		self.rectPlayx = 10
 		self.rectPlayy = 50
 		self.rectOppx = 280
 		self.rectOppy = 50
-		
+		#start and back button sizing/positioning
 		self.rectStarth = 25
 		self.rectStartw = 100
 		self.rectStartx = 330
 		self.rectStarty = 460
-		
 		self.rectBackx = 60
-		
+		#sizing of the choice list rects
 		self.rectCharh = 400
 		self.rectCharw = 200
-		
+		#sizing and positioning of player and opp choices
 		self.rectChoiceh = 80
 		self.rectChoicew = 160
 		self.rectPlayChoicex = 30
@@ -93,6 +93,7 @@ class CharacterScreen():
 		self.rectOppChoicex = 300
 	
 	def get_character_screen(self, screen):
+		'''paints char screen to window'''
 		self.loopInc = 0
 		self.rectPlayChoicey = 60
 		screen.fill(self.background_color)
