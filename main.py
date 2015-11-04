@@ -111,9 +111,9 @@ class CharacterScreen():
 
 	def set_party(self, party):
 		self.party = party
-		c = Crudder()
-		self.play_ops = c.get_num_choices_in_party(party)
-		if party = "DEM":
+		c = crudder.Crudder()
+		self.play_ops = c.get_num_chars_in_party(party)
+		if party == "DEM":
 			self.opp_ops = c.get_num_chars_in_party("REP")
 		else:
 			self.opp_ops = c.get_num_chars_in_party("DEM")
@@ -199,6 +199,8 @@ def main():
 	game_state = 1
 
 	while True:
+		if screen == None:
+			screen = pygame.display.set_mode((500, 500))
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				pygame.quit()
