@@ -2,8 +2,7 @@ import sqlite3
 
 '''
 Manages the interaction between the program
-and the database. Appended from crudder.py
-in project github.com/Derrreks/CRUD
+and the database suing SQLite3
 '''
 class Crudder():
 	def __init__(self):
@@ -12,7 +11,12 @@ class Crudder():
 		self.c = self.conn.cursor()
 
 	def get_health(self, name):
-		pass
+		sub = name[0:5]
+		self.c.execute("SELECT health FROM people WHERE name LIKE \"{subs}%\""\
+				.format(subs = sub))
+		health = self.c.fetchall()
+		health = health[0][0]
+		return health
 
 	def get_attacks(self, name):
 		pass
@@ -24,9 +28,12 @@ class Crudder():
 		pass
 
 	def get_party(self, name):
-		self.c.execute("SELECT party FROM people WHERE name = {_name}"\
-			.format(_name = name))
-		return self.c.fetchall()
+		sub = name[0:5]
+		self.c.execute("SELECT party FROM people WHERE name LIKE \"{subs}%\""\
+			.format(subs = sub))
+		party = self.c.fetchall()
+		party = party[0][0]
+		return party
 
 	def get_num_chars_in_party(self, party):
 		if party == "DEM" or party == "REP":
@@ -35,3 +42,5 @@ class Crudder():
 			fetch = self.c.fetchall()
 			fetch = fetch[0][0]
 			return int(fetch)
+		else:
+			return 0

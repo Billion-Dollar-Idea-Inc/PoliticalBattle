@@ -106,7 +106,6 @@ class CharacterScreen():
 		screen.blit(self.labelStart, (self.labelStartx, self.labelStartBacky))
 		screen.blit(self.labelOpp, (self.labelOppx, self.labelOppy))
 		screen.blit(self.labelBack, (self.labelBackx, self.labelStartBacky))
-		#TODO create boxes
 		return screen
 
 	def set_party(self, party):
@@ -117,6 +116,8 @@ class CharacterScreen():
 			self.opp_ops = c.get_num_chars_in_party("REP")
 		else:
 			self.opp_ops = c.get_num_chars_in_party("DEM")
+		#TODO
+		#SET UP BOXES FOR THE CHOICES
 
 	def is_in_start_button(self, pos):
 		xpos = pos[0]
@@ -138,46 +139,72 @@ class CharacterScreen():
 class GameScreen():
 	def __init__(self):
 		self.font = pygame.font.SysFont("monospace", 30)
-		self.background_color = (255, 255, 255)
-		#box with the attacks
-		self.attboxx = 0
-		self.attboxy = 400
-		self.attboxh = 400
-		self.attboxw = 100
-		self.attboxc = (100, 100, 100)
 		#four boxes for the attacks
 		self.attboxesx = [0, 200, 0, 200]
 		self.attboxesy = [300, 300, 400, 400]
 		self.attboxesw = 200
 		self.attboxesh = 100
 		#box for the options box
-		self.opboxx = 400
-		self.opboxy = 400
-		self.opboxw = 100
-		self.opboxh = 100
-		self.opboxc = (200, 200, 200)
+		self.exboxx = 400
+		self.exboxy = 400
+		self.exboxw = 100
+		self.exboxh = 100
+		self.exboxc = (200, 200, 200)
+		
 		self.playimgx = 0
 		self.playimgy = 300
 		self.oppimgx = 400
 		self.oppimgy = 0
 	
-	def set_chars(self, player, opponent):
+	def set_players(self, player, opponent):
+		self.set_images(player, opponent)
+		self.set_attacks(player)
+
+	def set_images(self, player, opponent):
 		'''this function currently assumes that the images will be jpegs
-		   so we will probably need to change that'''
+		   so we will probably need to change that and we'll also need to
+		   change it to reflect how the pictures are actually named'''
 		self.playimg = pygame.image.load("images/{play}.jpg"\
 			.format(play = player))
 		self.oppimg = pygame.images.load("images/{opp}.jpg"\
 			.format(opp = opponent))
 
+	def set_attacks(self, player):
+		self.c = crudder.Crudder()
+		attacks = c.get_attacks(player)
+
+	def is_attack(self, pos):
+		'''
+		with buttons in layout:  1    2
+					 3    4
+		return the number of the attack button which was clicked, 1-4,
+		or None if pos is not within any of them
+		'''
+		xpos = pos[0]
+		ypos = pos[1]
+		for x in range(0, 4):
+			if xpos > self.attboxesx[x] and xpos < self.attboxesx[x]+self.attboxesw:
+				if ypos > self.attboxesy[x] and ypos < self.attboxesy[x]+self.attboxesh:
+					return x
+		return None
+
+	def is_exit_button(self, pos):
+		xpos = pos[0]
+		ypos = pos[1]
+		if xpos > self.exboxx and xpos < self.exboxx + self.exboxw:
+			if ypos > self.exboxy and ypos < self.exboxy + self.exboxh:
+				return True
+		return False
+
 	def get_game_screen(self, screen):
 		screen.fill((255, 255, 255))
 		#screen.blit(self.playimg, (playimgx, playimgy))
 		#screen.blit(self.oppimg, (oppimgx, oppimgy))
-		pygame.draw.rect(screen, self.attboxc, pygame.Rect(self.attboxx, self.attboxy, self.attboxw, self.attboxh))
-		pygame.draw.rect(screen, self.opboxc, pygame.Rect(self.opboxx, self.opboxy, self.attboxw, self.attboxh))
+		pygame.draw.rect(screen, self.exboxc, pygame.Rect(self.exboxx, self.exboxy, self.exboxw, self.exboxh))
 		for x in range(0, 4):
-			pygame.draw.rect(screen, self.attboxc, pygame.Rect(self.attboxesx[x], self.attboxesy[x], self.attboxesw, self.attboxesh))
-
+			pygame.draw.rect(screen, (0, 50*(x), 50), pygame.Rect(self.attboxesx[x], self.attboxesy[x], self.attboxesw, self.attboxesh))
+		#print attack names to screen
+		return screen
 
 def main():
 	'''
@@ -199,8 +226,6 @@ def main():
 	game_state = 1
 
 	while True:
-		if screen == None:
-			screen = pygame.display.set_mode((500, 500))
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				pygame.quit()
@@ -213,10 +238,16 @@ def main():
 					if hs.is_in_rep_button(pygame.mouse.get_pos()):
 						game_state = 2
 						cs.set_party("REP")
-				if game_state == 2:
+				elif game_state == 2:
 				  	if cs.is_in_start_button(pygame.mouse.get_pos()):
 						game_state = 3
 					elif cs.is_in_back_button(pygame.mouse.get_pos()):
+						game_state = 1
+				elif game_state == 3:
+				  	if gs.is_attack(pygame.mouse.get_pos()) != None:
+				  		#they clicked an attack
+				  		pass
+					elif gs.is_exit_button(pygame.mouse.get_pos()):
 						game_state = 1
 		if game_state == 1:
 		 	screen = hs.get_home_screen(screen)
