@@ -101,11 +101,14 @@ class CharacterScreen():
 		pygame.draw.rect(screen, self.rect_color, pygame.Rect(self.rectOppx, self.rectOppy, self.rectCharw, self.rectCharh))		
 		pygame.draw.rect(screen, self.rect_color2, pygame.Rect(self.rectStartx, self.rectStarty, self.rectStartw, self.rectStarth))		
 		pygame.draw.rect(screen, self.rect_color3, pygame.Rect(self.rectBackx, self.rectStarty, self.rectStartw, self.rectStarth))		
-		pygame.draw.rect(screen, self.rect_color3, pygame.Rect(self.rectBackx, self.rectStarty, self.rectStartw, self.rectStarth))
 		screen.blit(self.labelPlay, (self.labelPlayx, self.labelPlayy))
 		screen.blit(self.labelStart, (self.labelStartx, self.labelStartBacky))
 		screen.blit(self.labelOpp, (self.labelOppx, self.labelOppy))
 		screen.blit(self.labelBack, (self.labelBackx, self.labelStartBacky))
+		for x in range(0, self.play_ops):
+			pygame.draw.rect(screen, (10*x, 10*x, 10*x), pygame.Rect(self.rectPlayx, self.rectPlayy+(x*self.playh), self.optionw, self.playh))
+		for x in range(0, self.opp_ops):
+			pygame.draw.rect(screen, (20*x, 20*x, 20*x), pygame.Rect(self.rectOppx, self.rectOppy+(x*self.opph), self.optionw, self.opph))
 		return screen
 
 	def set_party(self, party):
@@ -116,8 +119,10 @@ class CharacterScreen():
 			self.opp_ops = c.get_num_chars_in_party("REP")
 		else:
 			self.opp_ops = c.get_num_chars_in_party("DEM")
-		#TODO
-		#SET UP BOXES FOR THE CHOICES
+		self.optionw = self.rectCharw
+		total = self.rectCharh
+		self.playh = total/self.play_ops
+		self.opph = total/self.opp_ops
 
 	def is_in_start_button(self, pos):
 		xpos = pos[0]
