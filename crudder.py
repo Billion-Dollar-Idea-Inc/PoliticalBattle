@@ -44,3 +44,6 @@ class Crudder():
 			return int(fetch)
 		else:
 			return 0
+
+	def get_chars_in_party(self, party):
+		pass

@@ -3,6 +3,22 @@ import sys
 
 import crudder
 
+'''
+TODO:
+
+Character screen:
+-put the labels on the buttons for each of the names,
+	there is a method in crudder where you can get
+	the names
+-make a way to light up the last selected box
+-make a way to return which character got clicked
+
+Game scree:
+-use the pictures to actually paint the characters on
+-use the methods in crudder/character to get the attacks
+	and print those onto the boxes
+'''
+
 class HomeScreen:
 	def __init__(self):
 		self.font = pygame.font.SysFont("monospace", 30)
