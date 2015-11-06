@@ -140,6 +140,22 @@ class CharacterScreen():
 				return True
 		return False
 
+	def get_character(self, pos):
+		xpos = pos[0]
+		ypos = pos[1]
+		for x in range(0, self.play_ops):
+			if xpos > self.rectPlayx and xpos < self.rectPlayx+self.optionw:
+				if ypos > self.rectPlayy+(x*self.playh) and ypos < self.rectPlayy+(x*self.playh)+self.playh:
+					print x
+					return x
+	    
+	   	for x in range(0, self.opp_ops):
+	    		if xpos > self.rectOppx and xpos < self.rectOppx+self.optionw:
+	    			if ypos > self.rectOppy+(x*self.opph) and ypos < self.rectOppy+(x*self.opph)+self.opph:
+	    				print x
+	    				return x
+	    	print 0
+	    	return 0
 
 class GameScreen():
 	def __init__(self):
@@ -248,6 +264,8 @@ def main():
 						game_state = 3
 					elif cs.is_in_back_button(pygame.mouse.get_pos()):
 						game_state = 1
+					else:
+						cs.get_character(pygame.mouse.get_pos())
 				elif game_state == 3:
 				  	if gs.is_attack(pygame.mouse.get_pos()) != None:
 				  		#they clicked an attack
