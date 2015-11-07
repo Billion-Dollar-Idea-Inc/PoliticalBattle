@@ -68,11 +68,11 @@ class CharacterScreen():
 		self.font = pygame.font.SysFont("monospace", 15)
 		
 		#for layer above players char choice
-		self.labelPlay = self.font.render("Player", 1, (0, 0, 0))
+		self.labelPlay = self.font.render("Player", 1, (255, 255, 255))
 		self.labelPlayx = 75
 		self.labelPlayy = 20
 		#for label above opps char choice
-		self.labelOpp = self.font.render("Opponent", 1, (0, 0, 0))
+		self.labelOpp = self.font.render("Opponent", 1, (255, 255, 255))
 		self.labelOppx = 350
 		self.labelOppy = 20
 		#label and positions for start and back buttons
