@@ -46,4 +46,10 @@ class Crudder():
 			return 0
 
 	def get_chars_in_party(self, party):
-		pass
+		self.c.execute("SELECT name FROM people WHERE party = \"{_party}\""\
+			.format(_party = party))
+		fetch = self.c.fetchall()
+		names = []
+		for arr in fetch:
+			names.append(arr[0])
+		return names
