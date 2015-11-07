@@ -10,10 +10,9 @@ Character screen:
 -put the labels on the buttons for each of the names,
 	there is a method in crudder where you can get
 	the names
--make a way to light up the last selected box
 -make a way to return which character got clicked
 
-Game scree:
+Game screen:
 -use the pictures to actually paint the characters on
 -use the methods in crudder/character to get the attacks
 	and print those onto the boxes
@@ -37,6 +36,7 @@ class HomeScreen:
 		self.reprectw = 300
 		self.reprecth = 100
 		self.is_dem = True
+		
 
 	def get_home_screen(self, screen):
 		'''paints the home page to the screen'''
@@ -82,7 +82,7 @@ class CharacterScreen():
 		self.labelStartx = 360
 		self.labelStartBacky = 465
 		#background and rectangle coloring
-		self.background_color = (255, 255, 255)
+		self.background_color = (50, 50, 0)
 		self.rect_color = (0, 0, 100)
 		self.rect_color2 = (0, 100, 0)
 		self.rect_color3 = (100, 0, 0)
@@ -107,14 +107,15 @@ class CharacterScreen():
 		self.rectPlayChoicex = 30
 		self.rectPlayChoicey = 60
 		self.rectOppChoicex = 300
+		#sets the choice boxes variable
+		self.PlayChoice = 0
+		self.OppChoice = 0
 	
 	def get_character_screen(self, screen):
 		'''paints char screen to window'''
 		self.loopInc = 0
 		self.rectPlayChoicey = 60
 		screen.fill(self.background_color)
-		pygame.draw.rect(screen, self.rect_color, pygame.Rect(self.rectPlayx, self.rectPlayy, self.rectCharw, self.rectCharh))
-		pygame.draw.rect(screen, self.rect_color, pygame.Rect(self.rectOppx, self.rectOppy, self.rectCharw, self.rectCharh))		
 		pygame.draw.rect(screen, self.rect_color2, pygame.Rect(self.rectStartx, self.rectStarty, self.rectStartw, self.rectStarth))		
 		pygame.draw.rect(screen, self.rect_color3, pygame.Rect(self.rectBackx, self.rectStarty, self.rectStartw, self.rectStarth))		
 		screen.blit(self.labelPlay, (self.labelPlayx, self.labelPlayy))
@@ -122,9 +123,15 @@ class CharacterScreen():
 		screen.blit(self.labelOpp, (self.labelOppx, self.labelOppy))
 		screen.blit(self.labelBack, (self.labelBackx, self.labelStartBacky))
 		for x in range(0, self.play_ops):
-			pygame.draw.rect(screen, (10*x, 10*x, 10*x), pygame.Rect(self.rectPlayx, self.rectPlayy+(x*self.playh), self.optionw, self.playh))
+			if x == self.PlayChoice:
+				pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(self.rectPlayx, self.rectPlayy+(x*self.playh), self.optionw, self.playh))
+			else:
+				pygame.draw.rect(screen, (10*x, 10*x, 10*x), pygame.Rect(self.rectPlayx, self.rectPlayy+(x*self.playh), self.optionw, self.playh))
 		for x in range(0, self.opp_ops):
-			pygame.draw.rect(screen, (20*x, 20*x, 20*x), pygame.Rect(self.rectOppx, self.rectOppy+(x*self.opph), self.optionw, self.opph))
+			if x == self.OppChoice:
+				pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(self.rectOppx, self.rectOppy+(x*self.opph), self.optionw, self.opph))
+			else:
+				pygame.draw.rect(screen, (20*x, 20*x, 20*x), pygame.Rect(self.rectOppx, self.rectOppy+(x*self.opph), self.optionw, self.opph))
 		return screen
 
 	def set_party(self, party):
@@ -156,19 +163,21 @@ class CharacterScreen():
 				return True
 		return False
 
-	def get_character(self, pos):
+	def set_character(self, pos):
 		xpos = pos[0]
 		ypos = pos[1]
 		for x in range(0, self.play_ops):
 			if xpos > self.rectPlayx and xpos < self.rectPlayx+self.optionw:
 				if ypos > self.rectPlayy+(x*self.playh) and ypos < self.rectPlayy+(x*self.playh)+self.playh:
 					print x
+					self.PlayChoice = x
 					return x
 	    
 	   	for x in range(0, self.opp_ops):
 	    		if xpos > self.rectOppx and xpos < self.rectOppx+self.optionw:
 	    			if ypos > self.rectOppy+(x*self.opph) and ypos < self.rectOppy+(x*self.opph)+self.opph:
 	    				print x
+	    				self.OppChoice = x
 	    				return x
 	    	print 0
 	    	return 0
@@ -281,7 +290,7 @@ def main():
 					elif cs.is_in_back_button(pygame.mouse.get_pos()):
 						game_state = 1
 					else:
-						cs.get_character(pygame.mouse.get_pos())
+						cs.set_character(pygame.mouse.get_pos())
 				elif game_state == 3:
 				  	if gs.is_attack(pygame.mouse.get_pos()) != None:
 				  		#they clicked an attack
