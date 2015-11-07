@@ -169,18 +169,12 @@ class CharacterScreen():
 		for x in range(0, self.play_ops):
 			if xpos > self.rectPlayx and xpos < self.rectPlayx+self.optionw:
 				if ypos > self.rectPlayy+(x*self.playh) and ypos < self.rectPlayy+(x*self.playh)+self.playh:
-					print x
 					self.PlaySelect = x
-					return x
 	    
 	   	for x in range(0, self.opp_ops):
 	    		if xpos > self.rectOppx and xpos < self.rectOppx+self.optionw:
 	    			if ypos > self.rectOppy+(x*self.opph) and ypos < self.rectOppy+(x*self.opph)+self.opph:
-	    				print x
 	    				self.OppSelect = x
-	    				return x
-	    	print 0
-	    	return 0
 
 class GameScreen():
 	def __init__(self):
@@ -202,9 +196,9 @@ class GameScreen():
 		self.oppimgx = 400
 		self.oppimgy = 0
 	
-	def set_players(self, player, opponent):
-		self.set_images(player, opponent)
-		self.set_attacks(player)
+	def set_players(self, players):
+		self.set_images(players[0], players[1])
+		self.set_attacks(players[0])
 
 	def set_images(self, player, opponent):
 		'''this function currently assumes that the images will be jpegs
