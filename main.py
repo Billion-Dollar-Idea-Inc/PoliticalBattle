@@ -107,8 +107,8 @@ class CharacterScreen():
 		self.rectPlayChoicey = 60
 		self.rectOppChoicex = 300
 		#sets the choice boxes variable
-		self.PlayChoice = 0
-		self.OppChoice = 0
+		self.PlaySelect = 0
+		self.OppSelect = 0
 	
 	def get_character_screen(self, screen):
 		'''paints char screen to window'''
@@ -122,12 +122,12 @@ class CharacterScreen():
 		screen.blit(self.labelOpp, (self.labelOppx, self.labelOppy))
 		screen.blit(self.labelBack, (self.labelBackx, self.labelStartBacky))
 		for x in range(0, self.play_ops):
-			if x == self.PlayChoice:
+			if x == self.PlaySelect:
 				pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(self.rectPlayx, self.rectPlayy+(x*self.playh), self.optionw, self.playh))
 			else:
 				pygame.draw.rect(screen, (10*x, 10*x, 10*x), pygame.Rect(self.rectPlayx, self.rectPlayy+(x*self.playh), self.optionw, self.playh))
 		for x in range(0, self.opp_ops):
-			if x == self.OppChoice:
+			if x == self.OppSelect:
 				pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(self.rectOppx, self.rectOppy+(x*self.opph), self.optionw, self.opph))
 			else:
 				pygame.draw.rect(screen, (20*x, 20*x, 20*x), pygame.Rect(self.rectOppx, self.rectOppy+(x*self.opph), self.optionw, self.opph))
@@ -168,11 +168,18 @@ class CharacterScreen():
 		for x in range(0, self.play_ops):
 			if xpos > self.rectPlayx and xpos < self.rectPlayx+self.optionw:
 				if ypos > self.rectPlayy+(x*self.playh) and ypos < self.rectPlayy+(x*self.playh)+self.playh:
+<<<<<<< HEAD
 					self.PlayChoice = x
+=======
+					print x
+					self.PlaySelect = x
+					return x
+>>>>>>> 2d556feee19d7a8f03e1238759b5f8c60194b70c
 	    
 	   	for x in range(0, self.opp_ops):
 	    		if xpos > self.rectOppx and xpos < self.rectOppx+self.optionw:
 	    			if ypos > self.rectOppy+(x*self.opph) and ypos < self.rectOppy+(x*self.opph)+self.opph:
+<<<<<<< HEAD
 	    				self.OppChoice = x
 
 	def get_characters(self):
@@ -180,6 +187,13 @@ class CharacterScreen():
 		ret.append(self.PlayChoice)
 		ret.append(self.OppChoice)
 		return ret
+=======
+	    				print x
+	    				self.OppSelect = x
+	    				return x
+	    	print 0
+	    	return 0
+>>>>>>> 2d556feee19d7a8f03e1238759b5f8c60194b70c
 
 class GameScreen():
 	def __init__(self):
