@@ -23,8 +23,8 @@ class HomeScreen:
 		self.font = pygame.font.SysFont("monospace", 30)
 		self.labeldem = self.font.render("Democrat", 1, (0, 0, 0))
 		self.labelrep = self.font.render("Republican", 1, (0, 0, 0))
-		self.labelx = 150
-		self.labely = 250
+		self.labelx = 160
+		self.labely = 235
 		self.background_color = (255, 255, 255)
 		self.demrectx = 100
 		self.demrecty = 200
@@ -42,9 +42,9 @@ class HomeScreen:
 		'''paints the home page to the screen'''
 		screen.fill(self.background_color)
 		pygame.draw.rect(screen, self.rect_color, pygame.Rect(self.demrectx, self.demrecty, self.demrectw, self.demrecth))
-		screen.blit(self.labeldem, (self.labelx, self.labely))
+		screen.blit(self.labeldem, (self.labelx + 20, self.labely))
 		pygame.draw.rect(screen, self.rect_color, pygame.Rect(self.reprectx, self.reprecty, self.reprectw, self.reprecth))
-		screen.blit(self.labelrep, (self.labelx, self.labely+100))
+		screen.blit(self.labelrep, (self.labelx, self.labely+140))
 		return screen
 
 	def is_in_dem_button(self, pos):
@@ -82,7 +82,7 @@ class CharacterScreen():
 		self.labelStartx = 360
 		self.labelStartBacky = 465
 		#background and rectangle coloring
-		self.background_color = (50, 50, 0)
+		self.background_color = (0, 0, 0)
 		self.rect_color = (0, 0, 100)
 		self.rect_color2 = (0, 100, 0)
 		self.rect_color3 = (100, 0, 0)
@@ -110,6 +110,8 @@ class CharacterScreen():
 		#sets the choice boxes variable
 		self.PlaySelect = 0
 		self.OppSelect = 0
+
+                name = self.font.render("Regan", 1, (0, 0, 0))
 	
 	def get_character_screen(self, screen):
 		'''paints char screen to window'''
@@ -126,12 +128,20 @@ class CharacterScreen():
 			if x == self.PlaySelect:
 				pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(self.rectPlayx, self.rectPlayy+(x*self.playh), self.optionw, self.playh))
 			else:
-				pygame.draw.rect(screen, (10*x, 10*x, 10*x), pygame.Rect(self.rectPlayx, self.rectPlayy+(x*self.playh), self.optionw, self.playh))
+                                if self.party == "DEM":
+				    pygame.draw.rect(screen, (0, 0, 255/(x + 1)), pygame.Rect(self.rectPlayx, self.rectPlayy+(x*self.playh), self.optionw, self.playh))
+                                else:
+				    pygame.draw.rect(screen, (255/(x + 1), 0, 0), pygame.Rect(self.rectPlayx, self.rectPlayy+(x*self.playh), self.optionw, self.playh))
+
 		for x in range(0, self.opp_ops):
 			if x == self.OppSelect:
 				pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(self.rectOppx, self.rectOppy+(x*self.opph), self.optionw, self.opph))
 			else:
-				pygame.draw.rect(screen, (20*x, 20*x, 20*x), pygame.Rect(self.rectOppx, self.rectOppy+(x*self.opph), self.optionw, self.opph))
+                                if self.party != "DEM":
+				    pygame.draw.rect(screen, (0, 0, 255/(x + 1)), pygame.Rect(self.rectOppx, self.rectOppy+(x*self.opph), self.optionw, self.opph))
+                                else:
+				    pygame.draw.rect(screen, (255/(x + 1), 0, 0), pygame.Rect(self.rectOppx, self.rectOppy+(x*self.opph), self.optionw, self.opph))
+
 		return screen
 
 	def set_party(self, party):
@@ -196,6 +206,10 @@ class GameScreen():
 		self.oppimgx = 400
 		self.oppimgy = 0
 	
+                #labels
+		self.eLabel = self.font.render("Exit", 1, (0, 0, 0))
+                self.eLabelX = 410
+                self.eLabelY = 440
 	def set_players(self, players):
 		self.set_images(players[0], players[1])
 		self.set_attacks(players[0])
@@ -241,6 +255,7 @@ class GameScreen():
 		#screen.blit(self.playimg, (playimgx, playimgy))
 		#screen.blit(self.oppimg, (oppimgx, oppimgy))
 		pygame.draw.rect(screen, self.exboxc, pygame.Rect(self.exboxx, self.exboxy, self.exboxw, self.exboxh))
+		screen.blit(self.eLabel, (self.eLabelX, self.eLabelY))
 		for x in range(0, 4):
 			pygame.draw.rect(screen, (0, 50*(x), 50), pygame.Rect(self.attboxesx[x], self.attboxesy[x], self.attboxesw, self.attboxesh))
 		#print attack names to screen
