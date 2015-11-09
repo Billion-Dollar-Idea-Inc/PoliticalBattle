@@ -4,12 +4,12 @@ class Character(object):
 	def __init__(self, name):
 		self.name = name
 		self.c = crudder.Crudder()
-		self.orig_health = c.get_health(name)
-		self.health = c.get_health(name)
-		self.party = c.get_party(name)
-		self.attacks = c.get_attacks(name)
-		self.attack_powers = c.get_attack_powers(name)
-		self.attack_descs = c.get_attack_descs(name)	
+		self.orig_health = self.c.get_health(name)
+		self.health = self.c.get_health(name)
+		self.party = self.c.get_party(name)
+		self.attacks = self.c.get_attacks(name)
+		self.attack_powers = self.c.get_attack_powers(name)
+		self.attack_descs = self.c.get_attack_descs(name)	
 
 	def add_attack(self, attack):
 		'''
