@@ -67,6 +67,8 @@ class CharacterScreen():
 	def __init__(self):
 		self.font = pygame.font.SysFont("monospace", 15)
 		
+                self.crud = crudder.Crudder()
+
 		#for layer above players char choice
 		self.labelPlay = self.font.render("Player", 1, (255, 255, 255))
 		self.labelPlayx = 75
@@ -82,7 +84,7 @@ class CharacterScreen():
 		self.labelStartx = 360
 		self.labelStartBacky = 465
 		#background and rectangle coloring
-		self.background_color = (0, 0, 0)
+		self.background_color = (100, 100, 100)
 		self.rect_color = (0, 0, 100)
 		self.rect_color2 = (0, 100, 0)
 		self.rect_color3 = (100, 0, 0)
@@ -111,8 +113,6 @@ class CharacterScreen():
 		self.PlaySelect = 0
 		self.OppSelect = 0
 
-                name = self.font.render("Regan", 1, (0, 0, 0))
-	
 	def get_character_screen(self, screen):
 		'''paints char screen to window'''
 		self.loopInc = 0
@@ -124,23 +124,42 @@ class CharacterScreen():
 		screen.blit(self.labelStart, (self.labelStartx, self.labelStartBacky))
 		screen.blit(self.labelOpp, (self.labelOppx, self.labelOppy))
 		screen.blit(self.labelBack, (self.labelBackx, self.labelStartBacky))
+                
+                if self.party == "DEM":
+                    self.nameList = self.crud.get_chars_in_party("DEM")
+                else:
+                    self.nameList = self.crud.get_chars_in_party("REP")
+
 		for x in range(0, self.play_ops):
 			if x == self.PlaySelect:
 				pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(self.rectPlayx, self.rectPlayy+(x*self.playh), self.optionw, self.playh))
+                                self.nColor = (0, 0, 0)
 			else:
+                                self.nColor = (255, 255, 255)
                                 if self.party == "DEM":
-				    pygame.draw.rect(screen, (0, 0, 255/(x + 1)), pygame.Rect(self.rectPlayx, self.rectPlayy+(x*self.playh), self.optionw, self.playh))
+				    pygame.draw.rect(screen, (0, 0, 255 - (x * 30)), pygame.Rect(self.rectPlayx, self.rectPlayy+(x*self.playh), self.optionw, self.playh))
                                 else:
-				    pygame.draw.rect(screen, (255/(x + 1), 0, 0), pygame.Rect(self.rectPlayx, self.rectPlayy+(x*self.playh), self.optionw, self.playh))
+				    pygame.draw.rect(screen, (255 - (x * 30), 0, 0), pygame.Rect(self.rectPlayx, self.rectPlayy+(x*self.playh), self.optionw, self.playh))
+                        self.name = self.font.render(self.nameList[x], 1, self.nColor)
+                        screen.blit(self.name, (self.rectPlayx + 10, self.rectPlayy + (x*self.playh) + self.playh/2 - 10))
+
+                if self.party == "DEM":
+                    self.nameList = self.crud.get_chars_in_party("REP")
+                else:
+                    self.nameList = self.crud.get_chars_in_party("DEM")
 
 		for x in range(0, self.opp_ops):
 			if x == self.OppSelect:
 				pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(self.rectOppx, self.rectOppy+(x*self.opph), self.optionw, self.opph))
+                                self.nColor = (0, 0, 0)
 			else:
+                                self.nColor = (255, 255, 255)
                                 if self.party != "DEM":
-				    pygame.draw.rect(screen, (0, 0, 255/(x + 1)), pygame.Rect(self.rectOppx, self.rectOppy+(x*self.opph), self.optionw, self.opph))
+				    pygame.draw.rect(screen, (0, 0, 255-(x * 30)), pygame.Rect(self.rectOppx, self.rectOppy+(x*self.opph), self.optionw, self.opph))
                                 else:
-				    pygame.draw.rect(screen, (255/(x + 1), 0, 0), pygame.Rect(self.rectOppx, self.rectOppy+(x*self.opph), self.optionw, self.opph))
+				    pygame.draw.rect(screen, (255 - (x * 30), 0, 0), pygame.Rect(self.rectOppx, self.rectOppy+(x*self.opph), self.optionw, self.opph))
+                        self.name = self.font.render(self.nameList[x], 1, self.nColor)
+                        screen.blit(self.name, (self.rectOppx + 10, self.rectOppy + (x*self.opph) + self.opph/2 - 10))
 
 		return screen
 
