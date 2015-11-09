@@ -216,8 +216,15 @@ class CharacterScreen():
             Returns current selected Characters for player and oppenet,
             returned as a 2 item list with player in idex 0, opponent in 1
             '''
-            print (self.PlaySelect, self.OppSelect)
-            return (self.PlaySelect, self.OppSelect)
+            repOptions = self.crud.get_chars_in_party("REP")
+            demOptions = self.crud.get_chars_in_party("DEM")
+            
+            if self.party == "DEM":
+                # print demOptions[self.PlaySelect], " ", repOptions[self.OppSelect]
+                return (demOptions[self.PlaySelect], repOptions[self.OppSelect])
+            if self.party == "REP":
+                # print repOptions[self.PlaySelect], " ", demOptions[self.OppSelect]
+                return (repOptions[self.PlaySelect], demOptions[self.OppSelect])
 
 class GameScreen():
 	def __init__(self):
@@ -249,8 +256,8 @@ class GameScreen():
             self.player = character.Character(names[0]) 
             self.opponent = character.Character(names[1])
 
-	    self.set_images(player.get_picture(), opponent.get_picture) # get_picture unfinished
-	    self.set_attacks(player.get_four_attacks()) # get_four_attacks unfinished
+	    # self.set_images(self.player.get_picture(), self.opponent.get_picture) # get_picture unfinished
+	    # self.set_attacks(self.player.get_four_attacks()) # get_four_attacks unfinished
 
 	def set_images(self, player, opponent):
 		'''this function currently assumes that the images will be jpegs
@@ -334,7 +341,8 @@ def main():
 				elif game_state == 2:
 				  	if cs.is_in_start_button(pygame.mouse.get_pos()):
 						game_state = 3
-                                                # gs.set_players(cs.get_chars_to_battle())
+                                                #blah = cs.get_chars_to_battle()
+                                                gs.set_players(cs.get_chars_to_battle())
                                                 # TODO Get this to work
 					elif cs.is_in_back_button(pygame.mouse.get_pos()):
 						game_state = 1
