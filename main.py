@@ -20,17 +20,21 @@ Game screen:
 
 class HomeScreen:
 	def __init__(self):
+		self.font = pygame.font.SysFont("monospace", 50)
+		self.labeltitle1 = self.font.render("Political", 1, (0, 0, 0))
+		self.labeltitle2 = self.font.render("Battle", 1, (0, 0, 0))
 		self.font = pygame.font.SysFont("monospace", 30)
 		self.labeldem = self.font.render("Democrat", 1, (0, 0, 0))
 		self.labelrep = self.font.render("Republican", 1, (0, 0, 0))
 		self.labelx = 160
 		self.labely = 235
 		self.background_color = (255, 255, 255)
+		self.dem_color = (0, 0, 255)
 		self.demrectx = 100
 		self.demrecty = 200
 		self.demrectw = 300
 		self.demrecth = 100
-		self.rect_color = (100, 100, 100)
+		self.rep_color = (255, 0, 0)
 		self.reprectx = 100
 		self.reprecty = 350
 		self.reprectw = 300
@@ -41,9 +45,11 @@ class HomeScreen:
 	def get_home_screen(self, screen):
 		'''paints the home page to the screen'''
 		screen.fill(self.background_color)
-		pygame.draw.rect(screen, self.rect_color, pygame.Rect(self.demrectx, self.demrecty, self.demrectw, self.demrecth))
+		screen.blit(self.labeltitle1, (100, 50))
+		screen.blit(self.labeltitle2, (175, 100))
+		pygame.draw.rect(screen, self.dem_color, pygame.Rect(self.demrectx, self.demrecty, self.demrectw, self.demrecth))
 		screen.blit(self.labeldem, (self.labelx + 20, self.labely))
-		pygame.draw.rect(screen, self.rect_color, pygame.Rect(self.reprectx, self.reprecty, self.reprectw, self.reprecth))
+		pygame.draw.rect(screen, self.rep_color, pygame.Rect(self.reprectx, self.reprecty, self.reprectw, self.reprecth))
 		screen.blit(self.labelrep, (self.labelx, self.labely+140))
 		return screen
 
