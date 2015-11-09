@@ -205,6 +205,13 @@ class CharacterScreen():
 	    			if ypos > self.rectOppy+(x*self.opph) and ypos < self.rectOppy+(x*self.opph)+self.opph:
 	    				self.OppSelect = x
 
+        def get_chars_to_battle(self):
+            '''
+            Returns current selected Characters for player and oppenet,
+            returned as a 2 item list with player in idex 0, opponent in 1
+            '''
+            return (self.PlaySelect, self.OppSelect)
+
 class GameScreen():
 	def __init__(self):
 		self.font = pygame.font.SysFont("monospace", 30)
@@ -229,9 +236,14 @@ class GameScreen():
 		self.eLabel = self.font.render("Exit", 1, (0, 0, 0))
                 self.eLabelX = 410
                 self.eLabelY = 440
-	def set_players(self, players):
-		self.set_images(players[0], players[1])
-		self.set_attacks(players[0])
+
+	def set_players(self, names):
+            ''' sets player and opponent for GameScreen to use and draw variables from'''
+                self.player = character.Character(names[0]) 
+                self.opponent = character.Character(names[1])
+
+		self.set_images(player.get_picture(), opponent.get_picture) # get_picture unfinished
+		self.set_attacks(player.get_four_attacks()) # get_four_attacks unfinished
 
 	def set_images(self, player, opponent):
 		'''this function currently assumes that the images will be jpegs
@@ -315,6 +327,8 @@ def main():
 				elif game_state == 2:
 				  	if cs.is_in_start_button(pygame.mouse.get_pos()):
 						game_state = 3
+                                                gs.set_players(cs.get_chars_to_battle())
+
 					elif cs.is_in_back_button(pygame.mouse.get_pos()):
 						game_state = 1
 					else:
