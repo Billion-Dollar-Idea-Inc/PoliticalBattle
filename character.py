@@ -9,7 +9,7 @@ class Character(object):
 		self.party = self.c.get_party(name)
 		self.attacks = self.c.get_attacks(name)
 		self.attack_powers = self.c.get_attack_powers(name)
-		self.attack_descs = self.c.get_attack_descs(name)	
+		self.attack_descs = self.c.get_attack_descs(name)
 
 	def add_attack(self, attack):
 		'''
@@ -79,6 +79,9 @@ class Character(object):
 		'''
 		pass
 
-	def get_picture(self):
-               '''returns player picture'''
-               return self.image
+	def get_picture_name(self, direction):
+                '''returns player picture'''
+                fileName = self.name[self.name.find(" ",0) + 1:]
+                fileName = fileName + "_" + direction + ".jpg"
+                fileName = fileName.lower()
+                return fileName

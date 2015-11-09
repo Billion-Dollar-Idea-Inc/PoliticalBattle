@@ -263,10 +263,9 @@ class GameScreen():
 		'''this function currently assumes that the images will be jpegs
 		   so we will probably need to change that and we'll also need to
 		   change it to reflect how the pictures are actually named'''
-		self.playimg = pygame.image.load("images/{play}.jpg"\
-			.format(play = player))
-		self.oppimg = pygame.images.load("images/{opp}.jpg"\
-			.format(opp = opponent))
+
+		self.playimg = pygame.image.load("characters/" + self.player.get_picture_name("left"))
+		self.oppimg = pygame.image.load("characters/" + self.opponent.get_picture_name("right"))
 
 	def set_attacks(self, player):
 		self.c = crudder.Crudder()
@@ -297,13 +296,12 @@ class GameScreen():
 
 	def get_game_screen(self, screen):
 		screen.fill((255, 255, 255))
-		#screen.blit(self.playimg, (playimgx, playimgy))
-		#screen.blit(self.oppimg, (oppimgx, oppimgy))
 		pygame.draw.rect(screen, self.exboxc, pygame.Rect(self.exboxx, self.exboxy, self.exboxw, self.exboxh))
 		screen.blit(self.eLabel, (self.eLabelX, self.eLabelY))
+                screen.blit(self.playimg, (0,0)) # display image for player
+                screen.blit(self.oppimg, (100,0)) # display image for opponent
 		for x in range(0, 4):
 			pygame.draw.rect(screen, (0, 50*(x), 50), pygame.Rect(self.attboxesx[x], self.attboxesy[x], self.attboxesw, self.attboxesh))
-		#print attack names to screen
 		return screen
 
 def main():
@@ -341,9 +339,8 @@ def main():
 				elif game_state == 2:
 				  	if cs.is_in_start_button(pygame.mouse.get_pos()):
 						game_state = 3
-                                                #blah = cs.get_chars_to_battle()
                                                 gs.set_players(cs.get_chars_to_battle())
-                                                # TODO Get this to work
+                                                gs.set_images(gs.player,gs.opponent)
 					elif cs.is_in_back_button(pygame.mouse.get_pos()):
 						game_state = 1
 					else:
