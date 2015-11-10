@@ -252,9 +252,13 @@ class GameScreen():
                 self.eLabelY = self.exboxy + self.exboxh/2 - 15
 
 	def set_players(self, names):
-            ''' sets player and opponent for GameScreen to use and draw variables from'''
-            self.player = character.Character(names[0]) 
-            self.opponent = character.Character(names[1])
+            	''' sets player and opponent for GameScreen to use and draw variables from'''
+	    	self.player = character.Character(names[0])
+	    	if self.player.get_party() == "DEM":
+			self.attboxesc = [(0, 0, 125), (0, 0, 250), (0, 0, 250), (0, 0, 125)]
+		else:
+		     	self.attboxesc = [(125, 0, 0), (250, 0, 0), (250, 0, 0), (125, 0, 0)]
+            	self.opponent = character.Character(names[1])
 
 	    # self.set_images(self.player.get_picture(), self.opponent.get_picture) # get_picture unfinished
 	    # self.set_attacks(self.player.get_four_attacks()) # get_four_attacks unfinished
@@ -305,7 +309,7 @@ class GameScreen():
 		for x in range(0, 4):
                         fontSize = 20
                         afont = pygame.font.SysFont("monospace", fontSize)
-			pygame.draw.rect(screen, (0, 50*(x), 50), pygame.Rect(self.attboxesx[x], self.attboxesy[x], self.attboxesw, self.attboxesh))
+			pygame.draw.rect(screen, self.attboxesc[x], pygame.Rect(self.attboxesx[x], self.attboxesy[x], self.attboxesw, self.attboxesh))
                         att = self.attacks[x]
                         label = afont.render(att , 1, (255, 255, 255))
                         screen.blit(label, (self.attboxesx[x] + fontSize, self.attboxesy[x] + self.attboxesh/2 - fontSize/2))
