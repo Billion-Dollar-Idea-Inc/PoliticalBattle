@@ -241,9 +241,9 @@ class GameScreen():
 		self.exboxh = 100
 		self.exboxc = (200, 200, 200)
 		
-		self.playimgx = 0
-		self.playimgy = 300
-		self.oppimgx = 400
+		self.playimgx = 400
+		self.playimgy = 200
+		self.oppimgx = 0
 		self.oppimgy = 0
 	
                 #labels
@@ -265,7 +265,9 @@ class GameScreen():
 		   change it to reflect how the pictures are actually named'''
 
 		self.playimg = pygame.image.load("characters/" + self.player.get_picture_name("left"))
+		self.playimg = pygame.transform.scale(self.playimg, (100, 100))
 		self.oppimg = pygame.image.load("characters/" + self.opponent.get_picture_name("right"))
+		self.oppimg = pygame.transform.scale(self.oppimg, (100, 100))
 
 	def set_attacks(self, player):
 		self.c = crudder.Crudder()
@@ -298,8 +300,8 @@ class GameScreen():
 		screen.fill((255, 255, 255))
 		pygame.draw.rect(screen, self.exboxc, pygame.Rect(self.exboxx, self.exboxy, self.exboxw, self.exboxh))
 		screen.blit(self.eLabel, (self.eLabelX, self.eLabelY))
-                screen.blit(self.playimg, (0,0)) # display image for player
-                screen.blit(self.oppimg, (100,0)) # display image for opponent
+                screen.blit(self.playimg, (self.playimgx, self.playimgy)) # display image for player
+                screen.blit(self.oppimg, (self.oppimgx, self.oppimgy)) # display image for opponent
 		for x in range(0, 4):
 			pygame.draw.rect(screen, (0, 50*(x), 50), pygame.Rect(self.attboxesx[x], self.attboxesy[x], self.attboxesw, self.attboxesh))
 		return screen
