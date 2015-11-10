@@ -19,10 +19,11 @@ class Crudder():
 		return health
 
 	def get_attacks(self, name):
-		pass
+		'''return list of attack names in order'''
+                return ("insult 1", "insult 2", "insult 3", "insult 4") # for testing
 
 	def get_attack_descs(self, name):
-		pass
+                return ("fuck you 1", "fuck you 2", "fuck you 3", "fuck you 4") # for testing
 
 	def get_attack_powers(self, name):
 		pass

@@ -241,15 +241,15 @@ class GameScreen():
 		self.exboxh = 100
 		self.exboxc = (200, 200, 200)
 		
-		self.playimgx = 400
+		self.playimgx = 0
 		self.playimgy = 200
-		self.oppimgx = 0
+		self.oppimgx = 400
 		self.oppimgy = 0
 	
                 #labels
 		self.eLabel = self.font.render("Exit", 1, (0, 0, 0))
-                self.eLabelX = 410
-                self.eLabelY = 440
+                self.eLabelX = self.exboxx + 15
+                self.eLabelY = self.exboxy + self.exboxh/2 - 15
 
 	def set_players(self, names):
             ''' sets player and opponent for GameScreen to use and draw variables from'''
@@ -270,8 +270,8 @@ class GameScreen():
 		self.oppimg = pygame.transform.scale(self.oppimg, (100, 100))
 
 	def set_attacks(self, player):
-		self.c = crudder.Crudder()
-		attacks = c.get_attacks(player)
+		c = crudder.Crudder()
+		self.attacks = c.get_attacks(player)
 
 	def is_attack(self, pos):
 		'''
@@ -303,7 +303,12 @@ class GameScreen():
                 screen.blit(self.playimg, (self.playimgx, self.playimgy)) # display image for player
                 screen.blit(self.oppimg, (self.oppimgx, self.oppimgy)) # display image for opponent
 		for x in range(0, 4):
+                        fontSize = 20
+                        afont = pygame.font.SysFont("monospace", fontSize)
 			pygame.draw.rect(screen, (0, 50*(x), 50), pygame.Rect(self.attboxesx[x], self.attboxesy[x], self.attboxesw, self.attboxesh))
+                        att = self.attacks[x]
+                        label = afont.render(att , 1, (255, 255, 255))
+                        screen.blit(label, (self.attboxesx[x] + fontSize, self.attboxesy[x] + self.attboxesh/2 - fontSize/2))
 		return screen
 
 def main():
@@ -343,6 +348,7 @@ def main():
 						game_state = 3
                                                 gs.set_players(cs.get_chars_to_battle())
                                                 gs.set_images(gs.player,gs.opponent)
+                                                gs.set_attacks(gs.player)
 					elif cs.is_in_back_button(pygame.mouse.get_pos()):
 						game_state = 1
 					else:
