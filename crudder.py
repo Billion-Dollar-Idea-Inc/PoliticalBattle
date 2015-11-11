@@ -26,6 +26,7 @@ class Crudder():
                 return ("fuck you 1", "fuck you 2", "fuck you 3", "fuck you 4") # for testing
 
 	def get_attack_powers(self, name):
+		#should return a dictionary of attacks with their powers
 		pass
 
 	def get_party(self, name):

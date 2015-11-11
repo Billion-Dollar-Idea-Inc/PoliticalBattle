@@ -6,16 +6,11 @@ import crudder
 '''
 TODO:
 
-Character screen:
--put the labels on the buttons for each of the names,
-	there is a method in crudder where you can get
-	the names
--make a way to return which character got clicked
-
-Game screen:
--use the pictures to actually paint the characters on
--use the methods in crudder/character to get the attacks
-	and print those onto the boxes
+GameScreen:
+paint on health bars
+put on actual attacks
+make attack animation appear
+actual gameplay
 '''
 
 class HomeScreen:
