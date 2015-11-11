@@ -299,7 +299,22 @@ class GameScreen():
 		#attack is the number of the box for the attack that was clicked
 		#use it to make attacks
 		#the basic game loop can basically be run from this function
-		pass
+                display_attack(attack)
+
+        def display_attack(self, screen, insult, isPlayer):
+                '''Function needs screen to work, takes string that is the insult 
+                and true or false for isPlayer and displays in a speach bubble'''
+                x = 100
+                y = 100
+                w = 300
+                h = 100
+                pygame.draw.ellipse(screen, (200, 200, 200), (x, y, w, h), 0)
+                insultL = pygame.font.SysFont("monospace", 10).render(insult, 1, (0, 0, 0))
+                if isPlayer:
+                    pygame.draw.polygon(screen, (200, 200, 200), [(self.playimgx + 80, self.playimgy + 20), (x + 25, y + h/2 - 2), (x + w/3 + 50, y + h/2 - 2), (self.playimgx + 80, self.playimgy + 20)], 0)
+                else:
+                    pygame.draw.polygon(screen, (200, 200, 200), [(self.oppimgx + 20, self.oppimgy + 80), (x + w - 25, y + h/2 -2), (x + 2*w/3 - 50, y + h/2 -2), (self.oppimgx + 20, self.oppimgy + 80)], 0)
+                screen.blit(insultL, (x + 20, y + h/2 - 5))
 
 	def get_game_screen(self, screen):
 		screen.fill((255, 255, 255))
@@ -314,6 +329,7 @@ class GameScreen():
                         att = self.attacks[x]
                         label = afont.render(att , 1, (255, 255, 255))
                         screen.blit(label, (self.attboxesx[x] + fontSize, self.attboxesy[x] + self.attboxesh/2 - fontSize/2))
+                self.display_attack(screen, "MC JAGGER SWAGGER", False)
 		return screen
 
 def main():
