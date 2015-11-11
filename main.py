@@ -277,7 +277,7 @@ class GameScreen():
 		c = crudder.Crudder()
 		self.attacks = c.get_attacks(player)
 
-	def is_attack(self, pos):
+	def get_attack(self, pos):
 		'''
 		with buttons in layout:  1    2
 					 3    4
@@ -301,6 +301,9 @@ class GameScreen():
 		return False
 
 	def attack(self, attack):
+		#attack is the number of the box for the attack that was clicked
+		#use it to make attacks
+		#the basic game loop can basically be run from this function
 		pass
 
 	def get_game_screen(self, screen):
@@ -361,8 +364,8 @@ def main():
 					else:
 						cs.set_character(pygame.mouse.get_pos())
 				elif game_state == 3:
-				  	if gs.is_attack(pygame.mouse.get_pos()) != None:
-				  		gs.attack(pygame.mouse.get_pos())
+				  	if gs.get_attack(pygame.mouse.get_pos()) != None:
+				  		gs.attack(gs.get_attack(pygame.mouse.get_pos()))
 					elif gs.is_exit_button(pygame.mouse.get_pos()):
 						game_state = 1
 		if game_state == 1:
