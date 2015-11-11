@@ -300,6 +300,9 @@ class GameScreen():
 				return True
 		return False
 
+	def attack(self, attack):
+		pass
+
 	def get_game_screen(self, screen):
 		screen.fill((255, 255, 255))
 		pygame.draw.rect(screen, self.exboxc, pygame.Rect(self.exboxx, self.exboxy, self.exboxw, self.exboxh))
@@ -359,8 +362,7 @@ def main():
 						cs.set_character(pygame.mouse.get_pos())
 				elif game_state == 3:
 				  	if gs.is_attack(pygame.mouse.get_pos()) != None:
-				  		#they clicked an attack
-				  		pass
+				  		gs.attack(pygame.mouse.get_pos())
 					elif gs.is_exit_button(pygame.mouse.get_pos()):
 						game_state = 1
 		if game_state == 1:
