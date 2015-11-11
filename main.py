@@ -268,9 +268,9 @@ class GameScreen():
 		   so we will probably need to change that and we'll also need to
 		   change it to reflect how the pictures are actually named'''
 
-		self.playimg = pygame.image.load("characters/" + self.player.get_picture_name("left"))
+		self.playimg = pygame.image.load("characters/" + self.player.get_picture_name("right"))
 		self.playimg = pygame.transform.scale(self.playimg, (100, 100))
-		self.oppimg = pygame.image.load("characters/" + self.opponent.get_picture_name("right"))
+		self.oppimg = pygame.image.load("characters/" + self.opponent.get_picture_name("left"))
 		self.oppimg = pygame.transform.scale(self.oppimg, (100, 100))
 
 	def set_attacks(self, player):
