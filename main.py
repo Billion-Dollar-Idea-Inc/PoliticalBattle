@@ -245,6 +245,8 @@ class GameScreen():
 		self.eLabel = self.font.render("Exit", 1, (0, 0, 0))
                 self.eLabelX = self.exboxx + 15
                 self.eLabelY = self.exboxy + self.exboxh/2 - 15
+	
+		self.show_attack = False
 
 	def set_players(self, names):
             	''' sets player and opponent for GameScreen to use and draw variables from'''
@@ -299,7 +301,7 @@ class GameScreen():
 		#attack is the number of the box for the attack that was clicked
 		#use it to make attacks
 		#the basic game loop can basically be run from this function
-                display_attack(attack)
+                self.show_attack = True
 
         def display_attack(self, screen, insult, isPlayer):
                 '''Function needs screen to work, takes string that is the insult 
@@ -329,7 +331,8 @@ class GameScreen():
                         att = self.attacks[x]
                         label = afont.render(att , 1, (255, 255, 255))
                         screen.blit(label, (self.attboxesx[x] + fontSize, self.attboxesy[x] + self.attboxesh/2 - fontSize/2))
-                self.display_attack(screen, "MC JAGGER SWAGGER", False)
+		if self.show_attack:
+			self.display_attack(screen, "hi", True)
 		return screen
 
 def main():
