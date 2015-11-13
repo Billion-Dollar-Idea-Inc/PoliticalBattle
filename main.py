@@ -332,7 +332,7 @@ class GameScreen():
                         label = afont.render(att , 1, (255, 255, 255))
                         screen.blit(label, (self.attboxesx[x] + fontSize, self.attboxesy[x] + self.attboxesh/2 - fontSize/2))
 		if self.show_attack:
-			self.display_attack(screen, "hi", True)
+			self.display_attack(screen, "hi" , True)
 		return screen
 
 def main():
