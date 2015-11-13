@@ -293,6 +293,26 @@ class GameScreen():
 					return x
 		return None
 
+	def display_health(self, screen):
+		self.PlayerHealthBarY = 284
+		self.PlayerHealthBarX = 100
+		self.healthBarW = 15
+		self.healthBarH = 100
+		self.healthBarOutlineW = 15
+		self.healthBarOutlineH = 100
+		self.PlayerHealthBarOutlineY = 284
+		self.PlayerHealthBarOutlineX = 100
+		self.OppHealthBarOutlineY = 0
+		self.OppHealthBarOutlineX = 300
+		self.OppHealthBarY = 0
+		self.OppHealthBarX = 300
+		#paints red bar underneath healthbar to indicate lost health
+		pygame.draw.rect(screen, (200, 0, 0,), pygame.Rect(self.PlayerHealthBarOutlineX, self.PlayerHealthBarY, self.healthBarOutlineH, self.healthBarOutlineW))
+		pygame.draw.rect(screen, (200, 0, 0,), pygame.Rect(self.OppHealthBarOutlineX, self.OppHealthBarY, self.healthBarOutlineH, self.healthBarOutlineW))
+		#paints the actual healthbar
+		pygame.draw.rect(screen, (0, 200, 0), pygame.Rect(self.PlayerHealthBarX, self.PlayerHealthBarY, self.healthBarH, self.healthBarW))
+		pygame.draw.rect(screen, (0, 200, 0), pygame.Rect(self.OppHealthBarX, self.OppHealthBarY, self.healthBarH, self.healthBarW))
+
 	def is_exit_button(self, pos):
 		xpos = pos[0]
 		ypos = pos[1]
@@ -363,6 +383,7 @@ class GameScreen():
                         screen.blit(label, (self.attboxesx[x] + fontSize, self.attboxesy[x] + self.attboxesh/2 - fontSize/2))
 		if self.show_attack:
 			self.display_attack(screen, self.currentAttack , True)
+		self.display_health(screen)
 		return screen
 
 def main():
