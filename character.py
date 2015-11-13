@@ -74,6 +74,8 @@ class Character(object):
 	def get_picture_name(self, direction):
                 '''returns player picture'''
                 fileName = self.name[self.name.find(" ",0) + 1:]
+                #if self.name.find("'",0)>self.name.find(" ",0):
+                	#fileName = self.name[self.name.find("'",0)+1:]
                 fileName = fileName + "_" + direction + ".jpg"
                 fileName = fileName.lower()
                 return fileName
