@@ -21,6 +21,7 @@ class Crudder():
 
 	def get_attacks(self, name):
 		'''return list of attack names in order'''
+		print name
 		sub = name[0:5]
 		self.c.execute("SELECT attack FROM attacks WHERE name LIKE \"{subs}%\""\
 				.format(subs = sub))
@@ -78,3 +79,5 @@ class Crudder():
 		for arr in fetch:
 			names.append(arr[0])
 		return names
+
+

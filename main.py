@@ -272,7 +272,7 @@ class GameScreen():
 
 	def set_attacks(self, player):
 		c = crudder.Crudder()
-		self.attacks = c.get_attacks(player)
+		self.attacks = c.get_attacks(player.get_name())
 
 	def get_attack(self, pos):
 		'''
