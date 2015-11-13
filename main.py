@@ -35,7 +35,7 @@ class HomeScreen:
 		self.reprectw = 300
 		self.reprecth = 100
 		self.is_dem = True
-		
+
 
 	def get_home_screen(self, screen):
 		'''paints the home page to the screen'''
@@ -67,7 +67,7 @@ class HomeScreen:
 class CharacterScreen():
 	def __init__(self):
 		self.font = pygame.font.SysFont("monospace", 15)
-		
+
                 self.crud = crudder.Crudder()
 
 		#for layer above players char choice
@@ -119,13 +119,13 @@ class CharacterScreen():
 		self.loopInc = 0
 		self.rectPlayChoicey = 60
 		screen.fill(self.background_color)
-		pygame.draw.rect(screen, self.rect_color2, pygame.Rect(self.rectStartx, self.rectStarty, self.rectStartw, self.rectStarth))		
-		pygame.draw.rect(screen, self.rect_color3, pygame.Rect(self.rectBackx, self.rectStarty, self.rectStartw, self.rectStarth))		
+		pygame.draw.rect(screen, self.rect_color2, pygame.Rect(self.rectStartx, self.rectStarty, self.rectStartw, self.rectStarth))
+		pygame.draw.rect(screen, self.rect_color3, pygame.Rect(self.rectBackx, self.rectStarty, self.rectStartw, self.rectStarth))
 		screen.blit(self.labelPlay, (self.labelPlayx, self.labelPlayy))
 		screen.blit(self.labelStart, (self.labelStartx, self.labelStartBacky))
 		screen.blit(self.labelOpp, (self.labelOppx, self.labelOppy))
 		screen.blit(self.labelBack, (self.labelBackx, self.labelStartBacky))
-                
+
                 if self.party == "DEM":
                     self.nameList = self.crud.get_chars_in_party("DEM")
                 else:
@@ -200,7 +200,7 @@ class CharacterScreen():
 			if xpos > self.rectPlayx and xpos < self.rectPlayx+self.optionw:
 				if ypos > self.rectPlayy+(x*self.playh) and ypos < self.rectPlayy+(x*self.playh)+self.playh:
 					self.PlaySelect = x
-	    
+
 	   	for x in range(0, self.opp_ops):
 	    		if xpos > self.rectOppx and xpos < self.rectOppx+self.optionw:
 	    			if ypos > self.rectOppy+(x*self.opph) and ypos < self.rectOppy+(x*self.opph)+self.opph:
@@ -213,7 +213,7 @@ class CharacterScreen():
             '''
             repOptions = self.crud.get_chars_in_party("REP")
             demOptions = self.crud.get_chars_in_party("DEM")
-            
+
             if self.party == "DEM":
                 # print demOptions[self.PlaySelect], " ", repOptions[self.OppSelect]
                 return (demOptions[self.PlaySelect], repOptions[self.OppSelect])
@@ -235,17 +235,17 @@ class GameScreen():
 		self.exboxw = 100
 		self.exboxh = 100
 		self.exboxc = (200, 200, 200)
-		
+
 		self.playimgx = 0
 		self.playimgy = 200
 		self.oppimgx = 400
 		self.oppimgy = 0
-	
+
                 #labels
 		self.eLabel = self.font.render("Exit", 1, (0, 0, 0))
                 self.eLabelX = self.exboxx + 15
                 self.eLabelY = self.exboxy + self.exboxh/2 - 15
-	
+
 		self.show_attack = False
 
 	def set_players(self, names):
@@ -277,7 +277,7 @@ class GameScreen():
 	def set_descriptions(self, player):
 		c = crudder.Crudder()
 		self.descs = c.get_attack_descs(player.get_name())
-	
+
 	def get_attack(self, pos):
 		'''
 		with buttons in layout:  1    2
@@ -301,16 +301,38 @@ class GameScreen():
 				return True
 		return False
 
+	#TODO
 	def attack(self, attack):
-		'''takes in position of mouse and chooses attack description to be displayed'''
-		#attack is the number of the box for the attack that was clicked
-		#use it to make attacks
-		#the basic game loop can basically be run from this function
                 self.currentAttack = self.descs[attack];#sets attack selected description to speaking bubble
                 self.show_attack = True
+		#decrement health from opponent
+		#wait
+		#remove player's attack and show opponents
+		#decrement health from player
+		#wait
+		#then let player choose
+
+	def render_text(self, screen, font, text, pos, color):
+		'''using the parameters, draws rectangle to the screen with the
+		   given text formatted to be multilined inside
+		   color = color of box
+		   pos = position of box (x, y)
+		   rest is self explantory'''
+		lines = text.splitlines()  #splits lines into a list by \n's
+		width = 0
+		height = 0
+		for l in lines:   #determine total height of box maybe?  not sure this loop is mostly magic from internet
+			width = max(width, font.size(l)[0])
+			height += font.get_linesize()
+		height = 0
+		for l in lines:       #create the different lines and print each to the screen    
+			t = font.render(l, 0, color, (0, 0, 0))
+			screen.blit(t, (0, height))
+			height += font.get_linesize()
+		return screen        #might not be necessary idk didn't feel like testing without it
 
         def display_attack(self, screen, insult, isPlayer):
-                '''Function needs screen to work, takes string that is the insult 
+                '''Function needs screen to work, takes string that is the insult
                 and true or false for isPlayer and displays in a speach bubble'''
                 x = 100
                 y = 100
@@ -326,7 +348,7 @@ class GameScreen():
 
 	def clear_attack_bubble(self):
 		self.show_attack = False
-	
+
 	def get_game_screen(self, screen):
 		'''prints game screen to window'''
 		screen.fill((255, 255, 255))
@@ -343,6 +365,7 @@ class GameScreen():
                         screen.blit(label, (self.attboxesx[x] + fontSize, self.attboxesy[x] + self.attboxesh/2 - fontSize/2))
 		if self.show_attack:
 			self.display_attack(screen,self.currentAttack , True)
+		screen = self.rendertext(screen, afont, "hello how are you im going to make this really long wow look how long this is wow cool", (200, 200), (0, 0, 255))
 		return screen
 
 def main():
@@ -406,4 +429,3 @@ def main():
 
 if __name__ == "__main__":
 	main()
-
