@@ -11,6 +11,7 @@ class Crudder():
 		self.c = self.conn.cursor()
 
 	def get_health(self, name):
+		'''return health of player'''
 		sub = name[0:5]
 		self.c.execute("SELECT health FROM people WHERE name LIKE \"{subs}%\""\
 				.format(subs = sub))
@@ -20,14 +21,27 @@ class Crudder():
 
 	def get_attacks(self, name):
 		'''return list of attack names in order'''
-                return ("insult 1", "insult 2", "insult 3", "insult 4") # for testing
+		sub = name[0:5]
+		self.c.execute("SELECT attack FROM attacks WHERE name LIKE \"{subs}%\""\
+				.format(subs = sub))
+		attacks = self.c.fetchall()
+		return attacks # I hope this works
 
 	def get_attack_descs(self, name):
-                return ("fuck you 1", "fuck you 2", "fuck you 3", "fuck you 4") # for testing
+                '''return attack descriptions'''
+                sub = name[0:5]
+		self.c.execute("SELECT desc FROM attacks WHERE name LIKE \"{subs}%\""\
+				.format(subs = sub))
+		descs = self.c.fetchall()
+		return descs
 
 	def get_attack_powers(self, name):
-		#should return a dictionary of attacks with their powers
-		pass
+		'''return a dictionary of attacks with their powers'''
+		sub = name[0:5]
+		self.c.execute("SELECT power FROM attacks WHERE name LIKE \"{subs}%\""\
+				.format(subs = sub))
+		powers = self.c.fetchall()
+		return powers 
 
 	def get_party(self, name):
 		sub = name[0:5]
