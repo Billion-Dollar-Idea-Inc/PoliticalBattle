@@ -312,10 +312,9 @@ class GameScreen():
 		#wait
 		#then let player choose
 
-	def render_text(self, screen, font, text, pos, color):
+	def render_text(self, screen, font, text, pos):
 		'''using the parameters, draws rectangle to the screen with the
 		   given text formatted to be multilined inside
-		   color = color of box
 		   pos = position of box (x, y)
 		   rest is self explantory'''
 		lines = text.splitlines()  #splits lines into a list by \n's
@@ -326,10 +325,10 @@ class GameScreen():
 			height += font.get_linesize()
 		height = 0
 		for l in lines:       #create the different lines and print each to the screen    
-			t = font.render(l, 0, color, (0, 0, 0))
-			screen.blit(t, (0, height))
+			t = font.render(l, 0, (0, 0, 0))
+			screen.blit(t, (0 + pos[0], height + pos[1]))
 			height += font.get_linesize()
-		return screen        #might not be necessary idk didn't feel like testing without it
+		return screen
 
         def display_attack(self, screen, insult, isPlayer):
                 '''Function needs screen to work, takes string that is the insult
@@ -339,12 +338,11 @@ class GameScreen():
                 w = 300
                 h = 100
                 pygame.draw.ellipse(screen, (200, 200, 200), (x, y, w, h), 0)
-                insultL = pygame.font.SysFont("monospace", 10).render(insult, 1, (0, 0, 0))
                 if isPlayer:
                     pygame.draw.polygon(screen, (200, 200, 200), [(self.playimgx + 80, self.playimgy + 20), (x + 25, y + h/2 - 2), (x + w/3 + 50, y + h/2 - 2), (self.playimgx + 80, self.playimgy + 20)], 0)
                 else:
                     pygame.draw.polygon(screen, (200, 200, 200), [(self.oppimgx + 20, self.oppimgy + 80), (x + w - 25, y + h/2 -2), (x + 2*w/3 - 50, y + h/2 -2), (self.oppimgx + 20, self.oppimgy + 80)], 0)
-                screen.blit(insultL, (x + 20, y + h/2 - 5))
+                screen = self.render_text(screen, pygame.font.SysFont("monospace", 10), insult, (x + 25, y + h/2 - 10))
 
 	def clear_attack_bubble(self):
 		self.show_attack = False
@@ -364,8 +362,7 @@ class GameScreen():
                         label = afont.render(att , 1, (255, 255, 255))
                         screen.blit(label, (self.attboxesx[x] + fontSize, self.attboxesy[x] + self.attboxesh/2 - fontSize/2))
 		if self.show_attack:
-			self.display_attack(screen,self.currentAttack , True)
-		screen = self.rendertext(screen, afont, "hello how are you im going to make this really long wow look how long this is wow cool", (200, 200), (0, 0, 255))
+			self.display_attack(screen, self.currentAttack , True)
 		return screen
 
 def main():
