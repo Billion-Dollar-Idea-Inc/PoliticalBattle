@@ -324,6 +324,9 @@ class GameScreen():
                     pygame.draw.polygon(screen, (200, 200, 200), [(self.oppimgx + 20, self.oppimgy + 80), (x + w - 25, y + h/2 -2), (x + 2*w/3 - 50, y + h/2 -2), (self.oppimgx + 20, self.oppimgy + 80)], 0)
                 screen.blit(insultL, (x + 20, y + h/2 - 5))
 
+	def clear_attack_bubble(self):
+		self.show_attack = False
+	
 	def get_game_screen(self, screen):
 		'''prints game screen to window'''
 		screen.fill((255, 255, 255))
@@ -389,6 +392,7 @@ def main():
 				  	if gs.get_attack(pygame.mouse.get_pos()) != None:
 				  		gs.attack(gs.get_attack(pygame.mouse.get_pos()))
 					elif gs.is_exit_button(pygame.mouse.get_pos()):
+						gs.clear_attack_bubble()
 						game_state = 1
 		if game_state == 1:
 		 	screen = hs.get_home_screen(screen)
