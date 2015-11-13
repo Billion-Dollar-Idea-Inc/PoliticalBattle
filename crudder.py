@@ -24,23 +24,32 @@ class Crudder():
 		sub = name[0:5]
 		self.c.execute("SELECT attack FROM attacks WHERE name LIKE \"{subs}%\""\
 				.format(subs = sub))
-		attacks = self.c.fetchall()
-		return attacks # I hope this works
+		fetch = self.c.fetchall()
+		attacks = []
+		for arr in fetch:
+			attacks.append(arr[0])
+		return attacks
 
 	def get_attack_descs(self, name):
                 '''return attack descriptions'''
                 sub = name[0:5]
 		self.c.execute("SELECT desc FROM attacks WHERE name LIKE \"{subs}%\""\
 				.format(subs = sub))
-		descs = self.c.fetchall()
+		fetch = self.c.fetchall()
+		descs = []
+		for arr in fetch:
+			descs.append(arr[0])
 		return descs
 
 	def get_attack_powers(self, name):
-		'''return a dictionary of attacks with their powers'''
+		'''return a list of attacks with their powers'''
 		sub = name[0:5]
 		self.c.execute("SELECT power FROM attacks WHERE name LIKE \"{subs}%\""\
 				.format(subs = sub))
-		powers = self.c.fetchall()
+		fetch = self.c.fetchall()
+		powers = []
+		for arr in fetch:
+			powers.append(arr[0])
 		return powers 
 
 	def get_party(self, name):
