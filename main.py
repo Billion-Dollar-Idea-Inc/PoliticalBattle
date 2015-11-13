@@ -274,6 +274,10 @@ class GameScreen():
 		c = crudder.Crudder()
 		self.attacks = c.get_attacks(player.get_name())
 
+	def set_descriptions(self, player):
+		c = crudder.Crudder()
+		self.descs = c.get_attack_descs(player.get_name())
+	
 	def get_attack(self, pos):
 		'''
 		with buttons in layout:  1    2
@@ -298,9 +302,11 @@ class GameScreen():
 		return False
 
 	def attack(self, attack):
+		'''takes in position of mouse and chooses attack description to be displayed'''
 		#attack is the number of the box for the attack that was clicked
 		#use it to make attacks
 		#the basic game loop can basically be run from this function
+                self.currentAttack = self.descs[attack];#sets attack selected description to speaking bubble
                 self.show_attack = True
 
         def display_attack(self, screen, insult, isPlayer):
@@ -319,6 +325,7 @@ class GameScreen():
                 screen.blit(insultL, (x + 20, y + h/2 - 5))
 
 	def get_game_screen(self, screen):
+		'''prints game screen to window'''
 		screen.fill((255, 255, 255))
 		pygame.draw.rect(screen, self.exboxc, pygame.Rect(self.exboxx, self.exboxy, self.exboxw, self.exboxh))
 		screen.blit(self.eLabel, (self.eLabelX, self.eLabelY))
@@ -332,7 +339,7 @@ class GameScreen():
                         label = afont.render(att , 1, (255, 255, 255))
                         screen.blit(label, (self.attboxesx[x] + fontSize, self.attboxesy[x] + self.attboxesh/2 - fontSize/2))
 		if self.show_attack:
-			self.display_attack(screen, "hi" , True)
+			self.display_attack(screen,self.currentAttack , True)
 		return screen
 
 def main():
@@ -373,6 +380,7 @@ def main():
                                                 gs.set_players(cs.get_chars_to_battle())
                                                 gs.set_images(gs.player,gs.opponent)
                                                 gs.set_attacks(gs.player)
+                                                gs.set_descriptions(gs.player)
 					elif cs.is_in_back_button(pygame.mouse.get_pos()):
 						game_state = 1
 					else:
