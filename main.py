@@ -280,10 +280,13 @@ class GameScreen():
 	def set_descriptions(self, player):
 		c = crudder.Crudder()
 		self.descs = c.get_attack_descs(player.get_name())
+<<<<<<< HEAD
 	
 	def set_power(self, player):
 		c = crudder.Crudder()
 		self.powers = c.get_attack_powers(player.get_name())
+=======
+>>>>>>> 3c4d12958e89dcee3dc5307f5f039317bf54fd3a
 
 	def get_attack(self, pos):
 		'''
@@ -300,6 +303,26 @@ class GameScreen():
 					return x
 		return None
 
+	def display_health(self, screen):
+		self.PlayerHealthBarY = 284
+		self.PlayerHealthBarX = 100
+		self.healthBarW = 15
+		self.healthBarH = 100
+		self.healthBarOutlineW = 15
+		self.healthBarOutlineH = 100
+		self.PlayerHealthBarOutlineY = 284
+		self.PlayerHealthBarOutlineX = 100
+		self.OppHealthBarOutlineY = 0
+		self.OppHealthBarOutlineX = 300
+		self.OppHealthBarY = 0
+		self.OppHealthBarX = 300
+		#paints red bar underneath healthbar to indicate lost health
+		pygame.draw.rect(screen, (200, 0, 0,), pygame.Rect(self.PlayerHealthBarOutlineX, self.PlayerHealthBarY, self.healthBarOutlineH, self.healthBarOutlineW))
+		pygame.draw.rect(screen, (200, 0, 0,), pygame.Rect(self.OppHealthBarOutlineX, self.OppHealthBarY, self.healthBarOutlineH, self.healthBarOutlineW))
+		#paints the actual healthbar
+		pygame.draw.rect(screen, (0, 200, 0), pygame.Rect(self.PlayerHealthBarX, self.PlayerHealthBarY, self.healthBarH, self.healthBarW))
+		pygame.draw.rect(screen, (0, 200, 0), pygame.Rect(self.OppHealthBarX, self.OppHealthBarY, self.healthBarH, self.healthBarW))
+
 	def is_exit_button(self, pos):
 		xpos = pos[0]
 		ypos = pos[1]
@@ -308,6 +331,7 @@ class GameScreen():
 				return True
 		return False
 
+<<<<<<< HEAD
 	def attack(self, attackPos):
 		'''displays attack desc on the screen and decrements opp health'''
 		self.currentAttack = self.descs[attackPos];#sets attack selected description to speaking bubble
@@ -326,6 +350,18 @@ class GameScreen():
 		self.player.health -= self.oppAttack[1]
 		self.show_opp_attack = True
 		self.opp_turn = False
+=======
+	#TODO
+	def attack(self, attack):
+                self.currentAttack = self.descs[attack];#sets attack selected description to speaking bubble
+                self.show_attack = True
+		#decrement health from opponent
+		#wait
+		#remove player's attack and show opponents
+		#decrement health from player
+		#wait
+		#then let player choose
+>>>>>>> 3c4d12958e89dcee3dc5307f5f039317bf54fd3a
 
 	def render_text(self, screen, font, text, pos):
 		'''using the parameters, draws rectangle to the screen with the
@@ -361,7 +397,10 @@ class GameScreen():
 
 	def clear_attack_bubble(self):
 		self.show_attack = False
+<<<<<<< HEAD
 		self.show_opp_attack = False
+=======
+>>>>>>> 3c4d12958e89dcee3dc5307f5f039317bf54fd3a
 
 	def get_game_screen(self, screen):
 		'''prints game screen to window'''
@@ -379,8 +418,12 @@ class GameScreen():
                         screen.blit(label, (self.attboxesx[x] + fontSize, self.attboxesy[x] + self.attboxesh/2 - fontSize/2))
 		if self.show_attack:
 			self.display_attack(screen, self.currentAttack , True)
+<<<<<<< HEAD
 		elif self.show_opp_attack:
 			self.display_attack(screen, self.currentOppAttack, False)
+=======
+		self.display_health(screen)
+>>>>>>> 3c4d12958e89dcee3dc5307f5f039317bf54fd3a
 		return screen
 
 def main():
