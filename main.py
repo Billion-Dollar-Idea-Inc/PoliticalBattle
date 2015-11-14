@@ -2,17 +2,6 @@ import pygame
 import sys
 import character
 import crudder
-import time
-
-'''
-TODO:
-
-GameScreen:
-paint on health bars
-put on actual attacks
-make attack animation appear
-actual gameplay
-'''
 
 class HomeScreen:
 	def __init__(self):
@@ -92,9 +81,9 @@ class CharacterScreen():
 		self.rect_color3 = (100, 0, 0)
 		self.rect_color4 = (0, 0, 0)
 		#rectangles where the choices will be listed
-		self.rectPlayx = 10
+		self.rectPlayx = 20
 		self.rectPlayy = 50
-		self.rectOppx = 280
+		self.rectOppx = 300
 		self.rectOppy = 50
 		#start and back button sizing/positioning
 		self.rectStarth = 25
@@ -104,13 +93,7 @@ class CharacterScreen():
 		self.rectBackx = 60
 		#sizing of the choice list rects
 		self.rectCharh = 400
-		self.rectCharw = 200
-		#sizing and positioning of player and opp choices
-		self.rectChoiceh = 80
-		self.rectChoicew = 160
-		self.rectPlayChoicex = 30
-		self.rectPlayChoicey = 60
-		self.rectOppChoicex = 300
+		self.rectCharw = 180
 		#sets the choice boxes variable
 		self.PlaySelect = 0
 		self.OppSelect = 0
@@ -162,7 +145,6 @@ class CharacterScreen():
 				    pygame.draw.rect(screen, (255 - (x * 30), 0, 0), pygame.Rect(self.rectOppx, self.rectOppy+(x*self.opph), self.optionw, self.opph))
                         self.name = self.font.render(self.nameList[x], 1, self.nColor)
                         screen.blit(self.name, (self.rectOppx + 10, self.rectOppy + (x*self.opph) + self.opph/2 - 10))
-
 		return screen
 
 	def set_party(self, party):
@@ -424,10 +406,8 @@ def main():
 	game_state = 1
 
 	while True:
-		if gs.show_attack or gs.show_opp_attack:
-			time.sleep(3)
 		if gs.opp_turn:
-			gs.clear_attack_bubble()	
+			gs.clear_attack_bubble()
 			gs.opp_attack()
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -454,13 +434,10 @@ def main():
 					else:
 						cs.set_character(pygame.mouse.get_pos())
 				elif game_state == 3:
-					print "in game state 3"
 					if gs.get_attack(pygame.mouse.get_pos()) != None:
 						gs.clear_attack_bubble()
-						gs.attack(gs.get_attack(pygame.mouse.get_pos()))
-						print "after gs.attack"
+						gs.attack(gs.get_attack(pygame.mouse.get_pos))
 					elif gs.is_exit_button(pygame.mouse.get_pos()):
-						print "in exit screen"
 						gs.clear_attack_bubble()
 						game_state = 1
 		if game_state == 1:
