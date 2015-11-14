@@ -218,7 +218,7 @@ class GameScreen():
 		self.exboxw = 100
 		self.exboxh = 100
 		self.exboxc = (200, 200, 200)
-
+		self.exboxn = (100, 100, 100)
 		self.playimgx = 0
 		self.playimgy = 200
 		self.oppimgx = 400
@@ -226,6 +226,7 @@ class GameScreen():
 
                 #labels
 		self.eLabel = self.font.render("Exit", 1, (0, 0, 0))
+		self.nLabel = self.font.render("Next", 1, (0, 0, 0))
                 self.eLabelX = self.exboxx + 15
                 self.eLabelY = self.exboxy + self.exboxh/2 - 15
 
@@ -310,6 +311,14 @@ class GameScreen():
 				return True
 		return False
 
+	def is_next_button(self, pos):
+		xpos = pos[0]
+		ypos = pos[1]
+		if xpos > self.exboxx and xpos < self.exboxx + self.exboxw:
+			if ypos > self.exboxy -  self.exboxh and ypos < self.exboxy:
+				return True
+		return False
+
 	def attack(self, attackPos):
 		'''displays attack desc on the screen and decrements opp health'''
 		self.currentAttack = self.descs[attackPos];#sets attack selected description to speaking bubble
@@ -369,6 +378,8 @@ class GameScreen():
 		screen.fill((255, 255, 255))
 		pygame.draw.rect(screen, self.exboxc, pygame.Rect(self.exboxx, self.exboxy, self.exboxw, self.exboxh))
 		screen.blit(self.eLabel, (self.eLabelX, self.eLabelY))
+		pygame.draw.rect(screen, self.exboxn, pygame.Rect(self.exboxx, self.exboxy-self.exboxh, self.exboxw, self.exboxh))
+		screen.blit(self.nLabel, (self.eLabelX, self.eLabelY-self.exboxh))
                 screen.blit(self.playimg, (self.playimgx, self.playimgy)) # display image for player
                 screen.blit(self.oppimg, (self.oppimgx, self.oppimgy)) # display image for opponent
 		for x in range(0, 4):
@@ -439,11 +450,14 @@ def main():
 						print "in exit screen"
 						gs.clear_attack_bubble()
 						game_state = 1
-					elif gs.opp_turn:
+					elif gs.opp_turn and gs.is_next_button(pygame.mouse.get_pos()):
 						gs.clear_attack_bubble()
 						gs.opp_attack()
-					else:
+					elif gs.is_next_button(pygame.mouse.get_pos()):
+						print "in exit screen"
 						gs.clear_attack_bubble()
+
+			
 		if game_state == 1:
 		 	screen = hs.get_home_screen(screen)
 		elif game_state == 2:
