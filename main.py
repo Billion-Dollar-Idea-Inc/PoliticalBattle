@@ -346,18 +346,7 @@ class GameScreen():
 		self.player.health -= self.oppAttack[1]
 		self.show_opp_attack = True
 		self.opp_turn = False
-		
-	#TODO
-	def attack(self, attack):
-                self.currentAttack = self.descs[attack];#sets attack selected description to speaking bubble
-                self.show_attack = True
-		#decrement health from opponent
-		#wait
-		#remove player's attack and show opponents
-		#decrement health from player
-		#wait
-		#then let player choose
-
+	
 	def render_text(self, screen, font, text, pos):
 		'''using the parameters, draws rectangle to the screen with the
 		   given text formatted to be multilined inside
@@ -469,6 +458,7 @@ def main():
 					if gs.get_attack(pygame.mouse.get_pos()) != None:
 						gs.clear_attack_bubble()
 						gs.attack(gs.get_attack(pygame.mouse.get_pos()))
+						print "after gs.attack"
 					elif gs.is_exit_button(pygame.mouse.get_pos()):
 						print "in exit screen"
 						gs.clear_attack_bubble()
