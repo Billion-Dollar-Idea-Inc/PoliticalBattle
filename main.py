@@ -323,15 +323,12 @@ class GameScreen():
 		'''displays attack desc on the screen and decrements opp health'''
 		self.currentAttack = self.descs[attackPos];#sets attack selected description to speaking bubble
                 self.show_attack = True
-                print self.currentAttack
 		self.opponent.health -= self.powers[attackPos]
 		self.opp_turn = True
-		print self.opponent.health
 	
 	def opp_attack(self):	
 		'''display attack desc to screen and decrements player health'''
 		self.oppAttack = self.opponent.get_random_attack()
-		print self.oppAttack
 		self.currentOppAttack = self.oppAttack[0]
 		self.player.health -= self.oppAttack[1]
 		self.show_opp_attack = True
@@ -403,7 +400,7 @@ class GameScreen():
 		pygame.draw.rect(screen, (125, 125, 125), pygame.Rect(50, 50, 400, 300))
 		first = font2.render("You", 1, (255, 0, 0))
 		screen.blit(first, (100, 100))
-		if result = "win":
+		if result == "win":
 			second = font2.render("Won!", 1, (0, 0, 255))
 		else:
 			second = font2.render("Lost.", 1, (0, 0, 255))
@@ -424,6 +421,13 @@ def main():
 	hs = HomeScreen()
 	cs = CharacterScreen()
 	gs = GameScreen()
+
+	#TODO:
+	#change health after attacks
+	#assign win or loss after one of the plaers health = 0
+	#put \n in database
+	#don't allow player to select attack when its not their turn
+
 
 	# -- this would need to be worked out --
 	#if 1, then were at the home screen
@@ -457,23 +461,18 @@ def main():
 					else:
 						cs.set_character(pygame.mouse.get_pos())
 				elif game_state == 3:
-					print "in game state 3"
 					if gs.get_attack(pygame.mouse.get_pos()) != None:
 						gs.clear_attack_bubble()
 						gs.attack(gs.get_attack(pygame.mouse.get_pos()))
-						print "after gs.attack"
 					elif gs.is_exit_button(pygame.mouse.get_pos()):
-						print "in exit screen"
 						gs.clear_attack_bubble()
 						game_state = 1
 					elif gs.opp_turn and gs.is_next_button(pygame.mouse.get_pos()):
 						gs.clear_attack_bubble()
 						gs.opp_attack()
 					elif gs.is_next_button(pygame.mouse.get_pos()):
-						print "in exit screen"
 						gs.clear_attack_bubble()
 
-			
 		if game_state == 1:
 		 	screen = hs.get_home_screen(screen)
 		elif game_state == 2:
