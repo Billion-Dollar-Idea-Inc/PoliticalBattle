@@ -321,7 +321,6 @@ class GameScreen():
 	
 	def opp_attack(self):	
 		'''display attack desc to screen and decrements player health'''
-		time.sleep(1)
 		self.oppAttack = self.opponent.get_random_attack()
 		print self.oppAttack
 		self.currentOppAttack = self.oppAttack[0]
@@ -406,9 +405,6 @@ def main():
 	game_state = 1
 
 	while True:
-		if gs.opp_turn:
-			gs.clear_attack_bubble()
-			gs.opp_attack()
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				pygame.quit()
@@ -434,12 +430,20 @@ def main():
 					else:
 						cs.set_character(pygame.mouse.get_pos())
 				elif game_state == 3:
+					print "in game state 3"
 					if gs.get_attack(pygame.mouse.get_pos()) != None:
 						gs.clear_attack_bubble()
-						gs.attack(gs.get_attack(pygame.mouse.get_pos))
+						gs.attack(gs.get_attack(pygame.mouse.get_pos()))
+						print "after gs.attack"
 					elif gs.is_exit_button(pygame.mouse.get_pos()):
+						print "in exit screen"
 						gs.clear_attack_bubble()
 						game_state = 1
+					elif gs.opp_turn:
+						gs.clear_attack_bubble()
+						gs.opp_attack()
+					else:
+						gs.clear_attack_bubble()
 		if game_state == 1:
 		 	screen = hs.get_home_screen(screen)
 		elif game_state == 2:
@@ -448,7 +452,6 @@ def main():
 		    	screen = gs.get_game_screen(screen)
 		pygame.display.update()
 		pygame.display.flip()
-
 
 if __name__ == "__main__":
 	main()
