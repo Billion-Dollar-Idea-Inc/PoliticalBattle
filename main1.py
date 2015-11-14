@@ -2,7 +2,6 @@ import pygame
 import sys
 import character
 import crudder
-import time
 
 '''
 TODO:
@@ -36,7 +35,7 @@ class HomeScreen:
 		self.reprectw = 300
 		self.reprecth = 100
 		self.is_dem = True
-
+		
 
 	def get_home_screen(self, screen):
 		'''paints the home page to the screen'''
@@ -68,7 +67,7 @@ class HomeScreen:
 class CharacterScreen():
 	def __init__(self):
 		self.font = pygame.font.SysFont("monospace", 15)
-
+		
                 self.crud = crudder.Crudder()
 
 		#for layer above players char choice
@@ -120,13 +119,13 @@ class CharacterScreen():
 		self.loopInc = 0
 		self.rectPlayChoicey = 60
 		screen.fill(self.background_color)
-		pygame.draw.rect(screen, self.rect_color2, pygame.Rect(self.rectStartx, self.rectStarty, self.rectStartw, self.rectStarth))
-		pygame.draw.rect(screen, self.rect_color3, pygame.Rect(self.rectBackx, self.rectStarty, self.rectStartw, self.rectStarth))
+		pygame.draw.rect(screen, self.rect_color2, pygame.Rect(self.rectStartx, self.rectStarty, self.rectStartw, self.rectStarth))		
+		pygame.draw.rect(screen, self.rect_color3, pygame.Rect(self.rectBackx, self.rectStarty, self.rectStartw, self.rectStarth))		
 		screen.blit(self.labelPlay, (self.labelPlayx, self.labelPlayy))
 		screen.blit(self.labelStart, (self.labelStartx, self.labelStartBacky))
 		screen.blit(self.labelOpp, (self.labelOppx, self.labelOppy))
 		screen.blit(self.labelBack, (self.labelBackx, self.labelStartBacky))
-
+                
                 if self.party == "DEM":
                     self.nameList = self.crud.get_chars_in_party("DEM")
                 else:
@@ -201,7 +200,7 @@ class CharacterScreen():
 			if xpos > self.rectPlayx and xpos < self.rectPlayx+self.optionw:
 				if ypos > self.rectPlayy+(x*self.playh) and ypos < self.rectPlayy+(x*self.playh)+self.playh:
 					self.PlaySelect = x
-
+	    
 	   	for x in range(0, self.opp_ops):
 	    		if xpos > self.rectOppx and xpos < self.rectOppx+self.optionw:
 	    			if ypos > self.rectOppy+(x*self.opph) and ypos < self.rectOppy+(x*self.opph)+self.opph:
@@ -214,7 +213,7 @@ class CharacterScreen():
             '''
             repOptions = self.crud.get_chars_in_party("REP")
             demOptions = self.crud.get_chars_in_party("DEM")
-
+            
             if self.party == "DEM":
                 # print demOptions[self.PlaySelect], " ", repOptions[self.OppSelect]
                 return (demOptions[self.PlaySelect], repOptions[self.OppSelect])
@@ -236,20 +235,18 @@ class GameScreen():
 		self.exboxw = 100
 		self.exboxh = 100
 		self.exboxc = (200, 200, 200)
-
+		
 		self.playimgx = 0
 		self.playimgy = 200
 		self.oppimgx = 400
 		self.oppimgy = 0
-
+	
                 #labels
 		self.eLabel = self.font.render("Exit", 1, (0, 0, 0))
                 self.eLabelX = self.exboxx + 15
                 self.eLabelY = self.exboxy + self.exboxh/2 - 15
-
+	
 		self.show_attack = False
-		self.show_opp_attack = False
-		self.opp_turn = False
 
 	def set_players(self, names):
             	''' sets player and opponent for GameScreen to use and draw variables from'''
@@ -281,10 +278,6 @@ class GameScreen():
 		c = crudder.Crudder()
 		self.descs = c.get_attack_descs(player.get_name())
 	
-	def set_power(self, player):
-		c = crudder.Crudder()
-		self.powers = c.get_attack_powers(player.get_name())
-
 	def get_attack(self, pos):
 		'''
 		with buttons in layout:  1    2
@@ -308,61 +301,32 @@ class GameScreen():
 				return True
 		return False
 
-	def attack(self, attackPos):
-		'''displays attack desc on the screen and decrements opp health'''
-		self.currentAttack = self.descs[attackPos];#sets attack selected description to speaking bubble
+	def attack(self, attack):
+		'''takes in position of mouse and chooses attack description to be displayed'''
+		#attack is the number of the box for the attack that was clicked
+		#use it to make attacks
+		#the basic game loop can basically be run from this function
+                self.currentAttack = self.descs[attack];#sets attack selected description to speaking bubble
                 self.show_attack = True
-                print self.currentAttack
-		self.opponent.health -= self.powers[attackPos]
-		self.opp_turn = True
-		print self.opponent.health
-	
-	def opp_attack(self):	
-		'''display attack desc to screen and decrements player health'''
-		time.sleep(1)
-		self.oppAttack = self.opponent.get_random_attack()
-		print self.oppAttack
-		self.currentOppAttack = self.oppAttack[0]
-		self.player.health -= self.oppAttack[1]
-		self.show_opp_attack = True
-		self.opp_turn = False
-
-	def render_text(self, screen, font, text, pos):
-		'''using the parameters, draws rectangle to the screen with the
-		   given text formatted to be multilined inside
-		   pos = position of box (x, y)
-		   rest is self explantory'''
-		lines = text.splitlines()  #splits lines into a list by \n's
-		width = 0
-		height = 0
-		for l in lines:   #determine total height of box maybe?  not sure this loop is mostly magic from internet
-			width = max(width, font.size(l)[0])
-			height += font.get_linesize()
-		height = 0
-		for l in lines:       #create the different lines and print each to the screen    
-			t = font.render(l, 0, (0, 0, 0))
-			screen.blit(t, (0 + pos[0], height + pos[1]))
-			height += font.get_linesize()
-		return screen
 
         def display_attack(self, screen, insult, isPlayer):
-                '''Function needs screen to work, takes string that is the insult
+                '''Function needs screen to work, takes string that is the insult 
                 and true or false for isPlayer and displays in a speach bubble'''
                 x = 100
                 y = 100
                 w = 300
                 h = 100
                 pygame.draw.ellipse(screen, (200, 200, 200), (x, y, w, h), 0)
+                insultL = pygame.font.SysFont("monospace", 10).render(insult, 1, (0, 0, 0))
                 if isPlayer:
                     pygame.draw.polygon(screen, (200, 200, 200), [(self.playimgx + 80, self.playimgy + 20), (x + 25, y + h/2 - 2), (x + w/3 + 50, y + h/2 - 2), (self.playimgx + 80, self.playimgy + 20)], 0)
                 else:
                     pygame.draw.polygon(screen, (200, 200, 200), [(self.oppimgx + 20, self.oppimgy + 80), (x + w - 25, y + h/2 -2), (x + 2*w/3 - 50, y + h/2 -2), (self.oppimgx + 20, self.oppimgy + 80)], 0)
-                screen = self.render_text(screen, pygame.font.SysFont("monospace", 10), insult, (x + 25, y + h/2 - 10))
+                screen.blit(insultL, (x + 20, y + h/2 - 5))
 
 	def clear_attack_bubble(self):
 		self.show_attack = False
-		self.show_opp_attack = False
-
+	
 	def get_game_screen(self, screen):
 		'''prints game screen to window'''
 		screen.fill((255, 255, 255))
@@ -378,9 +342,7 @@ class GameScreen():
                         label = afont.render(att , 1, (255, 255, 255))
                         screen.blit(label, (self.attboxesx[x] + fontSize, self.attboxesy[x] + self.attboxesh/2 - fontSize/2))
 		if self.show_attack:
-			self.display_attack(screen, self.currentAttack , True)
-		elif self.show_opp_attack:
-			self.display_attack(screen, self.currentOppAttack, False)
+			self.display_attack(screen,self.currentAttack , True)
 		return screen
 
 def main():
@@ -403,11 +365,6 @@ def main():
 	game_state = 1
 
 	while True:
-		if gs.show_attack or gs.show_opp_attack:
-			time.sleep(3)
-		if gs.opp_turn:
-			gs.clear_attack_bubble()	
-			gs.opp_attack()
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				pygame.quit()
@@ -427,18 +384,14 @@ def main():
                                                 gs.set_images(gs.player,gs.opponent)
                                                 gs.set_attacks(gs.player)
                                                 gs.set_descriptions(gs.player)
-                                                gs.set_power(gs.player)
 					elif cs.is_in_back_button(pygame.mouse.get_pos()):
 						game_state = 1
 					else:
 						cs.set_character(pygame.mouse.get_pos())
 				elif game_state == 3:
-					print "in game state 3"
-					if gs.get_attack(pygame.mouse.get_pos()) != None:
-						gs.clear_attack_bubble()
-						gs.attack(gs.get_attack(pygame.mouse.get_pos()))
+				  	if gs.get_attack(pygame.mouse.get_pos()) != None:
+				  		gs.attack(gs.get_attack(pygame.mouse.get_pos()))
 					elif gs.is_exit_button(pygame.mouse.get_pos()):
-						print "in exit screen"
 						gs.clear_attack_bubble()
 						game_state = 1
 		if game_state == 1:
@@ -453,3 +406,4 @@ def main():
 
 if __name__ == "__main__":
 	main()
+

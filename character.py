@@ -1,4 +1,5 @@
 import crudder
+import random
 
 class Character(object):
 	def __init__(self, name):
@@ -66,11 +67,11 @@ class Character(object):
 		returns random attack in an array
 		of side two with name and power
 		'''
-                rand = random.randint(0, len(attacks))
-		name = attacks[rand]
-		power = attack_powers[name]
-		return [name, power]
-
+                rand = random.randint(0, len(self.attacks)-1)
+		desc = self.attack_descs[rand]
+		power = self.attack_powers[rand]
+		return [desc, power]
+	
 	def get_picture_name(self, direction):
                 '''returns player picture'''
                 fileName = self.name[self.name.find(" ",0) + 1:]
