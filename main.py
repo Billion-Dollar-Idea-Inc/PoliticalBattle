@@ -315,7 +315,7 @@ class GameScreen():
 		xpos = pos[0]
 		ypos = pos[1]
 		if xpos > self.exboxx and xpos < self.exboxx + self.exboxw:
-			if ypos > self.exboxy -  self.exboxh and ypos < self.exboxy:
+			if ypos > self.exboxy - self.exboxh and ypos < self.exboxy:
 				return True
 		return False
 
@@ -396,6 +396,19 @@ class GameScreen():
 		self.display_health(screen)
 		return screen
 
+	def get_won_screen(self, screen):
+		font2 = pygame.font.SysFont("monospace", 90)
+		font3 = pygame.font.SysFont("monospace", 25)
+		screen = self.get_game_screen(screen)
+		pygame.draw.rect(screen, (125, 125, 125), pygame.Rect(50, 50, 400, 300))
+		first = font2.render("You", 1, (255, 0, 0))
+		screen.blit(first, (100, 100))
+		second = font2.render("Won!", 1, (0, 0, 255))
+		screen.blit(second, (200, 200))
+		third = font3.render("Click anywhere to exit", 1, (255, 255, 255))
+		screen.blit(third, (75, 310))
+		return screen
+
 def main():
 	'''
 	runs the main game loop and
@@ -463,7 +476,7 @@ def main():
 		elif game_state == 2:
 		 	screen = cs.get_character_screen(screen)
 		elif game_state == 3:
-		    	screen = gs.get_game_screen(screen)
+			screen = gs.get_game_screen(screen)	
 		pygame.display.update()
 		pygame.display.flip()
 
