@@ -227,8 +227,8 @@ class GameScreen():
                 #labels
 		self.eLabel = self.font.render("Exit", 1, (0, 0, 0))
 		self.nLabel = self.font.render("Next", 1, (0, 0, 0))
-                self.eLabelX = self.exboxx + 15
-                self.eLabelY = self.exboxy + self.exboxh/2 - 15
+		self.eLabelX = self.exboxx + 15
+		self.eLabelY = self.exboxy + self.exboxh/2 - 15
 
 		self.show_attack = False
 		self.show_opp_attack = False
@@ -251,9 +251,9 @@ class GameScreen():
 		   so we will probably need to change that and we'll also need to
 		   change it to reflect how the pictures are actually named'''
 
-		self.playimg = pygame.image.load("characters/" + self.player.get_picture_name("right"))
+		self.playimg = pygame.image.load("images/" + self.player.get_picture_name("right"))
 		self.playimg = pygame.transform.scale(self.playimg, (100, 100))
-		self.oppimg = pygame.image.load("characters/" + self.opponent.get_picture_name("left"))
+		self.oppimg = pygame.image.load("images/" + self.opponent.get_picture_name("left"))
 		self.oppimg = pygame.transform.scale(self.oppimg, (100, 100))
 
 	def set_attacks(self, player):
@@ -409,6 +409,21 @@ class GameScreen():
 		screen.blit(third, (75, 310))
 		return screen
 
+	def check_for_win(self):
+		'''returns either PLAY, OPP, or NONE'''
+		if self.player.get_health() < 1:
+		   	self.do_win("PLAY")
+			return True
+		elif self.opponent.get_health() < 1:
+		   	self.do_win("OPP")
+		   	return True
+		else:
+		   	return False
+
+	def do_win(self, whowon):
+			'''do win animations here'''
+			pass
+
 def main():
 	'''
 	runs the main game loop and
@@ -472,6 +487,8 @@ def main():
 						gs.opp_attack()
 					elif gs.is_next_button(pygame.mouse.get_pos()):
 						gs.clear_attack_bubble()
+					if gs.check_for_win():
+						game_state = 1
 
 		if game_state == 1:
 		 	screen = hs.get_home_screen(screen)
