@@ -334,7 +334,7 @@ class GameScreen():
 		self.show_opp_attack = True
 		self.opp_turn = False
 	
-	def render_text(self, screen, font, text, pos):
+	def render_text(self, screen, font, text, pos, color):
 		'''using the parameters, draws rectangle to the screen with the
 		   given text formatted to be multilined inside
 		   pos = position of box (x, y)
@@ -347,7 +347,7 @@ class GameScreen():
 			height += font.get_linesize()
 		height = 0
 		for l in lines:       #create the different lines and print each to the screen    
-			t = font.render(l, 0, (0, 0, 0))
+			t = font.render(l, 0, color)
 			screen.blit(t, (0 + pos[0], height + pos[1]))
 			height += font.get_linesize()
 		return screen
@@ -364,7 +364,7 @@ class GameScreen():
                     pygame.draw.polygon(screen, (200, 200, 200), [(self.playimgx + 80, self.playimgy + 20), (x + 25, y + h/2 - 2), (x + w/3 + 50, y + h/2 - 2), (self.playimgx + 80, self.playimgy + 20)], 0)
                 else:
                     pygame.draw.polygon(screen, (200, 200, 200), [(self.oppimgx + 20, self.oppimgy + 80), (x + w - 25, y + h/2 -2), (x + 2*w/3 - 50, y + h/2 -2), (self.oppimgx + 20, self.oppimgy + 80)], 0)
-                screen = self.render_text(screen, pygame.font.SysFont("monospace", 10), insult, (x + 25, y + h/2 - 10))
+                screen = self.render_text(screen, pygame.font.SysFont("monospace", 10), insult, (x + 25, y + h/2 - 10), (0, 0, 0))
 
 	def clear_attack_bubble(self):
 		self.show_attack = False
@@ -380,12 +380,12 @@ class GameScreen():
                 screen.blit(self.playimg, (self.playimgx, self.playimgy)) # display image for player
                 screen.blit(self.oppimg, (self.oppimgx, self.oppimgy)) # display image for opponent
 		for x in range(0, 4):
+			pygame.draw.rect(screen, self.attboxesc[x], pygame.Rect(self.attboxesx[x], self.attboxesy[x], self.attboxesw, self.attboxesh))
+
                         fontSize = 20
                         afont = pygame.font.SysFont("monospace", fontSize)
-			pygame.draw.rect(screen, self.attboxesc[x], pygame.Rect(self.attboxesx[x], self.attboxesy[x], self.attboxesw, self.attboxesh))
                         att = self.attacks[x]
-                        label = afont.render(att , 1, (255, 255, 255))
-                        screen.blit(label, (self.attboxesx[x] + fontSize, self.attboxesy[x] + self.attboxesh/2 - fontSize/2))
+                        screen = self.render_text(screen, afont, att, (self.attboxesx[x] + fontSize, self.attboxesy[x] + self.attboxesh/2 - fontSize), (255, 255, 255))
 		if self.show_attack:
 			self.display_attack(screen, self.currentAttack , True)
 		elif self.show_opp_attack:
