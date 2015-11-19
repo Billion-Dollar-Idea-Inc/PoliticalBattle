@@ -288,20 +288,16 @@ class GameScreen():
 		self.PlayerHealthBarX = 100
 		self.healthBarW = 15
 		self.healthBarH = 100
-		self.healthBarOutlineW = 15
-		self.healthBarOutlineH = 100
-		self.PlayerHealthBarOutlineY = 284
-		self.PlayerHealthBarOutlineX = 100
-		self.OppHealthBarOutlineY = 0
-		self.OppHealthBarOutlineX = 300
+		self.playHealthBarH = self.player.get_health()
+		self.oppHealthBarH = self.opponent.get_health()
 		self.OppHealthBarY = 0
 		self.OppHealthBarX = 300
 		#paints red bar underneath healthbar to indicate lost health
-		pygame.draw.rect(screen, (200, 0, 0,), pygame.Rect(self.PlayerHealthBarOutlineX, self.PlayerHealthBarY, self.healthBarOutlineH, self.healthBarOutlineW))
-		pygame.draw.rect(screen, (200, 0, 0,), pygame.Rect(self.OppHealthBarOutlineX, self.OppHealthBarY, self.healthBarOutlineH, self.healthBarOutlineW))
+		pygame.draw.rect(screen, (200, 0, 0,), pygame.Rect(self.PlayerHealthBarX, self.PlayerHealthBarY, self.healthBarH, self.healthBarW))
+		pygame.draw.rect(screen, (200, 0, 0,), pygame.Rect(self.OppHealthBarX, self.OppHealthBarY, self.healthBarH, self.healthBarW))
 		#paints the actual healthbar
-		pygame.draw.rect(screen, (0, 200, 0), pygame.Rect(self.PlayerHealthBarX, self.PlayerHealthBarY, self.healthBarH, self.healthBarW))
-		pygame.draw.rect(screen, (0, 200, 0), pygame.Rect(self.OppHealthBarX, self.OppHealthBarY, self.healthBarH, self.healthBarW))
+		pygame.draw.rect(screen, (0, 200, 0), pygame.Rect(self.PlayerHealthBarX, self.PlayerHealthBarY, self.playHealthBarH, self.healthBarW))
+		pygame.draw.rect(screen, (0, 200, 0), pygame.Rect(self.OppHealthBarX, self.OppHealthBarY, self.oppHealthBarH, self.healthBarW))
 
 	def is_exit_button(self, pos):
 		xpos = pos[0]
