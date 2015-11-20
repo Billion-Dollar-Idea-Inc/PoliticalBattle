@@ -408,17 +408,65 @@ class GameScreen():
 	def check_for_win(self):
 		'''returns either PLAY, OPP, or NONE'''
 		if self.player.get_health() < 1:
-		   	self.do_win("PLAY")
-			return True
+			return "loss"
 		elif self.opponent.get_health() < 1:
-		   	self.do_win("OPP")
-		   	return True
+		   	return "win"
 		else:
 		   	return False
 
-	def do_win(self, whowon):
-			'''do win animations here'''
-			pass
+class EndScreen():
+	def __init__(self):
+		self.font = pygame.font.SysFont("monospace", 30)
+		self.attboxesx = [0, 200, 0, 200]
+		self.attboxesy = [300, 300, 400, 400]
+		self.attboxesw = 200
+		self.attboxesh = 100
+		#box for the options box
+		self.exboxx = 400
+		self.exboxy = 400
+		self.exboxw = 100
+		self.exboxh = 100
+		self.exboxc = (200, 200, 200)
+		self.exboxn = (100, 100, 100)
+		self.playimgx = 0
+		self.playimgy = 200
+		self.oppimgx = 400
+		self.oppimgy = 0
+
+		        #labels
+		self.eLabel = self.font.render("Exit", 1, (0, 0, 0))
+		self.nLabel = self.font.render("Next", 1, (0, 0, 0))
+		self.eLabelX = self.exboxx + 15
+		self.eLabelY = self.exboxy + self.exboxh/2 - 15
+
+		self.win = False
+		self.loss = False
+
+	def set_images(self, player, opponent):
+		'''this function currently assumes that the images will be jpegs
+		   so we will probably need to change that and we'll also need to
+		   change it to reflect how the pictures are actually named'''
+
+		self.playimg = pygame.image.load("images/" + player.get_picture_name("right"))
+		self.playimg = pygame.transform.scale(self.playimg, (100, 100))
+		self.oppimg = pygame.image.load("images/" + opponent.get_picture_name("left"))
+		self.oppimg = pygame.transform.scale(self.oppimg, (100, 100))	
+
+	def get_end_screen(self, screen, res):
+		'''prints end screen to window'''
+		screen.fill((255, 255, 255))
+		pygame.draw.rect(screen, self.exboxc, pygame.Rect(self.exboxx, self.exboxy, self.exboxw, self.exboxh))	
+		screen.blit(self.playimg, (self.playimgx, self.playimgy)) # display image for player
+		screen.blit(self.oppimg, (self.oppimgx, self.oppimgy)) # display image for opponent
+		if res == "win":
+			result = self.font.render("Winner", 1, (0, 0, 0))
+		elif res == "loss":
+			result = self.font.render("Loser", 1, (0, 0, 0))
+		screen.blit(result, (200, 200))	
+		end = self.font.render("Click anywhere to exit", 1, (255, 255, 255))	
+		screen.blit(end, (75, 310))
+		return screen
+
 
 def main():
 	'''
@@ -432,6 +480,7 @@ def main():
 	hs = HomeScreen()
 	cs = CharacterScreen()
 	gs = GameScreen()
+	es = EndScreen()
 
 	#TODO:
 	#change health after attacks
@@ -483,8 +532,11 @@ def main():
 						gs.opp_attack()
 					elif gs.is_next_button(pygame.mouse.get_pos()):
 						gs.clear_attack_bubble()
-					if gs.check_for_win():
-						game_state = 1
+					if gs.check_for_win() != False:
+						game_state = 4
+						es.set_images(gs.player,gs.opponent)
+						result = gs.check_for_win()
+						print result
 
 		if game_state == 1:
 		 	screen = hs.get_home_screen(screen)
@@ -492,6 +544,8 @@ def main():
 		 	screen = cs.get_character_screen(screen)
 		elif game_state == 3:
 			screen = gs.get_game_screen(screen)
+		elif game_state == 4:
+			screen = es.get_end_screen(screen, result)
 		pygame.display.update()
 		pygame.display.flip()
 
