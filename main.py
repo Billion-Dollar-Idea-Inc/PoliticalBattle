@@ -417,6 +417,7 @@ class GameScreen():
 class EndScreen():
 	def __init__(self):
 		self.font = pygame.font.SysFont("monospace", 30)
+		self.font2 = pygame.font.SysFont("monospace", 20)
 		self.attboxesx = [0, 200, 0, 200]
 		self.attboxesy = [300, 300, 400, 400]
 		self.attboxesw = 200
@@ -428,19 +429,15 @@ class EndScreen():
 		self.exboxh = 100
 		self.exboxc = (200, 200, 200)
 		self.exboxn = (100, 100, 100)
-		self.playimgx = 0
-		self.playimgy = 200
-		self.oppimgx = 400
-		self.oppimgy = 0
-
-		        #labels
+		self.playimgx = 250
+		self.playimgy = 150
+		self.oppimgx = 250
+		self.oppimgy = 150
+		#labels
 		self.eLabel = self.font.render("Exit", 1, (0, 0, 0))
 		self.nLabel = self.font.render("Next", 1, (0, 0, 0))
 		self.eLabelX = self.exboxx + 15
 		self.eLabelY = self.exboxy + self.exboxh/2 - 15
-
-		self.win = False
-		self.loss = False
 
 	def set_images(self, player, opponent):
 		'''this function currently assumes that the images will be jpegs
@@ -455,16 +452,16 @@ class EndScreen():
 	def get_end_screen(self, screen, res):
 		'''prints end screen to window'''
 		screen.fill((255, 255, 255))
-		pygame.draw.rect(screen, self.exboxc, pygame.Rect(self.exboxx, self.exboxy, self.exboxw, self.exboxh))	
-		screen.blit(self.playimg, (self.playimgx, self.playimgy)) # display image for player
-		screen.blit(self.oppimg, (self.oppimgx, self.oppimgy)) # display image for opponent
+		pygame.draw.rect(screen, self.exboxc, pygame.Rect(200, 200, self.exboxw, self.exboxh))	
 		if res == "win":
 			result = self.font.render("Winner", 1, (0, 0, 0))
+			screen.blit(self.playimg, (self.playimgx, self.playimgy))
 		elif res == "loss":
 			result = self.font.render("Loser", 1, (0, 0, 0))
+			screen.blit(self.oppimg, (self.oppimgx, self.oppimgy))
 		screen.blit(result, (200, 200))	
-		end = self.font.render("Click anywhere to exit", 1, (255, 255, 255))	
-		screen.blit(end, (75, 310))
+		end = self.font2.render("Click anywhere to exit", 1, (0, 0, 0))	
+		screen.blit(end, (75, 350))
 		return screen
 
 
@@ -483,8 +480,6 @@ def main():
 	es = EndScreen()
 
 	#TODO:
-	#change health after attacks
-	#assign win or loss after one of the plaers health = 0
 	#put \n in database
 	#don't allow player to select attack when its not their turn
 
@@ -536,7 +531,6 @@ def main():
 						game_state = 4
 						es.set_images(gs.player,gs.opponent)
 						result = gs.check_for_win()
-						print result
 
 		if game_state == 1:
 		 	screen = hs.get_home_screen(screen)
