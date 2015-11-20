@@ -418,26 +418,15 @@ class EndScreen():
 	def __init__(self):
 		self.font = pygame.font.SysFont("monospace", 30)
 		self.font2 = pygame.font.SysFont("monospace", 20)
-		self.attboxesx = [0, 200, 0, 200]
-		self.attboxesy = [300, 300, 400, 400]
-		self.attboxesw = 200
-		self.attboxesh = 100
-		#box for the options box
-		self.exboxx = 400
-		self.exboxy = 400
-		self.exboxw = 100
-		self.exboxh = 100
-		self.exboxc = (200, 200, 200)
-		self.exboxn = (100, 100, 100)
-		self.playimgx = 250
-		self.playimgy = 150
-		self.oppimgx = 250
-		self.oppimgy = 150
-		#labels
-		self.eLabel = self.font.render("Exit", 1, (0, 0, 0))
-		self.nLabel = self.font.render("Next", 1, (0, 0, 0))
-		self.eLabelX = self.exboxx + 15
-		self.eLabelY = self.exboxy + self.exboxh/2 - 15
+		#box for background of result
+		self.resboxx = 180
+		self.resboxy = 190
+		self.resboxw = 150
+		self.resboxh = 50
+		self.resboxc = (200, 200, 200)
+		self.resboxn = (100, 100, 100)
+		self.imgx = 200
+		self.imgy = 100
 
 	def set_images(self, player, opponent):
 		'''this function currently assumes that the images will be jpegs
@@ -452,16 +441,18 @@ class EndScreen():
 	def get_end_screen(self, screen, res):
 		'''prints end screen to window'''
 		screen.fill((255, 255, 255))
-		pygame.draw.rect(screen, self.exboxc, pygame.Rect(200, 200, self.exboxw, self.exboxh))	
+		background = pygame.image.load('flag.jpg')
+		screen.blit(background, [0, 0])
+		pygame.draw.rect(screen, self.resboxc, pygame.Rect(self.resboxx, self.resboxy, self.resboxw, self.resboxh))	
 		if res == "win":
 			result = self.font.render("Winner", 1, (0, 0, 0))
-			screen.blit(self.playimg, (self.playimgx, self.playimgy))
+			screen.blit(self.playimg, (self.imgx, self.imgy))
 		elif res == "loss":
 			result = self.font.render("Loser", 1, (0, 0, 0))
-			screen.blit(self.oppimg, (self.oppimgx, self.oppimgy))
+			screen.blit(self.oppimg, (self.imgx, self.imgy))
 		screen.blit(result, (200, 200))	
 		end = self.font2.render("Click anywhere to exit", 1, (0, 0, 0))	
-		screen.blit(end, (75, 350))
+		screen.blit(end, (100, 350))
 		return screen
 
 
