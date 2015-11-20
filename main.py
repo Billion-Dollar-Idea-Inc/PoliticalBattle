@@ -6,8 +6,8 @@ import crudder
 class HomeScreen:
 	def __init__(self):
 		self.font = pygame.font.SysFont("monospace", 50)
-		self.labeltitle1 = self.font.render("Political", 1, (0, 0, 0))
-		self.labeltitle2 = self.font.render("Battle", 1, (0, 0, 0))
+		self.labeltitle1 = self.font.render("Political", 1, (255, 255, 255))
+		self.labeltitle2 = self.font.render("Battle", 1, (255, 255, 255))
 		self.font = pygame.font.SysFont("monospace", 30)
 		self.labeldem = self.font.render("Democrat", 1, (0, 0, 0))
 		self.labelrep = self.font.render("Republican", 1, (0, 0, 0))
@@ -30,6 +30,8 @@ class HomeScreen:
 	def get_home_screen(self, screen):
 		'''paints the home page to the screen'''
 		screen.fill(self.background_color)
+		background = pygame.image.load('images/start_back.jpg')
+		screen.blit(background, [0, 0])
 		screen.blit(self.labeltitle1, (100, 50))
 		screen.blit(self.labeltitle2, (175, 100))
 		pygame.draw.rect(screen, self.dem_color, pygame.Rect(self.demrectx, self.demrecty, self.demrectw, self.demrecth))
@@ -223,13 +225,13 @@ class GameScreen():
 		self.playimgy = 200
 		self.oppimgx = 400
 		self.oppimgy = 0
-
-                #labels
+        #labels
 		self.eLabel = self.font.render("Exit", 1, (0, 0, 0))
 		self.nLabel = self.font.render("Next", 1, (0, 0, 0))
 		self.eLabelX = self.exboxx + 15
 		self.eLabelY = self.exboxy + self.exboxh/2 - 15
-
+		#booleans for gameplay control
+		self.player_turn = True
 		self.show_attack = False
 		self.show_opp_attack = False
 		self.opp_turn = False
@@ -317,18 +319,19 @@ class GameScreen():
 
 	def attack(self, attackPos):
 		'''displays attack desc on the screen and decrements opp health'''
-		self.currentAttack = self.descs[attackPos];#sets attack selected description to speaking bubble
-                self.show_attack = True
-		self.opponent.health -= self.powers[attackPos]
-		self.opp_turn = True
-	
-	def opp_attack(self):	
-		'''display attack desc to screen and decrements player health'''
-		self.oppAttack = self.opponent.get_random_attack()
-		self.currentOppAttack = self.oppAttack[0]
-		self.player.health -= self.oppAttack[1]
-		self.show_opp_attack = True
-		self.opp_turn = False
+		if self.player_turn:
+			self.currentAttack = self.player.get_attack_description(attackPos)#sets attack selected description to speaking bubble
+			self.show_attack = True
+			self.opponent.dec_health(self.powers[attackPos])
+			self.opp_turn = True
+			self.player_turn = False
+		else:
+			self.oppAttack = self.opponent.get_random_attack()
+			self.currentOppAttack = self.oppAttack[0]
+			self.player.dec_health(self.oppAttack[1])
+			self.show_opp_attack = True
+			self.opp_turn = False
+			self.player_turn = True
 	
 	def render_text(self, screen, font, text, pos, color):
 		'''using the parameters, draws rectangle to the screen with the
@@ -348,19 +351,19 @@ class GameScreen():
 			height += font.get_linesize()
 		return screen
 
-        def display_attack(self, screen, insult, isPlayer):
-                '''Function needs screen to work, takes string that is the insult
-                and true or false for isPlayer and displays in a speach bubble'''
-                x = 100
-                y = 100
-                w = 300
-                h = 100
-                pygame.draw.ellipse(screen, (200, 200, 200), (x, y, w, h), 0)
-                if isPlayer:
-                    pygame.draw.polygon(screen, (200, 200, 200), [(self.playimgx + 80, self.playimgy + 20), (x + 25, y + h/2 - 2), (x + w/3 + 50, y + h/2 - 2), (self.playimgx + 80, self.playimgy + 20)], 0)
-                else:
-                    pygame.draw.polygon(screen, (200, 200, 200), [(self.oppimgx + 20, self.oppimgy + 80), (x + w - 25, y + h/2 -2), (x + 2*w/3 - 50, y + h/2 -2), (self.oppimgx + 20, self.oppimgy + 80)], 0)
-                screen = self.render_text(screen, pygame.font.SysFont("monospace", 10), insult, (x + 25, y + h/2 - 10), (0, 0, 0))
+	def display_attack(self, screen, insult, isPlayer):
+		'''Function needs screen to work, takes string that is the insult
+		and true or false for isPlayer and displays in a speach bubble'''
+		x = 100
+		y = 100
+		w = 300
+		h = 100
+		pygame.draw.ellipse(screen, (200, 200, 200), (x, y, w, h), 0)
+		if isPlayer:
+		    pygame.draw.polygon(screen, (200, 200, 200), [(self.playimgx + 80, self.playimgy + 20), (x + 25, y + h/2 - 2), (x + w/3 + 50, y + h/2 - 2), (self.playimgx + 80, self.playimgy + 20)], 0)
+		else:
+		    pygame.draw.polygon(screen, (200, 200, 200), [(self.oppimgx + 20, self.oppimgy + 80), (x + w - 25, y + h/2 -2), (x + 2*w/3 - 50, y + h/2 -2), (self.oppimgx + 20, self.oppimgy + 80)], 0)
+		screen = self.render_text(screen, pygame.font.SysFont("monospace", 10), insult, (x + 25, y + h/2 - 10), (0, 0, 0))
 
 	def clear_attack_bubble(self):
 		self.show_attack = False
@@ -373,43 +376,30 @@ class GameScreen():
 		screen.blit(self.eLabel, (self.eLabelX, self.eLabelY))
 		pygame.draw.rect(screen, self.exboxn, pygame.Rect(self.exboxx, self.exboxy-self.exboxh, self.exboxw, self.exboxh))
 		screen.blit(self.nLabel, (self.eLabelX, self.eLabelY-self.exboxh))
-                screen.blit(self.playimg, (self.playimgx, self.playimgy)) # display image for player
-                screen.blit(self.oppimg, (self.oppimgx, self.oppimgy)) # display image for opponent
+		screen.blit(self.playimg, (self.playimgx, self.playimgy)) # display image for player
+		screen.blit(self.oppimg, (self.oppimgx, self.oppimgy)) # display image for opponent
 		for x in range(0, 4):
 			pygame.draw.rect(screen, self.attboxesc[x], pygame.Rect(self.attboxesx[x], self.attboxesy[x], self.attboxesw, self.attboxesh))
-
-                        fontSize = 20
-                        afont = pygame.font.SysFont("monospace", fontSize)
-                        att = self.attacks[x]
-                        screen = self.render_text(screen, afont, att, (self.attboxesx[x] + fontSize, self.attboxesy[x] + self.attboxesh/2 - fontSize), (255, 255, 255))
+			fontSize = 20
+			afont = pygame.font.SysFont("monospace", fontSize)
+			att = self.attacks[x]
+			screen = self.render_text(screen, afont, att, (self.attboxesx[x] + fontSize, self.attboxesy[x] + self.attboxesh/2 - fontSize), (255, 255, 255))
 		if self.show_attack:
 			self.display_attack(screen, self.currentAttack , True)
+			self.player_turn = False
 		elif self.show_opp_attack:
 			self.display_attack(screen, self.currentOppAttack, False)
+			self.player_turn = True
 		self.display_health(screen)
-		return screen
-
-	def get_end_screen(self, screen, result):
-		font2 = pygame.font.SysFont("monospace", 90)
-		font3 = pygame.font.SysFont("monospace", 25)
-		screen = self.get_game_screen(screen)
-		pygame.draw.rect(screen, (125, 125, 125), pygame.Rect(50, 50, 400, 300))
-		first = font2.render("You", 1, (255, 0, 0))
-		screen.blit(first, (100, 100))
-		if result == "win":
-			second = font2.render("Won!", 1, (0, 0, 255))
-		else:
-			second = font2.render("Lost.", 1, (0, 0, 255))
-		screen.blit(second, (200, 200))
-		third = font3.render("Click anywhere to exit", 1, (255, 255, 255))
-		screen.blit(third, (75, 310))
 		return screen
 
 	def check_for_win(self):
 		'''returns either PLAY, OPP, or NONE'''
 		if self.player.get_health() < 1:
+			self.player_turn = True
 			return "loss"
 		elif self.opponent.get_health() < 1:
+		   	self.player_turn = True
 		   	return "win"
 		else:
 		   	return False
@@ -429,16 +419,17 @@ class EndScreen():
 		self.imgy = 100
 
 	def set_images(self, player, opponent):
-		'''this function currently assumes that the images will be jpegs
-		   so we will probably need to change that and we'll also need to
-		   change it to reflect how the pictures are actually named'''
+		'''set opponent and player pictures to display winner'''
 
 		self.playimg = pygame.image.load("images/" + player.get_picture_name("right"))
 		self.playimg = pygame.transform.scale(self.playimg, (100, 100))
 		self.oppimg = pygame.image.load("images/" + opponent.get_picture_name("left"))
 		self.oppimg = pygame.transform.scale(self.oppimg, (100, 100))
+		self.playname = player.get_name()
+		self.oppname = opponent.get_name()
 
 	def is_in_start(self, pos):
+		'''senses when you click outside winner block'''
 		xpos = pos[0]
 		ypos = pos[1]
 		if (xpos < self.resboxx and xpos > 0) or (xpos > self.resboxx + self.resboxw and xpos < 450) or ((ypos < self.resboxy and ypos > 0) or (ypos > self.resboxy+self.resboxh and ypos < 450)):
@@ -448,17 +439,19 @@ class EndScreen():
 	def get_end_screen(self, screen, res):
 		'''prints end screen to window'''
 		screen.fill((255, 255, 255))
-		background = pygame.image.load('flag.jpg')
+		background = pygame.image.load('images/flag3.jpg')
 		screen.blit(background, [0, 0])
 		pygame.draw.rect(screen, self.resboxc, pygame.Rect(self.resboxx, self.resboxy, self.resboxw, self.resboxh))	
+		result = self.font.render("Winner:", 1, (0, 0, 0))
 		if res == "win":
-			result = self.font.render("Winner", 1, (0, 0, 0))
+			name = self.font.render(self.playname, 1, (255, 255, 255))
 			screen.blit(self.playimg, (self.imgx, self.imgy))
 		elif res == "loss":
-			result = self.font.render("Loser", 1, (0, 0, 0))
+			name = self.font.render(self.oppname, 1, (255, 255, 255))
 			screen.blit(self.oppimg, (self.imgx, self.imgy))
-		screen.blit(result, (200, 200))	
-		end = self.font2.render("Click anywhere to exit", 1, (0, 0, 0))	
+		screen.blit(result, (200, 200))
+		screen.blit(name, (150, 250))		
+		end = self.font2.render("Click anywhere to exit", 1, (255, 255, 255))	
 		screen.blit(end, (100, 350))
 		return screen
 
@@ -480,7 +473,6 @@ def main():
 	#TODO:
 	#put \n in database
 	#don't allow player to select attack when its not their turn
-
 
 	# -- this would need to be worked out --
 	#if 1, then were at the home screen
@@ -504,29 +496,30 @@ def main():
 				elif game_state == 2:
 				  	if cs.is_in_start_button(pygame.mouse.get_pos()):
 						game_state = 3
-                                                gs.set_players(cs.get_chars_to_battle())
-                                                gs.set_images(gs.player,gs.opponent)
-                                                gs.set_attacks(gs.player)
-                                                gs.set_descriptions(gs.player)
-                                                gs.set_power(gs.player)
+						gs.set_players(cs.get_chars_to_battle())
+						gs.set_images(gs.player,gs.opponent)
+						gs.set_attacks(gs.player)
+						gs.set_descriptions(gs.player)
+						gs.set_power(gs.player)
 					elif cs.is_in_back_button(pygame.mouse.get_pos()):
 						game_state = 1
 					else:
 						cs.set_character(pygame.mouse.get_pos())
 				elif game_state == 3:
-					if gs.get_attack(pygame.mouse.get_pos()) != None:
+					if gs.opp_turn and gs.is_next_button(pygame.mouse.get_pos()):
+						gs.clear_attack_bubble()
+						gs.attack(gs.get_attack(pygame.mouse.get_pos()))
+					elif gs.is_next_button(pygame.mouse.get_pos()):
+						gs.clear_attack_bubble()
+					elif gs.get_attack(pygame.mouse.get_pos()) != None:
 						gs.clear_attack_bubble()
 						gs.attack(gs.get_attack(pygame.mouse.get_pos()))
 					elif gs.is_exit_button(pygame.mouse.get_pos()):
 						gs.clear_attack_bubble()
 						game_state = 1
-					elif gs.opp_turn and gs.is_next_button(pygame.mouse.get_pos()):
-						gs.clear_attack_bubble()
-						gs.opp_attack()
-					elif gs.is_next_button(pygame.mouse.get_pos()):
-						gs.clear_attack_bubble()
 					if gs.check_for_win() != False:
 						game_state = 4
+						gs.clear_attack_bubble()
 						es.set_images(gs.player,gs.opponent)
 						result = gs.check_for_win()
 				elif game_state == 4:
