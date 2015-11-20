@@ -436,7 +436,14 @@ class EndScreen():
 		self.playimg = pygame.image.load("images/" + player.get_picture_name("right"))
 		self.playimg = pygame.transform.scale(self.playimg, (100, 100))
 		self.oppimg = pygame.image.load("images/" + opponent.get_picture_name("left"))
-		self.oppimg = pygame.transform.scale(self.oppimg, (100, 100))	
+		self.oppimg = pygame.transform.scale(self.oppimg, (100, 100))
+
+	def is_in_start(self, pos):
+		xpos = pos[0]
+		ypos = pos[1]
+		if (xpos < self.resboxx and xpos > 0) or (xpos > self.resboxx + self.resboxw and xpos < 450) or ((ypos < self.resboxy and ypos > 0) or (ypos > self.resboxy+self.resboxh and ypos < 450)):
+			return True
+		return False	
 
 	def get_end_screen(self, screen, res):
 		'''prints end screen to window'''
@@ -522,6 +529,9 @@ def main():
 						game_state = 4
 						es.set_images(gs.player,gs.opponent)
 						result = gs.check_for_win()
+				elif game_state == 4:
+					if es.is_in_start(pygame.mouse.get_pos()):
+						game_state = 1
 
 		if game_state == 1:
 		 	screen = hs.get_home_screen(screen)
