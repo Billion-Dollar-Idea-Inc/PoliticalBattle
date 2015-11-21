@@ -305,7 +305,6 @@ class GameScreen():
 		self.healthBarH = 100
 		self.playHealthBarH = self.player.get_health()
 		self.oppHealthBarH = self.opponent.get_health()
-		print self.oppHealthBarH
 		self.OppHealthBarY = 0
 		self.OppHealthBarX = 300
 		#paints red bar underneath healthbar to indicate lost health

@@ -1,6 +1,10 @@
 import random
+import sqlite3
+import crudder
 
-names = # get all names
+crud = crudder.Crudder()
+
+names = 
 
 for x in names:
     rPower = randomint(10, 25)
