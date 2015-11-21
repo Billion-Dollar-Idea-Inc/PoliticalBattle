@@ -193,7 +193,11 @@ class CharacterScreen():
 	    			if ypos > self.rectOppy+(x*self.opph) and ypos < self.rectOppy+(x*self.opph)+self.opph:
 	    				self.OppSelect = x
 
-        def get_chars_to_battle(self):
+	def reset_characters(self):
+		self.PlaySelect = 0
+		self.OppSelect = 0
+
+	def get_chars_to_battle(self):
             '''
             Returns current selected Characters for player and oppenet,
             returned as a 2 item list with player in idex 0, opponent in 1
@@ -530,9 +534,11 @@ def main():
 						gs.clear_attack_bubble()
 						gs.attack(gs.get_attack(pygame.mouse.get_pos()))
 					elif gs.is_exit_button(pygame.mouse.get_pos()):
+						cs.reset_characters()
 						gs.clear_attack_bubble()
 						game_state = 1	
 				elif game_state == 4:
+					cs.reset_characters()
 					if gs.in_screen(pygame.mouse.get_pos()):#checks to see if anywhere is clicked
 						game_state = 1
 
