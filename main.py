@@ -225,8 +225,6 @@ class GameScreen():
 		#paramers for white background for opp image	
 		self.bgroundoppx = 390
 		self.bgroundoppy = 0
-		self.bgroundoppw = 110
-		self.bgroundopph = 110
 		#box for the options box
 		self.exboxx = 400
 		self.exboxy = 400
@@ -338,14 +336,12 @@ class GameScreen():
 			self.currentAttack = self.player.get_attack_description(attackPos)#sets attack selected description to speaking bubble
 			self.show_attack = True
 			self.opponent.dec_health(self.powers[attackPos])
-			self.opp_turn = True
 			self.player_turn = False
 		else:
 			self.oppAttack = self.opponent.get_random_attack()
 			self.currentOppAttack = self.oppAttack[0]
 			self.player.dec_health(self.oppAttack[1])
 			self.show_opp_attack = True
-			self.opp_turn = False
 			self.player_turn = True
 	
 	def render_text(self, screen, font, text, pos, color):
@@ -381,10 +377,12 @@ class GameScreen():
 		screen = self.render_text(screen, pygame.font.SysFont("monospace", 10), insult, (x + 25, y + h/2 - 10), (0, 0, 0))
 
 	def clear_attack_bubble(self):
+		'''clears text bubble in middle of screen'''
 		self.show_attack = False
 		self.show_opp_attack = False
 
 	def in_screen(self,pos):
+		'''if there is a mouse click in the screen'''
 		xpos = pos[0]
 		ypos = pos[1]
 		if xpos > 0 and xpos < 500:
@@ -398,12 +396,12 @@ class GameScreen():
 		screen.fill((255, 255, 255))
 		background = pygame.image.load('images/char_back.jpg')
 		screen.blit(background, [0, 0])
-		pygame.draw.rect(screen, self.exboxc, pygame.Rect(self.exboxx, self.exboxy, self.exboxw, self.exboxh))
+		pygame.draw.rect(screen, self.exboxc, pygame.Rect(self.exboxx, self.exboxy, self.exboxw, self.exboxh))#exit box
 		screen.blit(self.eLabel, (self.eLabelX, self.eLabelY))
-		pygame.draw.rect(screen, self.exboxn, pygame.Rect(self.exboxx, self.exboxy-self.exboxh, self.exboxw, self.exboxh))
+		pygame.draw.rect(screen, self.exboxn, pygame.Rect(self.exboxx, self.exboxy-self.exboxh, self.exboxw, self.exboxh))#'next' box 
 		screen.blit(self.nLabel, (self.eLabelX, self.eLabelY-self.exboxh))
-		pygame.draw.rect(screen, self.bgroundc, pygame.Rect(self.bgroundx, self.bgroundy, self.bgroundw, self.bgroundh))
-		pygame.draw.rect(screen, self.bgroundc, pygame.Rect(self.bgroundoppx, self.bgroundoppy, self.bgroundoppw, self.bgroundopph))
+		pygame.draw.rect(screen, self.bgroundc, pygame.Rect(self.bgroundx, self.bgroundy, self.bgroundw, self.bgroundh))#white background behind player
+		pygame.draw.rect(screen, self.bgroundc, pygame.Rect(self.bgroundoppx, self.bgroundoppy, self.bgroundw, self.bgroundh))#white bacground behind opp
 		screen.blit(self.playimg, (self.playimgx, self.playimgy)) # display image for player
 		screen.blit(self.oppimg, (self.oppimgx, self.oppimgy)) # display image for opponent		
 		for x in range(0, 4):
@@ -422,12 +420,10 @@ class GameScreen():
 		return screen
 
 	def check_for_win(self):
-		'''returns either PLAY, OPP, or NONE'''
+		'''returns either win loss or False'''
 		if self.player.get_health() < 1:
-			self.player_turn = True
 			return "loss"
 		elif self.opponent.get_health() < 1:
-		   	self.player_turn = True
 		   	return "win"
 		else:
 		   	return False
@@ -448,21 +444,12 @@ class EndScreen():
 
 	def set_images(self, player, opponent):
 		'''set opponent and player pictures to display winner'''
-
 		self.playimg = pygame.image.load("images/" + player.get_picture_name("right"))
 		self.playimg = pygame.transform.scale(self.playimg, (100, 100))
 		self.oppimg = pygame.image.load("images/" + opponent.get_picture_name("left"))
 		self.oppimg = pygame.transform.scale(self.oppimg, (100, 100))
 		self.playname = player.get_name()
 		self.oppname = opponent.get_name()
-
-	def is_in_start(self, pos):
-		'''senses when you click outside winner block'''
-		xpos = pos[0]
-		ypos = pos[1]
-		if (xpos < self.resboxx and xpos > 0) or (xpos > self.resboxx + self.resboxw and xpos < 450) or ((ypos < self.resboxy and ypos > 0) or (ypos > self.resboxy+self.resboxh and ypos < 450)):
-			return True
-		return False	
 
 	def get_end_screen(self, screen, res):
 		'''prints end screen to window'''
@@ -499,13 +486,8 @@ def main():
 	es = EndScreen()
 
 	#TODO:
-	#put \n in database
-	#don't allow player to select attack when its not their turn
+	#put \n in database	
 
-	# -- this would need to be worked out --
-	#if 1, then were at the home screen
-	#if 2, were at character selection
-	#if 3, in the game
 	game_state = 1
 
 	while True:
@@ -534,24 +516,24 @@ def main():
 					else:
 						cs.set_character(pygame.mouse.get_pos())
 				elif game_state == 3:
-					if gs.check_for_win() != False and  (gs.in_screen(pygame.mouse.get_pos())):
+					if gs.check_for_win() != False and  (gs.in_screen(pygame.mouse.get_pos())):#if game is over and user makes an additional click 
 						game_state = 4	
 						gs.clear_attack_bubble()
 						es.set_images(gs.player,gs.opponent)
-						result = gs.check_for_win()
-					elif gs.opp_turn and gs.is_next_button(pygame.mouse.get_pos()):
+						result = gs.check_for_win()#sets result to win or loss
+					elif not gs.player_turn and gs.is_next_button(pygame.mouse.get_pos()):
 						gs.clear_attack_bubble()
 						gs.attack(gs.get_attack(pygame.mouse.get_pos()))
 					elif gs.is_next_button(pygame.mouse.get_pos()):
 						gs.clear_attack_bubble()
-					elif gs.get_attack(pygame.mouse.get_pos()) != None:
+					elif gs.get_attack(pygame.mouse.get_pos()) != None:#if it is player turn text bubble is cleared and it waits for player attack
 						gs.clear_attack_bubble()
 						gs.attack(gs.get_attack(pygame.mouse.get_pos()))
 					elif gs.is_exit_button(pygame.mouse.get_pos()):
 						gs.clear_attack_bubble()
 						game_state = 1	
 				elif game_state == 4:
-					if es.is_in_start(pygame.mouse.get_pos()):
+					if gs.in_screen(pygame.mouse.get_pos()):#checks to see if anywhere is clicked
 						game_state = 1
 
 		if game_state == 1:
