@@ -382,6 +382,15 @@ class GameScreen():
 		self.show_attack = False
 		self.show_opp_attack = False
 
+	def in_screen(self,pos):
+		xpos = pos[0]
+		ypos = pos[1]
+		if xpos > 0 and xpos < 500:
+			if ypos > 0 and ypos < 500:
+				return True
+		return False
+
+
 	def get_game_screen(self, screen):
 		'''prints game screen to window'''
 		screen.fill((255, 255, 255))
@@ -523,7 +532,12 @@ def main():
 					else:
 						cs.set_character(pygame.mouse.get_pos())
 				elif game_state == 3:
-					if gs.opp_turn and gs.is_next_button(pygame.mouse.get_pos()):
+					if gs.check_for_win() != False and  (gs.in_screen(pygame.mouse.get_pos())):
+						game_state = 4	
+						gs.clear_attack_bubble()
+						es.set_images(gs.player,gs.opponent)
+						result = gs.check_for_win()
+					elif gs.opp_turn and gs.is_next_button(pygame.mouse.get_pos()):
 						gs.clear_attack_bubble()
 						gs.attack(gs.get_attack(pygame.mouse.get_pos()))
 					elif gs.is_next_button(pygame.mouse.get_pos()):
@@ -533,12 +547,7 @@ def main():
 						gs.attack(gs.get_attack(pygame.mouse.get_pos()))
 					elif gs.is_exit_button(pygame.mouse.get_pos()):
 						gs.clear_attack_bubble()
-						game_state = 1
-					if gs.check_for_win() != False:
-						game_state = 4
-						gs.clear_attack_bubble()
-						es.set_images(gs.player,gs.opponent)
-						result = gs.check_for_win()
+						game_state = 1	
 				elif game_state == 4:
 					if es.is_in_start(pygame.mouse.get_pos()):
 						game_state = 1
