@@ -121,9 +121,7 @@ class CharacterScreen():
                     self.nameList = self.crud.get_chars_in_party("DEM")
                 else:
                     self.nameList = self.crud.get_chars_in_party("REP")
-		#if not self.unlock_players and not self.done:
-			#self.play_ops -= 1
-			#self.done = True
+
 		for x in range(0, self.play_ops):
 			if x == self.PlaySelect:
 				pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(self.rectPlayx, self.rectPlayy+(x*self.playh), self.optionw, self.playh))
@@ -156,6 +154,9 @@ class CharacterScreen():
                         screen.blit(self.name, (self.rectOppx + 10, self.rectOppy + (x*self.opph) + self.opph/2 - 10))
 		return screen
 
+	def unlock_player(self):
+		self.unlock_players = True
+
 	def set_party(self, party):
 		self.party = party
 		c = crudder.Crudder()
@@ -164,9 +165,9 @@ class CharacterScreen():
 			self.opp_ops = c.get_num_chars_in_party("REP")
 		else:
 			self.opp_ops = c.get_num_chars_in_party("DEM")
-		if not self.unlock_players and not self.done:
+		if not self.unlock_players:
 			self.play_ops -=1
-			self.done = True
+			self.opp_ops -=1
 		self.optionw = self.rectCharw
 		total = self.rectCharh
 		self.playh = total/self.play_ops
@@ -177,7 +178,6 @@ class CharacterScreen():
 		ypos = pos[1]
 		if xpos > self.rectStartx and xpos < self.rectStartx+self.rectStartw:
 			if ypos > self.rectStarty and ypos < self.rectStarty+self.rectStarth:
-				self.reset_characters()
 				return True
 		return False
 
@@ -185,8 +185,7 @@ class CharacterScreen():
 		xpos = pos[0]
 		ypos = pos[1]
 		if xpos > self.rectBackx and xpos < self.rectBackx+self.rectStartw:
-			if ypos > self.rectStarty and ypos < self.rectStarty+self.rectStarth:
-				self.reset_characters()
+			if ypos > self.rectStarty and ypos < self.rectStarty+self.rectStarth:	
 				return True
 		return False
 
@@ -269,9 +268,6 @@ class GameScreen():
 		else:
 		     	self.attboxesc = [(125, 0, 0), (250, 0, 0), (250, 0, 0), (125, 0, 0)]
             	self.opponent = character.Character(names[1])
-
-	    # self.set_images(self.player.get_picture(), self.opponent.get_picture) # get_picture unfinished
-	    # self.set_attacks(self.player.get_four_attacks()) # get_four_attacks unfinished
 
 	def set_images(self, player, opponent):
 		'''this function currently assumes that the images will be jpegs
@@ -511,6 +507,7 @@ def main():
 				sys.exit()
 			if event.type == pygame.MOUSEBUTTONDOWN:
 				if game_state == 1:
+					cs.reset_characters()
 					if hs.is_in_dem_button(pygame.mouse.get_pos()):
 						game_state = 2
 						cs.set_party("DEM")
@@ -548,8 +545,7 @@ def main():
 						game_state = 1	
 				elif game_state == 4:
 					if gs.check_for_win() == "win":
-						cs.unlock_players == True
-					cs.reset_characters()
+						cs.unlock_player()
 					if gs.in_screen(pygame.mouse.get_pos()):#checks to see if anywhere is clicked
 						game_state = 1
 
