@@ -15,6 +15,7 @@ class HomeScreen:
 		self.labely = 235
 		self.background_color = (255, 255, 255)
 		self.dem_color = (0, 0, 255)
+		self.title_color = (0,0,0)
 		self.demrectx = 100
 		self.demrecty = 200
 		self.demrectw = 300
@@ -32,7 +33,8 @@ class HomeScreen:
 		screen.fill(self.background_color)
 		background = pygame.image.load('images/start_back.jpg')
 		screen.blit(background, [0, 0])
-		screen.blit(self.labeltitle1, (100, 50))
+		pygame.draw.rect(screen, self.title_color, pygame.Rect(self.demrectx-20, self.demrecty-160, self.demrectw+40, self.demrecth+20))
+		screen.blit(self.labeltitle1, (110, 50))
 		screen.blit(self.labeltitle2, (175, 100))
 		pygame.draw.rect(screen, self.dem_color, pygame.Rect(self.demrectx, self.demrecty, self.demrectw, self.demrecth))
 		screen.blit(self.labeldem, (self.labelx + 20, self.labely))
@@ -213,7 +215,18 @@ class GameScreen():
 		self.attboxesx = [0, 200, 0, 200]
 		self.attboxesy = [300, 300, 400, 400]
 		self.attboxesw = 200
-		self.attboxesh = 100
+		self.attboxesh = 100		
+		#paramers for white background for play image
+		self.bgroundc = (210,210,210)
+		self.bgroundx = 0
+		self.bgroundy = 190
+		self.bgroundw = 110
+		self.bgroundh = 110
+		#paramers for white background for opp image	
+		self.bgroundoppx = 390
+		self.bgroundoppy = 0
+		self.bgroundoppw = 110
+		self.bgroundopph = 110
 		#box for the options box
 		self.exboxx = 400
 		self.exboxy = 400
@@ -372,12 +385,16 @@ class GameScreen():
 	def get_game_screen(self, screen):
 		'''prints game screen to window'''
 		screen.fill((255, 255, 255))
+		background = pygame.image.load('images/char_back.jpg')
+		screen.blit(background, [0, 0])
 		pygame.draw.rect(screen, self.exboxc, pygame.Rect(self.exboxx, self.exboxy, self.exboxw, self.exboxh))
 		screen.blit(self.eLabel, (self.eLabelX, self.eLabelY))
 		pygame.draw.rect(screen, self.exboxn, pygame.Rect(self.exboxx, self.exboxy-self.exboxh, self.exboxw, self.exboxh))
 		screen.blit(self.nLabel, (self.eLabelX, self.eLabelY-self.exboxh))
+		pygame.draw.rect(screen, self.bgroundc, pygame.Rect(self.bgroundx, self.bgroundy, self.bgroundw, self.bgroundh))
+		pygame.draw.rect(screen, self.bgroundc, pygame.Rect(self.bgroundoppx, self.bgroundoppy, self.bgroundoppw, self.bgroundopph))
 		screen.blit(self.playimg, (self.playimgx, self.playimgy)) # display image for player
-		screen.blit(self.oppimg, (self.oppimgx, self.oppimgy)) # display image for opponent
+		screen.blit(self.oppimg, (self.oppimgx, self.oppimgy)) # display image for opponent		
 		for x in range(0, 4):
 			pygame.draw.rect(screen, self.attboxesc[x], pygame.Rect(self.attboxesx[x], self.attboxesy[x], self.attboxesw, self.attboxesh))
 			fontSize = 20
@@ -439,7 +456,7 @@ class EndScreen():
 	def get_end_screen(self, screen, res):
 		'''prints end screen to window'''
 		screen.fill((255, 255, 255))
-		background = pygame.image.load('images/flag3.jpg')
+		background = pygame.image.load('images/flag.jpg')
 		screen.blit(background, [0, 0])
 		pygame.draw.rect(screen, self.resboxc, pygame.Rect(self.resboxx, self.resboxy, self.resboxw, self.resboxh))	
 		result = self.font.render("Winner:", 1, (0, 0, 0))
@@ -452,7 +469,7 @@ class EndScreen():
 		screen.blit(result, (200, 200))
 		screen.blit(name, (150, 250))		
 		end = self.font2.render("Click anywhere to exit", 1, (255, 255, 255))	
-		screen.blit(end, (100, 350))
+		screen.blit(end, (110, 300))
 		return screen
 
 
