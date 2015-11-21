@@ -101,6 +101,9 @@ class CharacterScreen():
 		#sets the choice boxes variable
 		self.PlaySelect = 0
 		self.OppSelect = 0
+		#if one game won you unlock obama and reagan
+		self.unlock_players = False
+		self.done = False
 
 	def get_character_screen(self, screen):
 		'''paints char screen to window'''
@@ -118,7 +121,9 @@ class CharacterScreen():
                     self.nameList = self.crud.get_chars_in_party("DEM")
                 else:
                     self.nameList = self.crud.get_chars_in_party("REP")
-
+		#if not self.unlock_players and not self.done:
+			#self.play_ops -= 1
+			#self.done = True
 		for x in range(0, self.play_ops):
 			if x == self.PlaySelect:
 				pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(self.rectPlayx, self.rectPlayy+(x*self.playh), self.optionw, self.playh))
@@ -159,6 +164,9 @@ class CharacterScreen():
 			self.opp_ops = c.get_num_chars_in_party("REP")
 		else:
 			self.opp_ops = c.get_num_chars_in_party("DEM")
+		if not self.unlock_players and not self.done:
+			self.play_ops -=1
+			self.done = True
 		self.optionw = self.rectCharw
 		total = self.rectCharh
 		self.playh = total/self.play_ops
@@ -538,6 +546,8 @@ def main():
 						gs.clear_attack_bubble()
 						game_state = 1	
 				elif game_state == 4:
+					if gs.check_for_win() == "win":
+						cs.unlock_players == True
 					cs.reset_characters()
 					if gs.in_screen(pygame.mouse.get_pos()):#checks to see if anywhere is clicked
 						game_state = 1
