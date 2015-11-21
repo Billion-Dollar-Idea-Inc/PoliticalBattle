@@ -442,6 +442,7 @@ class EndScreen():
 	def __init__(self):
 		self.font = pygame.font.SysFont("monospace", 30)
 		self.font2 = pygame.font.SysFont("monospace", 20)
+		self.font3 = pygame.font.SysFont("monospace", 15)
 		#box for background of result
 		self.resboxx = 180
 		self.resboxy = 190
@@ -451,6 +452,7 @@ class EndScreen():
 		self.resboxn = (100, 100, 100)
 		self.imgx = 200
 		self.imgy = 100
+		self.unlocked = False
 
 	def set_images(self, player, opponent):
 		'''set opponent and player pictures to display winner'''
@@ -461,7 +463,7 @@ class EndScreen():
 		self.playname = player.get_name()
 		self.oppname = opponent.get_name()
 
-	def get_end_screen(self, screen, res):
+	def get_end_screen(self, screen, res, bonus):
 		'''prints end screen to window'''
 		screen.fill((255, 255, 255))
 		background = pygame.image.load('images/flag.jpg')
@@ -478,8 +480,13 @@ class EndScreen():
 		screen.blit(name, (150, 250))		
 		end = self.font2.render("Click anywhere to exit", 1, (255, 255, 255))	
 		screen.blit(end, (110, 300))
-		return screen
 
+		if bonus:
+			unlock = self.font3.render("Bonus players unlocked!", 1, (255, 255, 255))	
+			screen.blit(unlock, (110, 350))
+			players = self.font3.render("Barack Obama and Ronald Reagan", 1, (255, 255, 255))	
+			screen.blit(players, (110, 400))
+		return screen
 
 def main():
 	'''
@@ -494,6 +501,8 @@ def main():
 	cs = CharacterScreen()
 	gs = GameScreen()
 	es = EndScreen()
+	unlock = False
+	bonus = False
 
 	#TODO:
 	#put \n in database	
@@ -528,6 +537,12 @@ def main():
 						cs.set_character(pygame.mouse.get_pos())
 				elif game_state == 3:
 					if gs.check_for_win() != False and  (gs.in_screen(pygame.mouse.get_pos())):#if game is over and user makes an additional click 
+						if gs.check_for_win() == "win" and not unlock:
+							cs.unlock_player()
+							unlock = True
+							bonus = True
+						else:
+							bonus = False
 						game_state = 4	
 						gs.clear_attack_bubble()
 						es.set_images(gs.player,gs.opponent)
@@ -544,8 +559,6 @@ def main():
 						gs.clear_attack_bubble()
 						game_state = 1	
 				elif game_state == 4:
-					if gs.check_for_win() == "win":
-						cs.unlock_player()
 					if gs.in_screen(pygame.mouse.get_pos()):#checks to see if anywhere is clicked
 						game_state = 1
 
@@ -556,7 +569,7 @@ def main():
 		elif game_state == 3:
 			screen = gs.get_game_screen(screen)
 		elif game_state == 4:
-			screen = es.get_end_screen(screen, result)
+			screen = es.get_end_screen(screen, result, bonus)
 		pygame.display.update()
 		pygame.display.flip()
 
