@@ -169,6 +169,7 @@ class CharacterScreen():
 		ypos = pos[1]
 		if xpos > self.rectStartx and xpos < self.rectStartx+self.rectStartw:
 			if ypos > self.rectStarty and ypos < self.rectStarty+self.rectStarth:
+				self.reset_characters()
 				return True
 		return False
 
@@ -177,6 +178,7 @@ class CharacterScreen():
 		ypos = pos[1]
 		if xpos > self.rectBackx and xpos < self.rectBackx+self.rectStartw:
 			if ypos > self.rectStarty and ypos < self.rectStarty+self.rectStarth:
+				self.reset_characters()
 				return True
 		return False
 
@@ -534,7 +536,6 @@ def main():
 						gs.clear_attack_bubble()
 						gs.attack(gs.get_attack(pygame.mouse.get_pos()))
 					elif gs.is_exit_button(pygame.mouse.get_pos()):
-						cs.reset_characters()
 						gs.clear_attack_bubble()
 						game_state = 1	
 				elif game_state == 4:
