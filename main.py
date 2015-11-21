@@ -305,14 +305,17 @@ class GameScreen():
 		self.healthBarH = 100
 		self.playHealthBarH = self.player.get_health()
 		self.oppHealthBarH = self.opponent.get_health()
+		print self.oppHealthBarH
 		self.OppHealthBarY = 0
 		self.OppHealthBarX = 300
 		#paints red bar underneath healthbar to indicate lost health
 		pygame.draw.rect(screen, (200, 0, 0,), pygame.Rect(self.PlayerHealthBarX, self.PlayerHealthBarY, self.healthBarH, self.healthBarW))
 		pygame.draw.rect(screen, (200, 0, 0,), pygame.Rect(self.OppHealthBarX, self.OppHealthBarY, self.healthBarH, self.healthBarW))
 		#paints the actual healthbar
-		pygame.draw.rect(screen, (0, 200, 0), pygame.Rect(self.PlayerHealthBarX, self.PlayerHealthBarY, self.playHealthBarH, self.healthBarW))
-		pygame.draw.rect(screen, (0, 200, 0), pygame.Rect(self.OppHealthBarX, self.OppHealthBarY, self.oppHealthBarH, self.healthBarW))
+		if self.playHealthBarH > 0:
+			pygame.draw.rect(screen, (0, 200, 0), pygame.Rect(self.PlayerHealthBarX, self.PlayerHealthBarY, self.playHealthBarH, self.healthBarW))
+		if self.oppHealthBarH > 0:	
+			pygame.draw.rect(screen, (0, 200, 0), pygame.Rect(self.OppHealthBarX, self.OppHealthBarY, self.oppHealthBarH, self.healthBarW))
 
 	def is_exit_button(self, pos):
 		xpos = pos[0]
