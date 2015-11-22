@@ -422,8 +422,8 @@ class GameScreen():
 			ohealth = 0
 		if health < 0:
 			health = 0
-		health = str(health)
-		ohealth = str(ohealth)
+		health = str(health)+"hp"
+		ohealth = str(ohealth)+"hp"
 		self.hfont = pygame.font.SysFont("monospace", 15)
 		self.Health = self.hfont.render(health, 1, (255, 255, 255))
 		screen.blit(self.Health,(135,260))
