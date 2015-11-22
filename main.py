@@ -308,22 +308,24 @@ class GameScreen():
 		return None
 
 	def display_health(self, screen):
-		self.PlayerHealthBarY = 284
-		self.PlayerHealthBarX = 100
-		self.healthBarW = 15
-		self.healthBarH = 100
-		self.playHealthBarH = self.player.get_health()
-		self.oppHealthBarH = self.opponent.get_health()
+		self.PlayerHealthBarY = 285
+		self.PlayerHealthBarX = 110
+		self.healthBarH = 15
+		self.healthBarW = 100
+		self.playHealthBarW = self.player.get_health()
+		self.oppHealthBarW = self.opponent.get_health()
 		self.OppHealthBarY = 0
-		self.OppHealthBarX = 300
+		self.OppHealthBarX = 290
 		#paints red bar underneath healthbar to indicate lost health
-		pygame.draw.rect(screen, (200, 0, 0,), pygame.Rect(self.PlayerHealthBarX, self.PlayerHealthBarY, self.healthBarH, self.healthBarW))
-		pygame.draw.rect(screen, (200, 0, 0,), pygame.Rect(self.OppHealthBarX, self.OppHealthBarY, self.healthBarH, self.healthBarW))
+		pygame.draw.rect(screen, (200, 0, 0,), pygame.Rect(self.PlayerHealthBarX, self.PlayerHealthBarY, self.healthBarW, self.healthBarH))
+		pygame.draw.rect(screen, (200, 0, 0,), pygame.Rect(self.OppHealthBarX, self.OppHealthBarY, self.healthBarW, self.healthBarH))
 		#paints the actual healthbar
-		if self.playHealthBarH > 0:
-			pygame.draw.rect(screen, (0, 200, 0), pygame.Rect(self.PlayerHealthBarX, self.PlayerHealthBarY, self.playHealthBarH, self.healthBarW))
-		if self.oppHealthBarH > 0:	
-			pygame.draw.rect(screen, (0, 200, 0), pygame.Rect(self.OppHealthBarX, self.OppHealthBarY, self.oppHealthBarH, self.healthBarW))
+		pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(self.PlayerHealthBarX+29, self.PlayerHealthBarY-self.healthBarH, self.healthBarW/2, self.healthBarH))
+		pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(self.OppHealthBarX+29, self.OppHealthBarY+self.healthBarH, self.healthBarW/2, self.healthBarH))
+		if self.playHealthBarW > 0:
+			pygame.draw.rect(screen, (0, 200, 0), pygame.Rect(self.PlayerHealthBarX, self.PlayerHealthBarY, self.playHealthBarW, self.healthBarH))
+		if self.oppHealthBarW > 0:	
+			pygame.draw.rect(screen, (0, 200, 0), pygame.Rect(self.OppHealthBarX, self.OppHealthBarY, self.oppHealthBarW, self.healthBarH))
 
 	def is_exit_button(self, pos):
 		xpos = pos[0]
@@ -402,17 +404,6 @@ class GameScreen():
 				return True
 		return False
 
-	def test_length(self,attack):
-		count = 0
-		for let in attack:
-			count+=1
-		if count >= 25:
-			return 4
-		elif count >= 23:
-			return 3
-		elif count == 15:
-			return 2
-
 	def get_game_screen(self, screen):
 		'''prints game screen to window'''
 		screen.fill((255, 255, 255))
@@ -426,31 +417,10 @@ class GameScreen():
 		pygame.draw.rect(screen, self.bgroundc, pygame.Rect(self.bgroundoppx, self.bgroundoppy, self.bgroundw, self.bgroundh))#white bacground behind opp
 		screen.blit(self.playimg, (self.playimgx, self.playimgy)) # display image for player
 		screen.blit(self.oppimg, (self.oppimgx, self.oppimgy)) # display image for opponent		
-		health = self.player.get_health()
-		ohealth = self.opponent.get_health()
-		if ohealth < 0:
-			ohealth = 0
-		if health < 0:
-			health = 0
-		health = str(health)+"hp"
-		ohealth = str(ohealth)+"hp"
-		self.hfont = pygame.font.SysFont("monospace", 15)
-		self.Health = self.hfont.render(health, 1, (255, 255, 255))
-		screen.blit(self.Health,(135,260))
-		self.oppHealth = self.hfont.render(ohealth, 1, (255, 255, 255))
-		screen.blit(self.oppHealth,(320,15))
 		for x in range(0, 4):
 			pygame.draw.rect(screen, self.attboxesc[x], pygame.Rect(self.attboxesx[x], self.attboxesy[x], self.attboxesw, self.attboxesh))	
 			att = self.attacks[x]
-			wordlen = self.test_length(str(att))
-			if wordlen == 4:
-				fontSize = 11
-			elif wordlen == 3:
-				fontSize = 13
-			elif wordlen == 2:
-				fontSize = 16
-			else:
-				fontSize = 20
+			fontSize = 20
 			afont = pygame.font.SysFont("monospace", fontSize)
 			screen = self.render_text(screen, afont, att, (self.attboxesx[x] + fontSize, self.attboxesy[x] + self.attboxesh/2 - fontSize), (255, 255, 255))
 		if self.show_attack:
@@ -460,6 +430,19 @@ class GameScreen():
 			self.display_attack(screen, self.currentOppAttack, False)
 			self.player_turn = True
 		self.display_health(screen)
+		health = self.player.get_health()
+		ohealth = self.opponent.get_health()
+		if ohealth < 0:
+			ohealth = 0
+		if health < 0:
+			health = 0
+		health = str(health)+"hp"
+		ohealth = str(ohealth)+"hp"
+		self.hfont = pygame.font.SysFont("monospace", 15)
+		self.Health = self.hfont.render(health, 1, (0, 0, 0))
+		screen.blit(self.Health,(135,265))
+		self.oppHealth = self.hfont.render(ohealth, 1, (0, 0, 0))
+		screen.blit(self.oppHealth,(320,15))
 		return screen
 
 	def check_for_win(self):
