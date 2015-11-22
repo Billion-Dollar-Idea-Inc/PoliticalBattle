@@ -2,6 +2,7 @@ import pygame
 import sys
 import character
 import crudder
+import random
 
 class HomeScreen:
 	def __init__(self):
@@ -283,6 +284,11 @@ class GameScreen():
 	def set_attacks(self, player):
 		c = crudder.Crudder()
 		self.attacks = c.get_attacks(player.get_name())
+		for i in range(0, len(self.attacks)):
+			rand = random.randint(0, len(self.attacks)-1)
+			temp = self.attacks[i]
+			self.attacks[i] = self.attacks[rand]
+			self.attacks[rand] = temp	
 
 	def set_descriptions(self, player):
 		c = crudder.Crudder()
