@@ -438,7 +438,7 @@ class GameScreen():
 		self.Health = self.hfont.render(health, 1, (255, 255, 255))
 		screen.blit(self.Health,(135,260))
 		self.oppHealth = self.hfont.render(ohealth, 1, (255, 255, 255))
-		screen.blit(self.oppHealth,(360,15))
+		screen.blit(self.oppHealth,(320,15))
 		for x in range(0, 4):
 			pygame.draw.rect(screen, self.attboxesc[x], pygame.Rect(self.attboxesx[x], self.attboxesy[x], self.attboxesw, self.attboxesh))	
 			att = self.attacks[x]
