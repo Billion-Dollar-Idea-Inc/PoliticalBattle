@@ -378,7 +378,7 @@ class GameScreen():
 		and true or false for isPlayer and displays in a speach bubble'''
 		x = 100
 		y = 100
-		w = 300
+		w = 320
 		h = 100
 		pygame.draw.ellipse(screen, (200, 200, 200), (x, y, w, h), 0)
 		if isPlayer:
