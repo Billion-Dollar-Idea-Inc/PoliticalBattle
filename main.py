@@ -402,6 +402,16 @@ class GameScreen():
 				return True
 		return False
 
+	def test_length(self,attack):
+		count = 0
+		for let in attack:
+			count+=1
+		if count >= 25:
+			return 4
+		elif count >= 23:
+			return 3
+		elif count == 15:
+			return 2
 
 	def get_game_screen(self, screen):
 		'''prints game screen to window'''
@@ -430,10 +440,18 @@ class GameScreen():
 		self.oppHealth = self.hfont.render(ohealth, 1, (255, 255, 255))
 		screen.blit(self.oppHealth,(360,15))
 		for x in range(0, 4):
-			pygame.draw.rect(screen, self.attboxesc[x], pygame.Rect(self.attboxesx[x], self.attboxesy[x], self.attboxesw, self.attboxesh))
-			fontSize = 15
-			afont = pygame.font.SysFont("monospace", fontSize)
+			pygame.draw.rect(screen, self.attboxesc[x], pygame.Rect(self.attboxesx[x], self.attboxesy[x], self.attboxesw, self.attboxesh))	
 			att = self.attacks[x]
+			wordlen = self.test_length(str(att))
+			if wordlen == 4:
+				fontSize = 11
+			elif wordlen == 3:
+				fontSize = 13
+			elif wordlen == 2:
+				fontSize = 16
+			else:
+				fontSize = 20
+			afont = pygame.font.SysFont("monospace", fontSize)
 			screen = self.render_text(screen, afont, att, (self.attboxesx[x] + fontSize, self.attboxesy[x] + self.attboxesh/2 - fontSize), (255, 255, 255))
 		if self.show_attack:
 			self.display_attack(screen, self.currentAttack , True)
