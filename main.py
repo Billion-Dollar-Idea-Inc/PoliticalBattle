@@ -262,6 +262,7 @@ class GameScreen():
 
 	def set_players(self, names):
             	''' sets player and opponent for GameScreen to use and draw variables from'''
+	    	self.player_turn = True
 	    	self.player = character.Character(names[0])
 	    	if self.player.get_party() == "DEM":
 			self.attboxesc = [(0, 0, 125), (0, 0, 250), (0, 0, 250), (0, 0, 125)]
@@ -415,9 +416,22 @@ class GameScreen():
 		pygame.draw.rect(screen, self.bgroundc, pygame.Rect(self.bgroundoppx, self.bgroundoppy, self.bgroundw, self.bgroundh))#white bacground behind opp
 		screen.blit(self.playimg, (self.playimgx, self.playimgy)) # display image for player
 		screen.blit(self.oppimg, (self.oppimgx, self.oppimgy)) # display image for opponent		
+		health = self.player.get_health()
+		ohealth = self.opponent.get_health()
+		if ohealth < 0:
+			ohealth = 0
+		if health < 0:
+			health = 0
+		health = str(health)
+		ohealth = str(ohealth)
+		self.hfont = pygame.font.SysFont("monospace", 15)
+		self.Health = self.hfont.render(health, 1, (255, 255, 255))
+		screen.blit(self.Health,(135,260))
+		self.oppHealth = self.hfont.render(ohealth, 1, (255, 255, 255))
+		screen.blit(self.oppHealth,(360,15))
 		for x in range(0, 4):
 			pygame.draw.rect(screen, self.attboxesc[x], pygame.Rect(self.attboxesx[x], self.attboxesy[x], self.attboxesw, self.attboxesh))
-			fontSize = 20
+			fontSize = 15
 			afont = pygame.font.SysFont("monospace", fontSize)
 			att = self.attacks[x]
 			screen = self.render_text(screen, afont, att, (self.attboxesx[x] + fontSize, self.attboxesy[x] + self.attboxesh/2 - fontSize), (255, 255, 255))
@@ -506,7 +520,7 @@ def main():
 	bonus = False
 
 	#TODO:
-	#put \n in database	
+	#resize attack names if they are too big
 
 	game_state = 1
 
