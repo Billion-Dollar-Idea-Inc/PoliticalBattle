@@ -358,8 +358,9 @@ class GameScreen():
 		'''using the parameters, draws rectangle to the screen with the
 		   given text formatted to be multilined inside
 		   pos = position of box (x, y)
-		   rest is self explantory'''
-		lines = text.splitlines()  #splits lines into a list by \n's
+		   rest is self explantory'''	
+		text =  text.replace("\\n", "\n")
+		lines = text.splitlines()  #splits lines into a list by \n's	
 		width = 0
 		height = 0
 		for l in lines:   #determine total height of box maybe?  not sure this loop is mostly magic from internet
@@ -368,7 +369,7 @@ class GameScreen():
 		height = 0
 		for l in lines:       #create the different lines and print each to the screen    
 			t = font.render(l, 0, color)
-			screen.blit(t, (0 + pos[0], height + pos[1]))
+			screen.blit(t, (pos[0], height + pos[1]))
 			height += font.get_linesize()
 		return screen
 
