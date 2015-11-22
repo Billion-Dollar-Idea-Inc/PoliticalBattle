@@ -416,7 +416,7 @@ class GameScreen():
 	def get_game_screen(self, screen):
 		'''prints game screen to window'''
 		screen.fill((255, 255, 255))
-		background = pygame.image.load('images/char_back.jpg')
+		background = pygame.image.load('images/Declaration.jpg')
 		screen.blit(background, [0, 0])
 		pygame.draw.rect(screen, self.exboxc, pygame.Rect(self.exboxx, self.exboxy, self.exboxw, self.exboxh))#exit box
 		screen.blit(self.eLabel, (self.eLabelX, self.eLabelY))
