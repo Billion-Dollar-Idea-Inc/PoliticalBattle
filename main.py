@@ -281,22 +281,26 @@ class GameScreen():
 		self.oppimg = pygame.image.load("images/" + self.opponent.get_picture_name("left"))
 		self.oppimg = pygame.transform.scale(self.oppimg, (100, 100))
 
-	def set_attacks(self, player):
+	def set_credentials(self, player):
 		c = crudder.Crudder()
 		self.attacks = c.get_attacks(player.get_name())
+		self.descs = c.get_attack_descs(player.get_name())
+		self.powers = c.get_attack_powers(player.get_name())
+		print self.attacks
+		print self.descs
 		for i in range(0, len(self.attacks)):
 			rand = random.randint(0, len(self.attacks)-1)
+			temp2 = self.powers[i]
+			temp1 = self.descs[i]
 			temp = self.attacks[i]
 			self.attacks[i] = self.attacks[rand]
+			self.descs[i] = self.descs[rand]
+			self.powers[i] = self.powers[rand]
 			self.attacks[rand] = temp	
-
-	def set_descriptions(self, player):
-		c = crudder.Crudder()
-		self.descs = c.get_attack_descs(player.get_name())
-	
-	def set_power(self, player):
-		c = crudder.Crudder()
-		self.powers = c.get_attack_powers(player.get_name())
+			self.descs[rand] = temp1
+			self.powers[rand] = temp2
+		print self.attacks
+		print self.descs
 
 	def get_attack(self, pos):
 		'''
@@ -352,7 +356,7 @@ class GameScreen():
 	def attack(self, attackPos):
 		'''displays attack desc on the screen and decrements opp health'''
 		if self.player_turn:
-			self.currentAttack = self.player.get_attack_description(attackPos)#sets attack selected description to speaking bubble
+			self.currentAttack = self.descs[attackPos]#sets attack selected description to speaking bubble
 			self.show_attack = True
 			self.opponent.dec_health(self.powers[attackPos])
 			self.player_turn = False
@@ -550,9 +554,7 @@ def main():
 						game_state = 3
 						gs.set_players(cs.get_chars_to_battle())
 						gs.set_images(gs.player,gs.opponent)
-						gs.set_attacks(gs.player)
-						gs.set_descriptions(gs.player)
-						gs.set_power(gs.player)
+						gs.set_credentials(gs.player)	
 					elif cs.is_in_back_button(pygame.mouse.get_pos()):
 						game_state = 1
 					else:
