@@ -28,7 +28,6 @@ class HomeScreen:
 		self.reprecth = 100
 		self.is_dem = True
 
-
 	def get_home_screen(self, screen):
 		'''paints the home page to the screen'''
 		screen.fill(self.background_color)
@@ -204,6 +203,7 @@ class CharacterScreen():
 	    				self.OppSelect = x
 
 	def reset_characters(self):
+		'''sets white-highlighted box back to the first one after a battle'''
 		self.PlaySelect = 0
 		self.OppSelect = 0
 
@@ -216,10 +216,8 @@ class CharacterScreen():
             demOptions = self.crud.get_chars_in_party("DEM")
 
             if self.party == "DEM":
-                # print demOptions[self.PlaySelect], " ", repOptions[self.OppSelect]
                 return (demOptions[self.PlaySelect], repOptions[self.OppSelect])
             if self.party == "REP":
-                # print repOptions[self.PlaySelect], " ", demOptions[self.OppSelect]
                 return (repOptions[self.PlaySelect], demOptions[self.OppSelect])
 
 class GameScreen():
@@ -272,10 +270,7 @@ class GameScreen():
             	self.opponent = character.Character(names[1])
 
 	def set_images(self, player, opponent):
-		'''this function currently assumes that the images will be jpegs
-		   so we will probably need to change that and we'll also need to
-		   change it to reflect how the pictures are actually named'''
-
+		'''sets left or right facing image to player or opponent'''
 		self.playimg = pygame.image.load("images/" + self.player.get_picture_name("right"))
 		self.playimg = pygame.transform.scale(self.playimg, (100, 100))
 		self.oppimg = pygame.image.load("images/" + self.opponent.get_picture_name("left"))
@@ -286,8 +281,6 @@ class GameScreen():
 		self.attacks = c.get_attacks(player.get_name())
 		self.descs = c.get_attack_descs(player.get_name())
 		self.powers = c.get_attack_powers(player.get_name())
-		print self.attacks
-		print self.descs
 		for i in range(0, len(self.attacks)):
 			rand = random.randint(0, len(self.attacks)-1)
 			temp2 = self.powers[i]
@@ -299,8 +292,6 @@ class GameScreen():
 			self.attacks[rand] = temp	
 			self.descs[rand] = temp1
 			self.powers[rand] = temp2
-		print self.attacks
-		print self.descs
 
 	def get_attack(self, pos):
 		'''
@@ -318,6 +309,7 @@ class GameScreen():
 		return None
 
 	def display_health(self, screen):
+		'''prints green/red health bar to screen'''
 		self.PlayerHealthBarY = 285
 		self.PlayerHealthBarX = 110
 		self.healthBarH = 15
@@ -329,9 +321,10 @@ class GameScreen():
 		#paints red bar underneath healthbar to indicate lost health
 		pygame.draw.rect(screen, (200, 0, 0,), pygame.Rect(self.PlayerHealthBarX, self.PlayerHealthBarY, self.healthBarW, self.healthBarH))
 		pygame.draw.rect(screen, (200, 0, 0,), pygame.Rect(self.OppHealthBarX, self.OppHealthBarY, self.healthBarW, self.healthBarH))
-		#paints the actual healthbar
+		#paints background of hp
 		pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(self.PlayerHealthBarX+29, self.PlayerHealthBarY-self.healthBarH, self.healthBarW/2, self.healthBarH))
 		pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(self.OppHealthBarX+29, self.OppHealthBarY+self.healthBarH, self.healthBarW/2, self.healthBarH))
+		#paints the actual healthbar if health is more than zero
 		if self.playHealthBarW > 0:
 			pygame.draw.rect(screen, (0, 200, 0), pygame.Rect(self.PlayerHealthBarX, self.PlayerHealthBarY, self.playHealthBarW, self.healthBarH))
 		if self.oppHealthBarW > 0:	
@@ -376,7 +369,7 @@ class GameScreen():
 		lines = text.splitlines()  #splits lines into a list by \n's	
 		width = 0
 		height = 0
-		for l in lines:   #determine total height of box maybe?  not sure this loop is mostly magic from internet
+		for l in lines:   #determine total height of box 
 			width = max(width, font.size(l)[0])
 			height += font.get_linesize()
 		height = 0
@@ -478,6 +471,7 @@ class EndScreen():
 		self.resboxn = (100, 100, 100)
 		self.imgx = 200
 		self.imgy = 100
+		#to unlock extra characters
 		self.unlocked = False
 
 	def set_images(self, player, opponent):
@@ -506,7 +500,6 @@ class EndScreen():
 		screen.blit(name, (150, 250))		
 		end = self.font2.render("Click anywhere to exit", 1, (255, 255, 255))	
 		screen.blit(end, (110, 300))
-
 		if bonus:
 			unlock = self.font3.render("Bonus players unlocked!", 1, (255, 255, 255))	
 			screen.blit(unlock, (110, 350))
@@ -529,9 +522,6 @@ def main():
 	es = EndScreen()
 	unlock = False
 	bonus = False
-
-	#TODO:
-	#resize attack names if they are too big
 
 	game_state = 1
 
