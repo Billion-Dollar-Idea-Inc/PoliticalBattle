@@ -31,6 +31,5 @@ for attack in attacks:
         	    last+=1
     if change:
     	print new_attack
-    	sql = "UPDATE attacks SET attack='%s' WHERE attack='%s'" % (new_attack, attack)
-    	c.execute(sql)
+    	c.execute("UPDATE attacks SET attack=\"{new_attack}\" WHERE attack=\"{old_attack}\"".format(new_attack = new_attack, old_attack = attack))
 
