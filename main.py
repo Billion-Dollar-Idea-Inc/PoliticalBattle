@@ -451,9 +451,9 @@ class GameScreen():
 	def check_for_win(self):
 		'''returns either win loss or False'''
 		if self.player.get_health() < 1:
-			return "loss"
+			return False
 		elif self.opponent.get_health() < 1:
-		   	return "win"
+		   	return True
 		else:
 		   	return False
 
@@ -490,10 +490,10 @@ class EndScreen():
 		screen.blit(background, [0, 0])
 		pygame.draw.rect(screen, self.resboxc, pygame.Rect(self.resboxx, self.resboxy, self.resboxw, self.resboxh))	
 		result = self.font.render("Winner:", 1, (0, 0, 0))
-		if res == "win":
+		if res:
 			name = self.font.render(self.playname, 1, (255, 255, 255))
 			screen.blit(self.playimg, (self.imgx, self.imgy))
-		elif res == "loss":
+		elif not res:
 			name = self.font.render(self.oppname, 1, (255, 255, 255))
 			screen.blit(self.oppimg, (self.imgx, self.imgy))
 		screen.blit(result, (200, 200))
@@ -550,8 +550,8 @@ def main():
 					else:
 						cs.set_character(pygame.mouse.get_pos())
 				elif game_state == 3:
-					if gs.check_for_win() != False and  (gs.in_screen(pygame.mouse.get_pos())):#if game is over and user makes an additional click 
-						if gs.check_for_win() == "win" and not unlock:
+					if gs.check_for_win() and (gs.in_screen(pygame.mouse.get_pos())):#if game is over and user makes an additional click 
+						if gs.check_for_win() and not unlock:
 							cs.unlock_player()
 							unlock = True
 							bonus = True
